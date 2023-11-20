@@ -1,6 +1,6 @@
 # bibcrush
 
-Mobile Computing Project. BibCrush
+Mobile Computing Project. BibCrushh
 
 ## Getting Started
 
