@@ -2,7 +2,7 @@
 
 Mobile Computing Project. BibCrush
 
-## Getting Startedddddggggggggggg
+## Getting Started
 
 This project is a starting point for a Flutter application.
 
