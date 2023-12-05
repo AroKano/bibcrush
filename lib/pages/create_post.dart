@@ -1,23 +1,7 @@
 import 'package:flutter/material.dart';
+import 'custom_nav_bar.dart';
 
-void main() {
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Post Screen',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: PostScreen(),
-    );
-  }
-}
-
-class PostScreen extends StatelessWidget {
+class CreatePost extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,14 +9,17 @@ class PostScreen extends StatelessWidget {
         leading: IconButton(
           icon: Icon(Icons.close),
           onPressed: () {
-            // Handle cancel/post action
+            Navigator.pop(context); // Close the current screen
           },
         ),
-        title: Text('9:41'),
+        title: Text('Create Post'),
         actions: [
           TextButton(
             onPressed: () {
-              // Handle cancel/post action
+              // Handle post action
+
+              // Assuming the post is successful, navigate back to the previous screen
+              Navigator.pop(context);
             },
             child: Text('Post'),
           ),
@@ -52,6 +39,11 @@ class PostScreen extends StatelessWidget {
             // Add additional widgets as necessary
           ],
         ),
+      ),
+      bottomNavigationBar: CustomNavBar(
+        onTabChange: (index) {
+          // Handle tab change if needed
+        },
       ),
     );
   }
