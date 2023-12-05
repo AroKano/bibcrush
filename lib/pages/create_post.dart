@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'custom_nav_bar.dart';
 
 class CreatePost extends StatelessWidget {
+  final VoidCallback onPostCreated;
+
+  CreatePost({Key? key, required this.onPostCreated}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -18,7 +22,10 @@ class CreatePost extends StatelessWidget {
             onPressed: () {
               // Handle post action
 
-              // Assuming the post is successful, navigate back to the previous screen
+              // Assuming the post is successful, call the callback
+              onPostCreated();
+
+              // Close the current screen
               Navigator.pop(context);
             },
             child: Text('Post'),

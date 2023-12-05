@@ -33,7 +33,14 @@ class _HomeScreenState extends State<HomeScreen> {
           if (index == 2) {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => CreatePost()),
+              MaterialPageRoute(
+                builder: (context) => CreatePost(
+                  onPostCreated: () {
+                    // Refresh the Home Screen or perform any other actions
+                    print('Post created! Refreshing...');
+                  },
+                ),
+              ),
             );
           }
         },
