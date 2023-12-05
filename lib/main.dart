@@ -1,19 +1,20 @@
-import 'package:bibcrush/pages/login_page.dart';
 import 'package:bibcrush/pages/profile_page.dart';
 import 'package:flutter/material.dart';
+import 'package:bibcrush/pages/home_screen.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: const ProfilePage(),
+      title: 'My App',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: HomeScreen(),
     );
   }
 }
