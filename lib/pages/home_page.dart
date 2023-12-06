@@ -1,25 +1,36 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'custom_nav_bar.dart';
 import 'create_post.dart';
 
-class HomeScreen extends StatefulWidget {
+class HomePage extends StatefulWidget {
   @override
-  _HomeScreenState createState() => _HomeScreenState();
+  _HomePageState createState() => _HomePageState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
+  final user = FirebaseAuth.instance.currentUser!;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Home Screen'),
+        title: Text('Homepage'),
       ),
       body: Center(
-        child: Text(
-          'Welcome to the Home Screen!',
-          style: TextStyle(fontSize: 18),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text('signed in as ' + user.email!),
+            MaterialButton(
+                onPressed: () {
+                  FirebaseAuth.instance.signOut();
+                },
+              color: Colors.deepPurple[200],
+              child: Text('sign out'),
+            )
+          ],
         ),
       ),
       bottomNavigationBar: CustomNavBar(

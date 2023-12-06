@@ -1,9 +1,29 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class LoginPage extends StatelessWidget {
+
+  // text controller
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+
+  Future confirm() async{
+    await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: _emailController.text.trim(),
+        password: _passwordController.text.trim()
+    );
+  }
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: Scaffold(
         backgroundColor: Colors.white, // Weißer Hintergrund
         appBar: AppBar(
@@ -27,7 +47,7 @@ class LoginPage extends StatelessWidget {
             children: [
               // Platz für das Logo (fügen Sie Ihr Logo hier ein)
 
-              SizedBox(height: 20), // Platz zwischen Logo und Text Containern
+              SizedBox(height: 20), // Platz zwischen Logo und Text Containerns
 
               // Text Container für die E-Mail
               Container(
@@ -43,6 +63,7 @@ class LoginPage extends StatelessWidget {
                       SizedBox(width: 10),
                       Expanded(
                         child: TextField(
+                          controller: _emailController,
                           decoration: InputDecoration(
                             hintText: 'E-Mail eingeben',
                             border: InputBorder.none,
@@ -70,6 +91,7 @@ class LoginPage extends StatelessWidget {
                       SizedBox(width: 10),
                       Expanded(
                         child: TextField(
+                          controller: _passwordController,
                           obscureText: true, // Passwort wird versteckt
                           decoration: InputDecoration(
                             hintText: 'Passwort eingeben',
@@ -107,17 +129,20 @@ class LoginPage extends StatelessWidget {
                   // Hier können Sie die Logik für die Bestätigung implementieren
                 },
                 style: ElevatedButton.styleFrom(
-                  primary: Color(0xFFFF7A00), // Orange Farbe
+                  backgroundColor: Color(0xFFFF7A00), // Orange Farbe
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10.0), // Abgerundete Ecken
                   ),
                 ),
-                child: Container(
-                  width: double.infinity,
-                  alignment: Alignment.center,
-                  child: Text(
-                    'Bestätigen',
-                    style: TextStyle(color: Colors.white),
+                child: GestureDetector(
+                  onTap: confirm,
+                  child: Container(
+                    width: double.infinity,
+                    alignment: Alignment.center,
+                    child: Text(
+                      'Bestätigen',
+                      style: TextStyle(color: Colors.white),
+                    ),
                   ),
                 ),
               ),

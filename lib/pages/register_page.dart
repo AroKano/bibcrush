@@ -5,14 +5,14 @@ class RegistrationPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        backgroundColor: Colors.white, // Weißer Hintergrund
-        appBar: AppBar(
+        backgroundColor: Colors.white, // weißer hintergrund
+        appBar: AppBar( //WIDGET: app leiste oben
           backgroundColor: Colors.white,
-          elevation: 0, // Kein Schatten
+          elevation: 0, // kein schatten
           leading: IconButton(
-            icon: Icon(Icons.arrow_back, color: Colors.black), // Zurück-Pfeil
+            icon: Icon(Icons.arrow_back, color: Colors.black), // zurück-pfeil
             onPressed: () {
-              // Hier können Sie die Logik für das Zurückgehen implementieren
+              // zurückgehen logik!!!
             },
           ),
           title: Text(
@@ -25,12 +25,12 @@ class RegistrationPage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Text Container für den Vorname
+              // text container für den vorname
               Container(
                 decoration: BoxDecoration(
-                  border: Border.all(color: Colors.grey), // Grauer Rahmen
+                  border: Border.all(color: Colors.grey), // grauer rahmen
                   borderRadius:
-                      BorderRadius.circular(10.0), // Abgerundete Ecken
+                      BorderRadius.circular(10.0), // abgerundete ecken
                 ),
                 child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 16.0),
@@ -50,14 +50,14 @@ class RegistrationPage extends StatelessWidget {
                 ),
               ),
 
-              SizedBox(height: 20), // Platz zwischen den Text Containern
+              SizedBox(height: 20), // platz zwischen den text containern
 
-              // Text Container für den Nachname
+              // text container für den nachname
               Container(
                 decoration: BoxDecoration(
-                  border: Border.all(color: Colors.grey), // Grauer Rahmen
+                  border: Border.all(color: Colors.grey), // grauer rahmen
                   borderRadius:
-                      BorderRadius.circular(10.0), // Abgerundete Ecken
+                      BorderRadius.circular(10.0), // abgerundete ecken
                 ),
                 child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 16.0),
@@ -77,14 +77,14 @@ class RegistrationPage extends StatelessWidget {
                 ),
               ),
 
-              SizedBox(height: 20), // Platz zwischen den Text Containern
+              SizedBox(height: 20), // platz zwischen den text containern
 
-              // Text Container für den Benutzernamen
+              // text container für den benutzernamen
               Container(
                 decoration: BoxDecoration(
-                  border: Border.all(color: Colors.grey), // Grauer Rahmen
+                  border: Border.all(color: Colors.grey), // grauer rahmen
                   borderRadius:
-                      BorderRadius.circular(10.0), // Abgerundete Ecken
+                      BorderRadius.circular(10.0), // abgerundete ecken
                 ),
                 child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 16.0),
@@ -104,14 +104,14 @@ class RegistrationPage extends StatelessWidget {
                 ),
               ),
 
-              SizedBox(height: 20), // Platz zwischen den Text Containern
+              SizedBox(height: 20), 
 
-              // Text Container für die E-Mail
+              // text container für die e-mail
               Container(
                 decoration: BoxDecoration(
-                  border: Border.all(color: Colors.grey), // Grauer Rahmen
+                  border: Border.all(color: Colors.grey), 
                   borderRadius:
-                      BorderRadius.circular(10.0), // Abgerundete Ecken
+                      BorderRadius.circular(10.0), 
                 ),
                 child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 16.0),
@@ -131,14 +131,14 @@ class RegistrationPage extends StatelessWidget {
                 ),
               ),
 
-              SizedBox(height: 20), // Platz zwischen den Text Containern
+              SizedBox(height: 20), 
 
-              // Text Container für das Passwort
+              // text container für das passwort
               Container(
                 decoration: BoxDecoration(
-                  border: Border.all(color: Colors.grey), // Grauer Rahmen
+                  border: Border.all(color: Colors.grey), 
                   borderRadius:
-                      BorderRadius.circular(10.0), // Abgerundete Ecken
+                      BorderRadius.circular(10.0), 
                 ),
                 child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 16.0),
@@ -147,7 +147,7 @@ class RegistrationPage extends StatelessWidget {
                       SizedBox(width: 10),
                       Expanded(
                         child: TextField(
-                          obscureText: true, // Passwort wird versteckt
+                          obscureText: true,
                           decoration: InputDecoration(
                             hintText: 'Passwort',
                             border: InputBorder.none,
@@ -161,12 +161,12 @@ class RegistrationPage extends StatelessWidget {
 
               SizedBox(
                   height:
-                      20), // Platz zwischen den Text Containern und dem Button
+                      20), 
               Container(
                 decoration: BoxDecoration(
-                  border: Border.all(color: Colors.grey), // Grauer Rahmen
+                  border: Border.all(color: Colors.grey), 
                   borderRadius:
-                      BorderRadius.circular(10.0), // Abgerundete Ecken
+                      BorderRadius.circular(10.0), 
                 ),
                 child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 16.0),
@@ -175,7 +175,7 @@ class RegistrationPage extends StatelessWidget {
                       SizedBox(width: 10),
                       Expanded(
                         child: TextField(
-                          obscureText: true, // Passwort wird versteckt
+                          obscureText: true, 
                           decoration: InputDecoration(
                             hintText: 'Passwort bestätigen',
                             border: InputBorder.none,
@@ -189,12 +189,12 @@ class RegistrationPage extends StatelessWidget {
 
               SizedBox(
                   height:
-                      20), // Platz zwischen den Text Containern und dem Button
+                      20), 
 
-              // Text "Du hast bereits ein Konto? Anmelden." in Orange
+              // text "Du hast bereits ein Konto? Anmelden." in orange
               GestureDetector(
                 onTap: () {
-                  // Hier können Sie die Logik für das Umschalten zur Anmeldeseite implementieren
+                  // logik für auf anmeldeseite gehen fehlt!!!
                 },
                 child: Container(
                   width: double.infinity,
@@ -206,18 +206,18 @@ class RegistrationPage extends StatelessWidget {
                 ),
               ),
 
-              SizedBox(height: 20), // Platz zwischen dem Text und dem Button
+              SizedBox(height: 20), 
 
-              // Button "Bestätigen" mit abgerundeten Ecken in FF7A00
+              // button "Bestätigen" mit abgerundeten ecken
               ElevatedButton(
                 onPressed: () {
-                  // Hier können Sie die Logik für die Bestätigung implementieren
+                  // logik für bestätigung fehlt!!!
                 },
                 style: ElevatedButton.styleFrom(
-                  primary: Color(0xFFFF7A00), // Orange Farbe
+                  backgroundColor: Color(0xFFFF7A00), // orange farbe
                   shape: RoundedRectangleBorder(
                     borderRadius:
-                        BorderRadius.circular(10.0), // Abgerundete Ecken
+                        BorderRadius.circular(10.0), // abgerundete ecken
                   ),
                 ),
                 child: Container(
