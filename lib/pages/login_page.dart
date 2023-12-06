@@ -3,46 +3,46 @@ import 'package:flutter/material.dart';
 class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        backgroundColor: Colors.white, // Weißer Hintergrund
-        appBar: AppBar(
+    return MaterialApp( //WIDGET
+      home: Scaffold( //WIDGET
+        backgroundColor: Colors.white, // weißer hintergrund
+        appBar: AppBar( //WIDGET: 1. app leiste oben 2. pfeil
           backgroundColor: Colors.white,
-          elevation: 0, // Kein Schatten
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back, color: Colors.black), // Zurück-Pfeil
+          elevation: 0, // kein Schatten
+          leading: IconButton( //WIDGET: (attribut)
+            icon: Icon(Icons.arrow_back, color: Colors.black), // zurück-pfeil links
             onPressed: () {
-              // Hier können Sie die Logik für das Zurückgehen implementieren
+              // logik für zurückgehen fehlt!!!
             },
           ),
-          title: Text(
+          title: Text( //WIDGET: für text oben
             'Anmelden',
             style: TextStyle(color: Colors.black),
           ),
         ),
-        body: Padding(
+        body: Padding( //WIDGET: polsterung um inhalt
           padding: EdgeInsets.all(16.0),
-          child: Column(
+          child: Column( //WIDGET
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Platz für das Logo (fügen Sie Ihr Logo hier ein)
+              // logo code einfügen!!!
 
-              SizedBox(height: 20), // Platz zwischen Logo und Text Containern
+              SizedBox(height: 20), // WIDGET: platz zwischen logo und text containern
 
-              // Text Container für die E-Mail
-              Container(
+              // text container für die e-mail
+              Container( 
                 decoration: BoxDecoration(
-                  border: Border.all(color: Colors.grey), // Grauer Rahmen
-                  borderRadius: BorderRadius.circular(10.0), // Abgerundete Ecken
+                  border: Border.all(color: Colors.grey), // grauer rahmen
+                  borderRadius: BorderRadius.circular(10.0), // abgerundete ecken
                 ),
-                child: Padding(
+                child: Padding( //WIDGET
                   padding: EdgeInsets.symmetric(horizontal: 16.0),
-                  child: Row(
+                  child: Row( //reihe
                     children: [
-                      Icon(Icons.mail, color: Colors.grey), // Graues Post Icon
+                      Icon(Icons.mail, color: Colors.grey), // WIDGET: graues post icon
                       SizedBox(width: 10),
                       Expanded(
-                        child: TextField(
+                        child: TextField( //WIDGET: eingabe von text
                           decoration: InputDecoration(
                             hintText: 'E-Mail eingeben',
                             border: InputBorder.none,
@@ -54,23 +54,23 @@ class LoginPage extends StatelessWidget {
                 ),
               ),
 
-              SizedBox(height: 20), // Platz zwischen den Text Containern
+              SizedBox(height: 20), //WIDGET: platz zwischen text containern
 
-              // Text Container für das Passwort
+              // text container für passwort
               Container(
                 decoration: BoxDecoration(
-                  border: Border.all(color: Colors.grey), // Grauer Rahmen
-                  borderRadius: BorderRadius.circular(10.0), // Abgerundete Ecken
+                  border: Border.all(color: Colors.grey), // grauer rahmen
+                  borderRadius: BorderRadius.circular(10.0), // abgerundete ecken
                 ),
-                child: Padding(
+                child: Padding( //WIDGET
                   padding: EdgeInsets.symmetric(horizontal: 16.0),
-                  child: Row(
+                  child: Row( //reihe
                     children: [
-                      Icon(Icons.lock, color: Colors.grey), // Graues Schlüssel Icon
+                      Icon(Icons.lock, color: Colors.grey), // WIDGET: graues schlüssel icon
                       SizedBox(width: 10),
                       Expanded(
                         child: TextField(
-                          obscureText: true, // Passwort wird versteckt
+                          obscureText: true, // passwort verstecken
                           decoration: InputDecoration(
                             hintText: 'Passwort eingeben',
                             border: InputBorder.none,
@@ -82,16 +82,16 @@ class LoginPage extends StatelessWidget {
                 ),
               ),
 
-              SizedBox(height: 20), // Platz zwischen den Text Containern und dem Button
+              SizedBox(height: 20), // widget: platz zwischen den text containern und dem button
 
-              // Text "Passwort vergessen?" in Orange
-              GestureDetector(
+              // text "Passwort vergessen?" in orange
+              GestureDetector( //WIDGET und klasse, benutzerinteraktion
                 onTap: () {
-                  // Hier können Sie die Logik für das Vergessen des Passworts implementieren
+                  // logik für passwort einfügen!!!
                 },
                 child: Container(
                   width: double.infinity,
-                  child: Text(
+                  child: Text( //widget statischer text
                     'Passwort vergessen?',
                     style: TextStyle(color: Color(0xFFFF7A00)),
                     textAlign: TextAlign.center,
@@ -99,17 +99,17 @@ class LoginPage extends StatelessWidget {
                 ),
               ),
 
-              SizedBox(height: 20), // Platz zwischen dem Text und dem Button
+              SizedBox(height: 20), // platz zwischen dem text und dem button
 
-              // Button "Bestätigen" mit abgerundeten Ecken in FF7A00
-              ElevatedButton(
+              // button "Bestätigen" mit abgerundeten ecken
+              ElevatedButton( //widget
                 onPressed: () {
-                  // Hier können Sie die Logik für die Bestätigung implementieren
+                  // logik für bestätigung
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xFFFF7A00), // Orange Farbe
+                  backgroundColor: Color(0xFFFF7A00), // orange farbe
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10.0), // Abgerundete Ecken
+                    borderRadius: BorderRadius.circular(10.0), // abgerundete ecken
                   ),
                 ),
                 child: Container(
