@@ -3,9 +3,10 @@ import 'package:flutter/material.dart';
 class StartPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
+    return MaterialApp( //WIDGET: grundeinstellungen, designregeln für app
+      home: Scaffold( //grundlayout der seite
         backgroundColor: Colors.white, // weißer hintergrund
+        
         body: Padding(
           padding: EdgeInsets.all(16.0),
           child: Column(
