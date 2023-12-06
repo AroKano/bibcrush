@@ -1,19 +1,42 @@
+//import 'package:firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-class ProfilePage extends StatelessWidget {
+class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
 
-  //current logged in user
+  @override
+  State<ProfilePage> createState() => _ProfilePageState();
+}
 
-  //future to fetch user details
+class _ProfilePageState extends State<ProfilePage> {
+  //user (folgende Zeile muss AUSKOMMENTIEREN werden)
+  //final currentuser = FirebaseAuth.instance.currentuser!;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        backgroundColor: Colors.white,
         appBar: AppBar(
-      title: Text("Profile"),
-      backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-      elevation: 0,
-    ));
+          title: Text("Profile"),
+          backgroundColor: const Color(0xFFFF7A00),
+        ),
+        body: ListView(
+          children: [
+            const SizedBox(height: 50),
+
+            //profile pic
+            const Icon(
+              Icons.person,
+              size: 72,
+            ),
+            //user caption
+            Text(
+              //AUSKOMMENTIEREN:
+              //currentUser.caption!,
+              'Photographer | Music enthusiast | Coffee lover | Lifelong learner',
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ));
   }
 }
