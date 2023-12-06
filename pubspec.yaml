@@ -38,6 +38,7 @@ dependencies:
   flutterflow_ui: ^0.2.0+1
   google_nav_bar: ^5.0.6
   easy_dashboard: ^0.0.2
+  firebase_auth: ^4.15.0
 
 dev_dependencies:
   flutter_test:
