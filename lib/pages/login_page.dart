@@ -47,7 +47,7 @@ class LoginPage extends StatelessWidget {
             children: [
               // Platz für das Logo (fügen Sie Ihr Logo hier ein)
 
-              SizedBox(height: 20), // Platz zwischen Logo und Text Containern
+              SizedBox(height: 20), // Platz zwischen Logo und Text Containerns
 
               // Text Container für die E-Mail
               Container(
