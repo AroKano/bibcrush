@@ -16,10 +16,7 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: Colors.white,
-        appBar: AppBar(
-          title: Text("Profile"),
-          backgroundColor: const Color(0xFFFF7A00),
-        ),
+        appBar: AppBar(),
         body: ListView(
           children: [
             const SizedBox(height: 50),
@@ -29,6 +26,35 @@ class _ProfilePageState extends State<ProfilePage> {
               Icons.person,
               size: 72,
             ),
+
+            //name
+            RichText(
+              text: TextSpan(
+                //AUSKOMMENTIEREN:
+                //currentUser.name!,
+                text: 'Max',
+                style: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 24,
+                ),
+
+                //Benutzername
+
+                children: [
+                  TextSpan(
+                    //AUSKOMMENTIEREN:
+                    //currentUser.username!,
+                    text: '@MaxMusty',
+                    style: TextStyle(
+                      color: Colors.grey,
+                      fontSize: 20,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
             //user caption
             Text(
               //AUSKOMMENTIEREN:
