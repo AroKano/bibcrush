@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class OpeningPageBuilder {
-  static Widget build() {
+  static Widget bsuild() {
     return OpeningPage();
   }
 }

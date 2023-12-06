@@ -1,152 +1,128 @@
-import 'package:flutter/material.dart'; //import von packages
+import 'package:flutter/material.dart';
 
-//Main Funktion, ruft runApp Funktion auf, übergibt MyApp als Hauptwidget
-// void main() {
-//   runApp(MyApp());
-// }
-// //Klasse definiert, erbt von StatelessWidget ok
-// class MyApp extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     return MaterialApp( //MyApp gint MaterialApp zurück, hat als ahuptwidget die LoginPage
-//       home: LoginPage(),
-//     );
-//   }
-// }
-
-//StatefulWidget (zustand derseite kann sich ändern)
-class LoginPage extends StatefulWidget {
-  const LoginPage({super.key}); //damit man das in der main file aufrufen kann
-
-  @override
-  _LoginPageState createState() =>
-      _LoginPageState(); //erstellt zugehöriges state-objekt, verwaltet zustand der seite
-}
-
-//zustand für loginPage wird definiert
-class _LoginPageState extends State<LoginPage> {
-  bool isAnmeldenTab = true; //damit kann man den ausgewählten tab verfolgen
-
-  //build methode, erstellt ui der seite
+class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      //grundgerüst???
-      appBar: AppBar(
-        //app leiste
-        title: const Text(
-          'BibCrush', //titel code card
-          style: TextStyle(color: Colors.black), //weisser text
+    return MaterialApp(
+      home: Scaffold(
+        backgroundColor: Colors.white, // Weißer Hintergrund
+        appBar: AppBar(
+          backgroundColor: Colors.white,
+          elevation: 0, // Kein Schatten
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back, color: Colors.black), // Zurück-Pfeil
+            onPressed: () {
+              // Hier können Sie die Logik für das Zurückgehen implementieren
+            },
+          ),
+          title: Text(
+            'Anmelden',
+            style: TextStyle(color: Colors.black),
+          ),
         ),
-        backgroundColor: Colors.white, //hintergrundfarbe
-        elevation: 0,
-      ),
-      body: Container(
-        //body container, hauptinhalt der seite
-        color: Colors.white, //hintergrundfarbe
-        padding: const EdgeInsets.all(16.0), //abstand zwischen ui elementen
-        child: Column(
-          //widget wird verwendet um widgets vertikal anzuordnen
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Row(
-              //buttons für anmelden und registrieren
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                buildTabButton('Anmelden', true),
-                buildTabButton('Registrieren', false),
-              ],
-            ),
-            const SizedBox(height: 20),
-            TextField(
-              //textfeld für email
-              style:
-                  const TextStyle(color: Colors.grey), // Textfarbe weiß setzen
-              decoration: InputDecoration(
-                labelText: 'E-mail Adresse',
-                prefixIcon: const Icon(Icons.mail, color: Colors.grey),
-                labelStyle: const TextStyle(color: Colors.grey),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: const BorderSide(color: Colors.grey),
-                  borderRadius: BorderRadius.circular(10),
+        body: Padding(
+          padding: EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Platz für das Logo (fügen Sie Ihr Logo hier ein)
+
+              SizedBox(height: 20), // Platz zwischen Logo und Text Containern
+
+              // Text Container für die E-Mail
+              Container(
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey), // Grauer Rahmen
+                  borderRadius: BorderRadius.circular(10.0), // Abgerundete Ecken
                 ),
-                enabledBorder: OutlineInputBorder(
-                  borderSide: const BorderSide(color: Colors.grey),
-                  borderRadius: BorderRadius.circular(10),
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16.0),
+                  child: Row(
+                    children: [
+                      Icon(Icons.mail, color: Colors.grey), // Graues Post Icon
+                      SizedBox(width: 10),
+                      Expanded(
+                        child: TextField(
+                          decoration: InputDecoration(
+                            hintText: 'E-Mail eingeben',
+                            border: InputBorder.none,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-            const SizedBox(height: 20),
-            TextField(
-              //textfeld für passwort
-              style:
-                  const TextStyle(color: Colors.grey), // Textfarbe weiß setzen
-              decoration: InputDecoration(
-                labelText: 'Passwort',
-                prefixIcon: const Icon(Icons.lock, color: Colors.grey),
-                labelStyle: const TextStyle(color: Colors.grey),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: const BorderSide(color: Colors.grey),
-                  borderRadius: BorderRadius.circular(10),
+
+              SizedBox(height: 20), // Platz zwischen den Text Containern
+
+              // Text Container für das Passwort
+              Container(
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey), // Grauer Rahmen
+                  borderRadius: BorderRadius.circular(10.0), // Abgerundete Ecken
                 ),
-                enabledBorder: OutlineInputBorder(
-                  borderSide: const BorderSide(color: Colors.grey),
-                  borderRadius: BorderRadius.circular(10),
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16.0),
+                  child: Row(
+                    children: [
+                      Icon(Icons.lock, color: Colors.grey), // Graues Schlüssel Icon
+                      SizedBox(width: 10),
+                      Expanded(
+                        child: TextField(
+                          obscureText: true, // Passwort wird versteckt
+                          decoration: InputDecoration(
+                            hintText: 'Passwort eingeben',
+                            border: InputBorder.none,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-              obscureText: true, //passwort verbergen
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              //erhebener button für bestätigung
-              onPressed: () {
-                //
-                // ANMELDELOGIK FEHLT!!! FIREBASE!!!
-                print('Bestätigen erfolgreich');
-              },
-              style: ElevatedButton.styleFrom(
-                //button stil
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
+
+              SizedBox(height: 20), // Platz zwischen den Text Containern und dem Button
+
+              // Text "Passwort vergessen?" in Orange
+              GestureDetector(
+                onTap: () {
+                  // Hier können Sie die Logik für das Vergessen des Passworts implementieren
+                },
+                child: Container(
+                  width: double.infinity,
+                  child: Text(
+                    'Passwort vergessen?',
+                    style: TextStyle(color: Color(0xFFFF7A00)),
+                    textAlign: TextAlign.center,
+                  ),
                 ),
-                backgroundColor: const Color(0xFFFF7A00), //farbe
               ),
-              child: const SizedBox(
-                width: double.infinity,
-                child: Center(
+
+              SizedBox(height: 20), // Platz zwischen dem Text und dem Button
+
+              // Button "Bestätigen" mit abgerundeten Ecken in FF7A00
+              ElevatedButton(
+                onPressed: () {
+                  // Hier können Sie die Logik für die Bestätigung implementieren
+                },
+                style: ElevatedButton.styleFrom(
+                  primary: Color(0xFFFF7A00), // Orange Farbe
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0), // Abgerundete Ecken
+                  ),
+                ),
+                child: Container(
+                  width: double.infinity,
+                  alignment: Alignment.center,
                   child: Text(
                     'Bestätigen',
                     style: TextStyle(color: Colors.white),
                   ),
                 ),
               ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget buildTabButton(String text, bool isSelected) {
-    //funktion für tab buttons
-    return ElevatedButton(
-      //tab wird hervorgehoben
-      onPressed: () {
-        setState(() {
-          isAnmeldenTab = isSelected;
-        });
-      },
-      style: ElevatedButton.styleFrom(
-        backgroundColor:
-            isSelected ? const Color(0xFFFF7A00) : const Color(0xFFFF7A00),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
-        ),
-      ),
-      child: Text(
-        text,
-        style: TextStyle(
-          color: isSelected ? Colors.white : Colors.white,
+            ],
+          ),
         ),
       ),
     );
