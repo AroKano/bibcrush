@@ -4,6 +4,8 @@ import 'custom_nav_bar.dart';
 import 'create_post.dart';
 
 class HomePage extends StatefulWidget {
+  const HomePage({super.key});
+
   @override
   _HomePageState createState() => _HomePageState();
 }
@@ -16,19 +18,19 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Homepage'),
+        title: const Text('Homepage'),
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text('signed in as ' + user.email!),
+            Text('signed in as ${user.email!}'),
             MaterialButton(
                 onPressed: () {
                   FirebaseAuth.instance.signOut();
                 },
               color: Colors.deepPurple[200],
-              child: Text('sign out'),
+              child: const Text('sign out'),
             )
           ],
         ),
