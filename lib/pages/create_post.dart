@@ -1,57 +1,131 @@
 import 'package:flutter/material.dart';
-import 'custom_nav_bar.dart';
 
-class CreatePost extends StatelessWidget {
-  final VoidCallback onPostCreated;
+void main() {
+  runApp(MyApp());
+}
 
-  CreatePost({Key? key, required this.onPostCreated}) : super(key: key);
-
+class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(Icons.close),
-          onPressed: () {
-            Navigator.pop(context); // Close the current screen
-          },
-        ),
-        title: Text('Create Post'),
-        actions: [
-          TextButton(
-            onPressed: () {
-              // Handle post action
-
-              // Assuming the post is successful, call the callback
-              onPostCreated();
-
-              // Close the current screen
-              Navigator.pop(context);
-            },
-            child: Text('Post'),
-          ),
-        ],
+    return MaterialApp(
+      title: 'Create Post',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+        visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      body: Padding(
-        padding: EdgeInsets.all(8.0),
-        child: Column(
-          children: [
-            TextField(
-              keyboardType: TextInputType.multiline,
-              maxLines: null,
-              decoration: InputDecoration(
-                hintText: 'Type something...',
+      home: CreatePostPage(),
+    );
+  }
+}
+
+class CreatePostPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        // Closes the keyboard when the user taps outside of the TextField
+        FocusScope.of(context).requestFocus(FocusNode());
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          leading: Padding(
+            padding: EdgeInsets.only(left: 12.0),
+            child: TextButton(
+              onPressed: () {
+                // Handle cancel action
+              },
+              style: TextButton.styleFrom(
+                padding: EdgeInsets.zero,
+                primary: Color(0xFFE85555),
+                minimumSize: Size(20, 20),
+              ),
+              child: Text('Cancel', style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
+            ),
+          ),
+          title: Text(''),
+          actions: <Widget>[
+            Padding(
+              padding: EdgeInsets.only(right: 10.0),
+              child: TextButton(
+                onPressed: () {
+                  // Handle post action
+                },
+                child: Text('Post', style: TextStyle(fontSize: 18.0, color: Color(0xFFFF7A00), fontWeight: FontWeight.bold)),
               ),
             ),
-            // Add additional widgets as necessary
           ],
         ),
+        body: Column(
+          children: <Widget>[
+            Padding(
+              padding: EdgeInsets.only(top: 5),
+              child: Divider(
+                height: 1,
+                color: Color(0xFFE7E7E7),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(bottom: 5),
+              child: Container(
+                color: Colors.white,
+                height: 10,
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 10.0),
+              child: TextField(
+                decoration: InputDecoration(
+                  hintText: 'Type something...',
+                  hintStyle: TextStyle(fontSize: 18.0, color: Color(0xFF939393), fontWeight: FontWeight.normal),
+                  border: InputBorder.none,
+                  contentPadding: EdgeInsets.all(16),
+                ),
+                keyboardType: TextInputType.multiline,
+                maxLines: null,
+              ),
+            ),
+          ],
+        ),
+        bottomNavigationBar: Container(
+          height: 70,
+          child: ListView(
+            scrollDirection: Axis.horizontal,
+            children: <Widget>[
+              _buildActionItem(context, 'Capture', Icons.camera_alt, Color(0xFFC6D2DD), Color(0xFF41698D)),
+              _buildActionItem(context, 'Upload', Icons.file_upload, Color(0xFFD6ECCF), Color(0xFF78C05F)),
+              _buildActionItem(context, 'Tag Location', Icons.location_on, Color(0xFFE2D1EF), Color(0xFF9D67C8)),
+              _buildActionItem(context, 'GIF', Icons.gif, Color(0xFFB2BAC5), Color(0xFF00193F)),
+            ],
+          ),
+        ),
       ),
-      bottomNavigationBar: CustomNavBar(
-        onTabChange: (index) {
-          // Handle tab change if needed
+    );
+  }
+
+  Widget _buildActionItem(BuildContext context, String text, IconData icon, Color color, Color iconColor) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 4.0),
+      child: InkWell(
+        onTap: () {
+          print('$text tapped!');
         },
+        child: Container(
+          padding: EdgeInsets.only(top: 20.0, bottom: 20.0, left: 15.0, right: 15.0),
+          decoration: BoxDecoration(
+            color: color,
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Icon(icon, color: iconColor),
+              SizedBox(width: 8),
+              Text(text, style: TextStyle(color: Color(0xFF323232), fontWeight: FontWeight.bold)),
+            ],
+          ),
+        ),
       ),
     );
   }
 }
+
