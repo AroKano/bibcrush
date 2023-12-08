@@ -1,5 +1,5 @@
 PODS:
-  - cloud_firestore (4.13.3):
+  - cloud_firestore (4.13.4):
     - Firebase/Firestore (= 10.18.0)
     - firebase_core
     - Flutter
@@ -17,11 +17,11 @@ PODS:
   - Firebase/Firestore (10.18.0):
     - Firebase/CoreOnly
     - FirebaseFirestore (~> 10.18.0)
-  - firebase_auth (4.15.0):
+  - firebase_auth (4.15.1):
     - Firebase/Auth (= 10.18.0)
     - firebase_core
     - Flutter
-  - firebase_core (2.24.0):
+  - firebase_core (2.24.1):
     - Firebase/CoreOnly (= 10.18.0)
     - Flutter
   - FirebaseAnalytics (10.18.0):
@@ -70,6 +70,8 @@ PODS:
     - GoogleUtilities/UserDefaults (~> 7.8)
     - PromisesObjC (~> 2.1)
   - Flutter (1.0.0)
+  - flutter_native_splash (0.0.1):
+    - Flutter
   - FMDB (2.7.5):
     - FMDB/standard (= 2.7.5)
   - FMDB/standard (2.7.5)
@@ -136,6 +138,7 @@ DEPENDENCIES:
   - firebase_core (from `.symlinks/plugins/firebase_core/ios`)
   - FirebaseFirestore (from `https://github.com/invertase/firestore-ios-sdk-frameworks.git`, tag `10.18.0`)
   - Flutter (from `Flutter`)
+  - flutter_native_splash (from `.symlinks/plugins/flutter_native_splash/ios`)
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
   - rive_common (from `.symlinks/plugins/rive_common/ios`)
   - sqflite (from `.symlinks/plugins/sqflite/ios`)
@@ -169,6 +172,8 @@ EXTERNAL SOURCES:
     :tag: 10.18.0
   Flutter:
     :path: Flutter
+  flutter_native_splash:
+    :path: ".symlinks/plugins/flutter_native_splash/ios"
   path_provider_foundation:
     :path: ".symlinks/plugins/path_provider_foundation/darwin"
   rive_common:
@@ -182,10 +187,10 @@ CHECKOUT OPTIONS:
     :tag: 10.18.0
 
 SPEC CHECKSUMS:
-  cloud_firestore: 9b25b77371a845d07a48e5146799f6d4552f5940
+  cloud_firestore: 1a98da0743ee92f36efc74af98389f7843a12c53
   Firebase: 414ad272f8d02dfbf12662a9d43f4bba9bec2a06
-  firebase_auth: 02d1a6340f81020cc302fb8fea8518908c546cec
-  firebase_core: f802c5c1f6caff9b8d38b591a36e7b25f8878936
+  firebase_auth: d6737fa2721c9dfc57ca16a1bb57c244a4ae9332
+  firebase_core: 3d2a3f6e075df5207950cc5577202ed2e6805d9e
   FirebaseAnalytics: 4d310b35c48eaa4a058ddc04bdca6bdb5dc0fe80
   FirebaseAppCheckInterop: 37884781f3e16a1ba47e7ec80a1e805f987788e3
   FirebaseAuth: 12314b438fa76048540c8fb86d6cfc9e08595176
@@ -194,6 +199,7 @@ SPEC CHECKSUMS:
   FirebaseFirestore: 584e3f563142f63d20e9ec9c505370d674d44eba
   FirebaseInstallations: 033d199474164db20c8350736842a94fe717b960
   Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
+  flutter_native_splash: 52501b97d1c0a5f898d687f1646226c1f93c56ef
   FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
   GoogleAppMeasurement: 70ce9aa438cff1cfb31ea3e660bcc67734cb716e
   GoogleUtilities: 0759d1a57ebb953965c2dfe0ba4c82e95ccc2e34

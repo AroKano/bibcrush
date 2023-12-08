@@ -41,6 +41,7 @@ dependencies:
   firebase_core: ^2.24.0
   firebase_auth: ^4.15.0
   cloud_firestore: ^4.13.3
+  flutter_native_splash: ^2.3.8
 
   # Add other Firebase dependencies as needed
 
@@ -58,6 +59,15 @@ dev_dependencies:
   # rules and activating additional ones.
   flutter_lints: ^3.0.1
 
+
+ # mit befehl: flutter pub run flutter_native_splash:create
+ # bei veränderungen ausführen
+flutter_native_splash:
+  image: assets/bibcrush_logo_white.png
+  background_image: assets/gradient_background.png
+  android: true
+  ios: true
+
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
@@ -70,9 +80,8 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-  # assets:
-  #   - images/a_dot_burr.jpeg
-  #   - images/a_dot_ham.jpeg
+  assets:
+    - assets/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

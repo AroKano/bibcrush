@@ -21,7 +21,7 @@ class MainPage extends StatelessWidget {
           if(snapshot.hasData) {
             return HomePage();
           } else {
-            return LoginPage();
+            return StartPage();
           }
         },
       ),

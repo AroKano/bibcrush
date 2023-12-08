@@ -38,7 +38,6 @@ class StartPage extends StatelessWidget {
 
               SizedBox(height: 20), // abstand zwischen button und textfeld
 
-              // textfeld für "Kein Konto? Registrieren."
               Container(
                 width: double.infinity,
                 alignment: Alignment.center,
