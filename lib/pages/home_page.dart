@@ -26,9 +26,9 @@ class _HomePageState extends State<HomePage> {
           children: [
             Text('signed in as ${user.email!}'),
             MaterialButton(
-                onPressed: () {
-                  FirebaseAuth.instance.signOut();
-                },
+              onPressed: () {
+                FirebaseAuth.instance.signOut();
+              },
               color: Colors.deepPurple[200],
               child: const Text('sign out'),
             )
@@ -47,12 +47,13 @@ class _HomePageState extends State<HomePage> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => CreatePost(
-                  onPostCreated: () {
-                    // Refresh the Home Screen or perform any other actions
-                    print('Post created! Refreshing...');
-                  },
-                ),
+                builder: (context) => CreatePostPage(
+                    //FUNKTIONIERT NICHT!
+                    // onPostCreated: () {
+                    //   // Refresh the Home Screen or perform any other actions
+                    //   print('Post created! Refreshing...');
+                    // },
+                    ),
               ),
             );
           }
