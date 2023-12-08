@@ -1,7 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'custom_nav_bar.dart';
 import 'create_post.dart';
+import 'custom_nav_bar.dart';
+
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -42,20 +43,8 @@ class _HomePageState extends State<HomePage> {
             _selectedIndex = index;
           });
 
-          // Handle additional logic based on tab changes, if needed
-          if (index == 2) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => CreatePost(
-                  onPostCreated: () {
-                    // Refresh the Home Screen or perform any other actions
-                    print('Post created! Refreshing...');
-                  },
-                ),
-              ),
-            );
-          }
+
+
         },
       ),
     );

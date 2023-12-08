@@ -35,8 +35,7 @@ class CreatePostPage extends StatelessWidget {
                 // Handle cancel action
               },
               style: TextButton.styleFrom(
-                padding: EdgeInsets.zero,
-                primary: Color(0xFFE85555),
+                foregroundColor: Color(0xFFE85555), padding: EdgeInsets.zero,
                 minimumSize: Size(20, 20),
               ),
               child: Text('Cancel', style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
