@@ -1,24 +1,8 @@
 import 'package:flutter/material.dart';
 
-void main() {
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Create Post',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-      ),
-      home: CreatePostPage(),
-    );
-  }
-}
-
 class CreatePostPage extends StatelessWidget {
+  const CreatePostPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -35,10 +19,13 @@ class CreatePostPage extends StatelessWidget {
                 // Handle cancel action
               },
               style: TextButton.styleFrom(
-                foregroundColor: Color(0xFFE85555), padding: EdgeInsets.zero,
+                foregroundColor: Color(0xFFE85555),
+                padding: EdgeInsets.zero,
                 minimumSize: Size(20, 20),
               ),
-              child: Text('Cancel', style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
+              child: Text('Cancel',
+                  style:
+                      TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
             ),
           ),
           title: Text(''),
@@ -49,7 +36,11 @@ class CreatePostPage extends StatelessWidget {
                 onPressed: () {
                   // Handle post action
                 },
-                child: Text('Post', style: TextStyle(fontSize: 18.0, color: Color(0xFFFF7A00), fontWeight: FontWeight.bold)),
+                child: Text('Post',
+                    style: TextStyle(
+                        fontSize: 18.0,
+                        color: Color(0xFFFF7A00),
+                        fontWeight: FontWeight.bold)),
               ),
             ),
           ],
@@ -75,7 +66,10 @@ class CreatePostPage extends StatelessWidget {
               child: TextField(
                 decoration: InputDecoration(
                   hintText: 'Type something...',
-                  hintStyle: TextStyle(fontSize: 18.0, color: Color(0xFF939393), fontWeight: FontWeight.normal),
+                  hintStyle: TextStyle(
+                      fontSize: 18.0,
+                      color: Color(0xFF939393),
+                      fontWeight: FontWeight.normal),
                   border: InputBorder.none,
                   contentPadding: EdgeInsets.all(16),
                 ),
@@ -90,10 +84,14 @@ class CreatePostPage extends StatelessWidget {
           child: ListView(
             scrollDirection: Axis.horizontal,
             children: <Widget>[
-              _buildActionItem(context, 'Capture', Icons.camera_alt, Color(0xFFC6D2DD), Color(0xFF41698D)),
-              _buildActionItem(context, 'Upload', Icons.file_upload, Color(0xFFD6ECCF), Color(0xFF78C05F)),
-              _buildActionItem(context, 'Tag Location', Icons.location_on, Color(0xFFE2D1EF), Color(0xFF9D67C8)),
-              _buildActionItem(context, 'GIF', Icons.gif, Color(0xFFB2BAC5), Color(0xFF00193F)),
+              _buildActionItem(context, 'Capture', Icons.camera_alt,
+                  Color(0xFFC6D2DD), Color(0xFF41698D)),
+              _buildActionItem(context, 'Upload', Icons.file_upload,
+                  Color(0xFFD6ECCF), Color(0xFF78C05F)),
+              _buildActionItem(context, 'Tag Location', Icons.location_on,
+                  Color(0xFFE2D1EF), Color(0xFF9D67C8)),
+              _buildActionItem(context, 'GIF', Icons.gif, Color(0xFFB2BAC5),
+                  Color(0xFF00193F)),
             ],
           ),
         ),
@@ -101,7 +99,8 @@ class CreatePostPage extends StatelessWidget {
     );
   }
 
-  Widget _buildActionItem(BuildContext context, String text, IconData icon, Color color, Color iconColor) {
+  Widget _buildActionItem(BuildContext context, String text, IconData icon,
+      Color color, Color iconColor) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 4.0),
       child: InkWell(
@@ -109,7 +108,8 @@ class CreatePostPage extends StatelessWidget {
           print('$text tapped!');
         },
         child: Container(
-          padding: EdgeInsets.only(top: 20.0, bottom: 20.0, left: 15.0, right: 15.0),
+          padding:
+              EdgeInsets.only(top: 20.0, bottom: 20.0, left: 15.0, right: 15.0),
           decoration: BoxDecoration(
             color: color,
             borderRadius: BorderRadius.circular(10),
@@ -119,7 +119,9 @@ class CreatePostPage extends StatelessWidget {
             children: <Widget>[
               Icon(icon, color: iconColor),
               SizedBox(width: 8),
-              Text(text, style: TextStyle(color: Color(0xFF323232), fontWeight: FontWeight.bold)),
+              Text(text,
+                  style: TextStyle(
+                      color: Color(0xFF323232), fontWeight: FontWeight.bold)),
             ],
           ),
         ),
@@ -127,4 +129,3 @@ class CreatePostPage extends StatelessWidget {
     );
   }
 }
-
