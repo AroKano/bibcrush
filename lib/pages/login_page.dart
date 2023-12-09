@@ -1,11 +1,13 @@
+import 'package:bibcrush/components/my_button.dart';
+import 'package:bibcrush/components/my_textfield.dart';
 import 'package:bibcrush/pages/start_page.dart';
-import 'package:bibcrush/pages/home_page.dart'; // Importiere die Home-Seite
+import 'package:bibcrush/pages/home_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'forgot_pw_page.dart';
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+  const LoginPage({Key? key}) : super(key: key);
 
   @override
   State<LoginPage> createState() => _LoginPageState();
@@ -22,10 +24,10 @@ class _LoginPageState extends State<LoginPage> {
         password: _passwordController.text.trim(),
       );
 
-      // Anmeldung erfolgreich, navigiere zur Home-Seite
-      Navigator.pushReplacement(
+      // Anmeldung erfolgreich, navigiere zur Home-Seite und ersetze die aktuelle Seite
+      Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => const HomePage()), // Hier wird die Home-Seite aufgerufen
+        MaterialPageRoute(builder: (context) => const HomePage()),
       );
     } catch (e) {
       // Fehler bei der Anmeldung
@@ -67,7 +69,7 @@ class _LoginPageState extends State<LoginPage> {
             },
           ),
           title: const Text(
-            'Anmelden',
+            'Anmeldung',
             style: TextStyle(color: Colors.black),
           ),
         ),
@@ -89,12 +91,10 @@ class _LoginPageState extends State<LoginPage> {
                       const Icon(Icons.mail, color: Colors.grey),
                       const SizedBox(width: 10),
                       Expanded(
-                        child: TextField(
-                          controller: _emailController,
-                          decoration: const InputDecoration(
-                            hintText: 'E-Mail eingeben',
-                            border: InputBorder.none,
-                          ),
+                        child: MyTextField(
+                            hintText: "E-Mail eingeben",
+                            obscureText: false,
+                            controller: _emailController
                         ),
                       ),
                     ],
@@ -114,14 +114,11 @@ class _LoginPageState extends State<LoginPage> {
                       const Icon(Icons.lock, color: Colors.grey),
                       const SizedBox(width: 10),
                       Expanded(
-                        child: TextField(
-                          controller: _passwordController,
-                          obscureText: true,
-                          decoration: const InputDecoration(
+                        child: MyTextField(
                             hintText: 'Passwort eingeben',
-                            border: InputBorder.none,
-                          ),
-                        ),
+                            obscureText: true,
+                            controller: _passwordController
+                        )
                       ),
                     ],
                   ),
@@ -148,24 +145,10 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
               ),
+
               const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: confirm,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFFFF7A00),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
-                ),
-                child: Container(
-                  width: double.infinity,
-                  alignment: Alignment.center,
-                  child: const Text(
-                    'Bestätigen',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ),
-              ),
+
+              MyButton(text: "Anmelden", onTap: confirm)
             ],
           ),
         ),

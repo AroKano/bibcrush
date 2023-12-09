@@ -1,3 +1,4 @@
+import 'package:bibcrush/components/my_button.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'custom_nav_bar.dart';
@@ -7,7 +8,7 @@ class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
   @override
-  _HomePageState createState() => _HomePageState();
+  State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
@@ -35,23 +36,10 @@ class _HomePageState extends State<HomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text('Eingeloggt als ${user.email!}'),
-            ElevatedButton(
-              onPressed: _signOut,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFFFF7A00),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10.0),
-                ),
-              ),
-              child: Container(
-                width: double.infinity,
-                alignment: Alignment.center,
-                child: const Text(
-                  'Ausloggen',
-                  style: TextStyle(color: Colors.white),
-                ),
-              ),
-            ),
+
+            const SizedBox(height: 20), // platz zwischen den text containern
+
+            MyButton(text: "Ausloggen", onTap: _signOut)
           ],
         ),
       ),

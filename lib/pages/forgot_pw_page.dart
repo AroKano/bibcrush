@@ -1,3 +1,5 @@
+import 'package:bibcrush/components/my_button.dart';
+import 'package:bibcrush/components/my_textfield.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -96,7 +98,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           const Text(
-            'Enter Your Email and we will send you a password reset link',
+            'Geben Sie Ihre E-Mail-Adresse ein und wir senden Ihnen einen Link zum Zurücksetzen des Passworts',
             textAlign: TextAlign.center,
             style: TextStyle(fontSize: 18),
           ),
@@ -113,30 +115,15 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                   const Icon(Icons.mail, color: Colors.grey),
                   const SizedBox(width: 10),
                   Expanded(
-                    child: TextField(
-                      controller: _emailController,
-                      decoration: const InputDecoration(
-                        hintText: 'Enter Email',
-                        border: InputBorder.none,
-                      ),
-                    ),
+                    child: MyTextField(hintText: "E-Mail eingeben", obscureText: false, controller: _emailController)
                   ),
                 ],
               ),
             ),
           ),
           const SizedBox(height: 20),
-          MaterialButton(
-            onPressed: passwordReset,
-            color: const Color(0xFFFF7A00),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10.0),
-            ),
-            child: const Text(
-              'Reset Password',
-              style: TextStyle(color: Colors.white),
-            ),
-          )
+
+          MyButton(text: "Bestätigung", onTap: passwordReset)
         ],
       ),
     );
