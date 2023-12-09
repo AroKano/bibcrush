@@ -1,12 +1,9 @@
-import 'package:bibcrush/pages/profile_page.dart';
-import 'package:bibcrush/pages/register_page.dart';
-import 'package:bibcrush/pages/start_page.dart';
-
-import 'home_page.dart';
-import 'login_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
+import 'start_page.dart';
+import 'home_page.dart';
+import 'register_page.dart';
+import 'login_page.dart';
 import 'opening_page.dart';
 
 class MainPage extends StatelessWidget {
@@ -19,9 +16,9 @@ class MainPage extends StatelessWidget {
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot){
           if(snapshot.hasData) {
-            return HomePage();
+            return const HomePage();
           } else {
-            return StartPage();
+            return const StartPage();
           }
         },
       ),
