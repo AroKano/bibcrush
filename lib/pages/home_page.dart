@@ -1,11 +1,12 @@
 import 'package:bibcrush/components/my_button.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'custom_nav_bar.dart';
+import '../components/custom_nav_bar.dart';
 import 'start_page.dart'; // Importiere die Start-Seite
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  final VoidCallback showStartPage;
+  HomePage({Key? key, required this.showStartPage}) : super(key: key);
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -19,10 +20,10 @@ class _HomePageState extends State<HomePage> {
     await FirebaseAuth.instance.signOut();
 
     // Navigiere zur Start-Seite
-    Navigator.pushReplacement(
+    Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => const StartPage()),
-    );
+      MaterialPageRoute(builder: (context) => StartPage(showRegisterPage: widget.showStartPage),
+    ));
   }
 
   @override

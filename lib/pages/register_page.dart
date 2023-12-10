@@ -8,7 +8,8 @@ import 'package:bibcrush/helper/helper_functions.dart';
 
 class RegistrationPage extends StatefulWidget {
 
-  const RegistrationPage({Key? key}) : super(key: key);
+  final VoidCallback showLoginPage;
+  const RegistrationPage({Key? key, required this.showLoginPage}) : super(key: key);
 
   @override
   State<RegistrationPage> createState() => _RegistrationPage();
@@ -16,47 +17,11 @@ class RegistrationPage extends StatefulWidget {
 
   class _RegistrationPage extends State<RegistrationPage> {
 
-    final TextEditingController _usernameController = TextEditingController();
-    final TextEditingController _emailController = TextEditingController();
-    final TextEditingController _passwordController = TextEditingController();
-    final TextEditingController _confirmPwController = TextEditingController();
+    final  _usernameController = TextEditingController();
+    final  _emailController = TextEditingController();
+    final  _passwordController = TextEditingController();
+    final  _confirmPwController = TextEditingController();
 
-    void registerUser()  async {
-      // loading circle
-      showDialog(
-        context: context,
-        builder: (context) => const Center(
-          child: CircularProgressIndicator(),
-        ),
-      );// Center
-
-      // make sure passwords match
-      if (_passwordController.text != _confirmPwController.text) {
-        // pop loading circle
-        Navigator.pop(context);
-
-        // show error message to user
-        displayMessageToUser("Passwords don't match", context);
-      }
-
-      // try creating the user
-      try {
-        // create the user
-        UserCredential? userCredential =
-            await FirebaseAuth.instance.createUserWithEmailAndPassword(
-          email: _emailController.text,
-          password: _passwordController.text,
-        );
-
-        // pop loading circle
-        Navigator.pop(context);
-      } on FirebaseAuthException catch (e) {
-        // pop loading circle
-        Navigator.pop(context);
-        // display error message to user
-        displayMessageToUser(e.code, context);
-      }
-    }
 
     Future confirm() async{
     await FirebaseAuth.instance.signInWithEmailAndPassword(
@@ -68,6 +33,7 @@ class RegistrationPage extends StatefulWidget {
   @override
   void dispose() {
     _emailController.dispose();
+    _passwordController.dispose();
     super.dispose();
   }
 
@@ -80,16 +46,6 @@ class RegistrationPage extends StatefulWidget {
         appBar: AppBar( //WIDGET: app leiste oben
           backgroundColor: Colors.white,
           elevation: 0, // kein schatten
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back, color: Colors.black), // zurück-pfeil
-            onPressed: () {
-              // Navigiere zur Login-Seite
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const StartPage()),
-              );
-            },
-          ),
           title: const Text(
             'Registrieren',
             style: TextStyle(color: Colors.black),
@@ -263,11 +219,13 @@ class RegistrationPage extends StatefulWidget {
                     style: TextStyle(color: Color(0xFFFF7A00)),
                   ),
                   GestureDetector(
-                    onTap: () {    // Navigiere zur Login-Seite
+                    onTap: () {
+                      // Navigate to LoginPage
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => const StartPage()),
-                      );},
+                        MaterialPageRoute(builder: (context) => LoginPage(showStartPage: widget.showLoginPage,)),
+                      );
+                    },
                     child: const Text(
                       "Anmelden",
                       style: TextStyle(

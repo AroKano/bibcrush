@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'custom_nav_bar.dart';
+import '../components/custom_nav_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 //user

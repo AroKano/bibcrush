@@ -1,6 +1,6 @@
 {
-    "name": "bibcrush",
-    "short_name": "bibcrush",
+    "name": "BibCrush",
+    "short_name": "BibCrush",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
