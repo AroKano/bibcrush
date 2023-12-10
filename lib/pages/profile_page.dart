@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'custom_nav_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+//user
+final user = FirebaseAuth.instance.currentUser!;
+
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
 
@@ -10,9 +13,6 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  //user (folgende Zeile muss AUSKOMMENTIEREN werden)
-  //final currentuser = FirebaseAuth.instance.currentuser!;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -45,7 +45,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 children: [
                   TextSpan(
                     //AUSKOMMENTIEREN:
-                    //currentUser.username!,
+                    // currentUser.username!,
                     text: '@MaxMusty',
                     style: TextStyle(
                       color: Colors.grey,
@@ -70,25 +70,9 @@ class _ProfilePageState extends State<ProfilePage> {
 
 // @override
 // Widget build(BuildContext context) {
+//   int _selectedIndex = 0;
+
 //   return Scaffold(
-//     appBar: AppBar(
-//       title: const Text('Homepage'),
-//     ),
-//     body: Center(
-//       child: Column(
-//         mainAxisAlignment: MainAxisAlignment.center,
-//         children: [
-//           Text('signed in as ${user.email!}'),
-//           MaterialButton(
-//             onPressed: () {
-//               FirebaseAuth.instance.signOut();
-//             },
-//             color: Colors.deepPurple[200],
-//             child: const Text('sign out'),
-//           )
-//         ],
-//       ),
-//     ),
 //     bottomNavigationBar: CustomNavBar(
 //       selectedIndex: _selectedIndex,
 //       onTabChange: (index) {
