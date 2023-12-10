@@ -13,73 +13,124 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  int _selectedIndex = 0;
+
+  bool _selected = false;
+  bool _enabled = true;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.white,
-        appBar: AppBar(),
-        body: ListView(
-          children: [
-            const SizedBox(height: 50),
-
-            //profile pic
-            const Icon(
-              Icons.person,
-              size: 72,
+      appBar: AppBar(),
+      endDrawer: Drawer(
+          child: ListView(
+        children: [
+          ListTile(
+            leading: Icon(Icons.sunny),
+            title: Text("Light/Dark Mode"),
+            trailing: Switch(
+              onChanged: (bool? value) {
+                // This is called when the user toggles the switch.
+                setState(() {
+                  _enabled = value!;
+                });
+              },
+              value: _enabled,
             ),
-
-            //name
-            RichText(
-              text: TextSpan(
-                //AUSKOMMENTIEREN:
-                //currentUser.name!,
-                text: 'Max',
-                style: TextStyle(
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 24,
-                ),
-
-                //Benutzername
-
-                children: [
-                  TextSpan(
-                    //AUSKOMMENTIEREN:
-                    // currentUser.username!,
-                    text: '@MaxMusty',
-                    style: TextStyle(
-                      color: Colors.grey,
-                      fontSize: 20,
-                    ),
-                  ),
-                ],
+          ),
+          ListTile(
+            leading: Icon(Icons.notifications),
+            title: Text("Benachrichtigungen"),
+            trailing: Switch(
+              onChanged: (bool? value) {
+                // This is called when the user toggles the switch.
+                setState(() {
+                  _enabled = value!;
+                });
+              },
+              value: _enabled,
+            ),
+          ),
+          ListTile(
+            leading: Icon(Icons.key),
+            title: Text("Passwort ändern"),
+            onTap: () {},
+          ),
+          Expanded(
+            child: Align(
+              alignment: FractionalOffset.bottomCenter,
+              child: ListTile(
+                leading: Icon(Icons.logout),
+                title: Text("Log out"),
+                onTap: () {},
               ),
             ),
+          ),
+        ],
+      )),
 
-            //user caption
-            Text(
+      body: ListView(
+        children: [
+          const SizedBox(height: 50),
+
+          //profile pic
+          const Icon(
+            Icons.person,
+            size: 72,
+          ),
+
+          //name
+          RichText(
+            textAlign: TextAlign.center,
+            text: TextSpan(
+              //AUSKOMMENTIEREN:
+              //currentUser.name!,
+              text: 'Max',
+              style: TextStyle(
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+                fontSize: 24,
+              ),
+
+              //Benutzername
+
+              children: [
+                TextSpan(
+                  //AUSKOMMENTIEREN:
+                  // currentUser.username!,
+                  text: '@MaxMusty',
+                  style: TextStyle(
+                    color: Colors.grey,
+                    fontSize: 20,
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          //user caption
+          Container(
+            child: Text(
               //AUSKOMMENTIEREN:
               //currentUser.caption!,
               'Photographer | Music enthusiast | Coffee lover | Lifelong learner',
               textAlign: TextAlign.center,
             ),
-          ],
-        ));
+            alignment: Alignment.center,
+            margin: EdgeInsets.symmetric(horizontal: 80.0),
+            padding: EdgeInsets.all(10.0),
+          ),
+        ],
+      ),
+      //untere Leiste
+      bottomNavigationBar: CustomNavBar(
+        selectedIndex: _selectedIndex,
+        onTabChange: (index) {
+          setState(() {
+            _selectedIndex = index;
+          });
+        },
+      ),
+    );
   }
 }
-
-// @override
-// Widget build(BuildContext context) {
-//   int _selectedIndex = 0;
-
-//   return Scaffold(
-//     bottomNavigationBar: CustomNavBar(
-//       selectedIndex: _selectedIndex,
-//       onTabChange: (index) {
-//         setState(() {
-//           _selectedIndex = index;
-//         });
-//       },
-//     ),
-//   );
-// }
