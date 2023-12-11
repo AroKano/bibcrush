@@ -1,40 +1,145 @@
 import 'package:bibcrush/components/my_button.dart';
 import 'package:bibcrush/components/my_textfield.dart';
+import 'package:bibcrush/pages/home_page.dart';
 import 'package:bibcrush/pages/login_page.dart';
-import 'package:bibcrush/pages/start_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:bibcrush/helper/helper_functions.dart';
 
 class RegistrationPage extends StatefulWidget {
-
   final VoidCallback showLoginPage;
   const RegistrationPage({Key? key, required this.showLoginPage}) : super(key: key);
 
   @override
-  State<RegistrationPage> createState() => _RegistrationPage();
+  State<RegistrationPage> createState() => _RegistrationPageState();
 }
 
-  class _RegistrationPage extends State<RegistrationPage> {
-
-    final  _usernameController = TextEditingController();
-    final  _emailController = TextEditingController();
-    final  _passwordController = TextEditingController();
-    final  _confirmPwController = TextEditingController();
-
-
-    Future confirm() async{
-    await FirebaseAuth.instance.signInWithEmailAndPassword(
-      email: _emailController.text.trim(),
-      password: _passwordController.text.trim()
-    );
-  }
+class _RegistrationPageState extends State<RegistrationPage> {
+  final _vornameController = TextEditingController();
+  final _nachnameController = TextEditingController();
+  final _usernameController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _confirmpasswordController = TextEditingController();
+  String usernameError = "";
+  String emailError = "";
+  String passwordError = "";
+  String confirmPasswordError = "";
+  String vornameError = "";
+  String nachnameError = "";
 
   @override
   void dispose() {
+    _vornameController.dispose();
+    _nachnameController.dispose();
+    _usernameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
+    _confirmpasswordController.dispose();
     super.dispose();
+  }
+
+  Future signUp() async {
+    // Clear previous error messages
+    setState(() {
+      usernameError = "";
+      emailError = "";
+      passwordError = "";
+      confirmPasswordError = "";
+      vornameError = "";
+      nachnameError = "";
+    });
+
+    if (_vornameController.text.trim().isEmpty) {
+      setState(() {
+        vornameError = "Vorname ist erforderlich";
+      });
+      showSnackBar("Vorname ist erforderlich");
+      return;
+    }
+
+    if (_nachnameController.text.trim().isEmpty) {
+      setState(() {
+        nachnameError = "Nachname ist erforderlich";
+      });
+      showSnackBar("Nachname is ist erforderlich");
+      return;
+    }
+
+    if (_usernameController.text.trim().isEmpty) {
+      setState(() {
+        usernameError = "Benutzername ist erforderlich";
+      });
+      showSnackBar("Benutzername ist erforderlich");
+      return;
+    }
+
+    if (_emailController.text.trim().isEmpty) {
+      setState(() {
+        emailError = "E-Mail Adresse ist erforderlich";
+      });
+      showSnackBar("E-Mail Adresse ist erforderlich");
+      return;
+    } else if (!isEmailValid(_emailController.text.trim())) {
+      setState(() {
+        emailError = "Ungültige E-Mail Adresse";
+      });
+      showSnackBar("Ungültige E-Mail Adresse");
+      return;
+    }
+
+    if (_passwordController.text.trim().isEmpty) {
+      setState(() {
+        passwordError = "Passwort ist erforderlich";
+      });
+      showSnackBar("Passwort ist erforderlich");
+      return;
+    }
+
+    if (!passwordConfirmed()) {
+      // Handle password not confirmed error
+      showSnackBar("Passwörter stimmen nicht überein");
+      return;
+    }
+
+    try {
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: _emailController.text.trim(),
+        password: _passwordController.text.trim(),
+      );
+
+      // Registration successful, navigate to HomePage
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => HomePage(showStartPage: widget.showLoginPage)),
+      );
+    } catch (e) {
+      // Handle registration error
+      showSnackBar("Registrierung fehlgeschlagen: $e");
+    }
+  }
+
+  bool isEmailValid(String email) {
+    // Use a simple regex to check if the email format is valid
+    return RegExp(r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$").hasMatch(email);
+  }
+
+  void showSnackBar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        duration: Duration(seconds: 3),
+      ),
+    );
+  }
+
+  bool passwordConfirmed() {
+    if (_passwordController.text.trim() != _confirmpasswordController.text.trim()) {
+      setState(() {
+        confirmPasswordError = "Passwörter stimmen nicht überein";
+      });
+      return false;
+    }
+    return true;
   }
 
   @override
@@ -42,10 +147,10 @@ class RegistrationPage extends StatefulWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-        backgroundColor: Colors.white, // weißer hintergrund
-        appBar: AppBar( //WIDGET: app leiste oben
+        backgroundColor: Colors.white,
+        appBar: AppBar(
           backgroundColor: Colors.white,
-          elevation: 0, // kein schatten
+          elevation: 0,
           title: const Text(
             'Registrieren',
             style: TextStyle(color: Colors.black),
@@ -56,24 +161,22 @@ class RegistrationPage extends StatefulWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // text container für den vorname
               Container(
                 decoration: BoxDecoration(
-                  border: Border.all(color: Colors.grey), // grauer rahmen
-                  borderRadius:
-                      BorderRadius.circular(10.0), // abgerundete ecken
+                  border: Border.all(color: Colors.grey),
+                  borderRadius: BorderRadius.circular(10.0),
                 ),
-                child: const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16.0),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   child: Row(
                     children: [
-                      SizedBox(width: 10),
+                      const SizedBox(width: 10),
                       Expanded(
                         child: TextField(
                           decoration: InputDecoration(
                             hintText: 'Vorname',
-                            border: InputBorder.none,
                           ),
+                          controller: _vornameController,
                         ),
                       ),
                     ],
@@ -81,26 +184,30 @@ class RegistrationPage extends StatefulWidget {
                 ),
               ),
 
-              const SizedBox(height: 20), // platz zwischen den text containern
+              // Add this Text widget below the TextField
+              Text(
+                vornameError,
+                style: TextStyle(color: Colors.red), // Customize the text color
+              ),
 
-              // text container für den nachname
+              const SizedBox(height: 20),
+
               Container(
                 decoration: BoxDecoration(
-                  border: Border.all(color: Colors.grey), // grauer rahmen
-                  borderRadius:
-                      BorderRadius.circular(10.0), // abgerundete ecken
+                  border: Border.all(color: Colors.grey),
+                  borderRadius: BorderRadius.circular(10.0),
                 ),
-                child: const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16.0),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   child: Row(
                     children: [
-                      SizedBox(width: 10),
+                      const SizedBox(width: 10),
                       Expanded(
                         child: TextField(
                           decoration: InputDecoration(
                             hintText: 'Nachname',
-                            border: InputBorder.none,
                           ),
+                          controller: _nachnameController,
                         ),
                       ),
                     ],
@@ -108,9 +215,16 @@ class RegistrationPage extends StatefulWidget {
                 ),
               ),
 
-              const SizedBox(height: 20), // platz zwischen den text containern
+              // Add this Text widget below the TextField
+              Text(
+                nachnameError,
+                style: TextStyle(color: Colors.red), // Customize the text color
+              ),
 
-              // text container für den benutzernamen
+              // Your existing UI code...
+
+              const SizedBox(height: 20),
+
               Container(
                 decoration: BoxDecoration(
                   border: Border.all(color: Colors.grey),
@@ -123,19 +237,24 @@ class RegistrationPage extends StatefulWidget {
                       const SizedBox(width: 10),
                       Expanded(
                         child: MyTextField(
-                            hintText: "Benutzername",
-                            obscureText: false,
-                            controller: _usernameController
-                        )
+                          hintText: "Benutzername",
+                          obscureText: false,
+                          controller: _usernameController,
+                        ),
                       ),
                     ],
                   ),
                 ),
               ),
 
+              // Add this Text widget below the TextField
+              Text(
+                usernameError,
+                style: TextStyle(color: Colors.red), // Customize the text color
+              ),
+
               const SizedBox(height: 20),
 
-              // text container für die e-mail
               Container(
                 decoration: BoxDecoration(
                   border: Border.all(color: Colors.grey),
@@ -148,19 +267,24 @@ class RegistrationPage extends StatefulWidget {
                       const SizedBox(width: 10),
                       Expanded(
                         child: MyTextField(
-                            hintText: "E-Mail",
-                            obscureText: false,
-                            controller: _emailController,
-                        )
+                          hintText: "E-Mail",
+                          obscureText: false,
+                          controller: _emailController,
+                        ),
                       ),
                     ],
                   ),
                 ),
               ),
 
+              // Add this Text widget below the TextField
+              Text(
+                emailError,
+                style: TextStyle(color: Colors.red), // Customize the text color
+              ),
+
               const SizedBox(height: 20),
 
-              // text container für das passwort
               Container(
                 decoration: BoxDecoration(
                   border: Border.all(color: Colors.grey),
@@ -173,19 +297,24 @@ class RegistrationPage extends StatefulWidget {
                       const SizedBox(width: 10),
                       Expanded(
                         child: MyTextField(
-                            hintText: "Passwort",
-                            obscureText: true,
-                            controller: _passwordController,
-                        )
+                          hintText: "Passwort",
+                          obscureText: true,
+                          controller: _passwordController,
+                        ),
                       ),
                     ],
                   ),
                 ),
               ),
 
+              // Add this Text widget below the TextField
+              Text(
+                passwordError,
+                style: TextStyle(color: Colors.red), // Customize the text color
+              ),
+
               const SizedBox(height: 20),
 
-              // text container für das passwort bestätigen
               Container(
                 decoration: BoxDecoration(
                   border: Border.all(color: Colors.grey),
@@ -198,19 +327,24 @@ class RegistrationPage extends StatefulWidget {
                       const SizedBox(width: 10),
                       Expanded(
                         child: MyTextField(
-                            hintText: "Passwort bestätigen",
-                            obscureText: true,
-                            controller: _confirmPwController,
-                        )
+                          hintText: "Passwort bestätigen",
+                          obscureText: true,
+                          controller: _confirmpasswordController,
+                        ),
                       ),
                     ],
                   ),
                 ),
               ),
 
+              // Add this Text widget below the TextField
+              Text(
+                confirmPasswordError,
+                style: TextStyle(color: Colors.red), // Customize the text color
+              ),
+
               const SizedBox(height: 20),
 
-              // text "Du hast bereits ein Konto? Anmelden." in orange
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -220,10 +354,9 @@ class RegistrationPage extends StatefulWidget {
                   ),
                   GestureDetector(
                     onTap: () {
-                      // Navigate to LoginPage
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => LoginPage(showStartPage: widget.showLoginPage,)),
+                        MaterialPageRoute(builder: (context) => LoginPage(showStartPage: widget.showLoginPage)),
                       );
                     },
                     child: const Text(
@@ -239,8 +372,7 @@ class RegistrationPage extends StatefulWidget {
 
               const SizedBox(height: 20),
 
-              // button "Bestätigen" mit abgerundeten ecken
-              MyButton(text: "Bestätigung", onTap: confirm)
+              MyButton(text: "Registrieren", onTap: signUp),
             ],
           ),
         ),
@@ -248,4 +380,3 @@ class RegistrationPage extends StatefulWidget {
     );
   }
 }
-
