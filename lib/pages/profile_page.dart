@@ -8,7 +8,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 final user = FirebaseAuth.instance.currentUser!;
 
 class ProfilePage extends StatefulWidget {
-  const ProfilePage({super.key});
+  final VoidCallback showStartPage;
+
+  ProfilePage({Key? key, required this.showStartPage}) : super(key: key);
 
   @override
   State<ProfilePage> createState() => _ProfilePageState();
@@ -23,11 +25,11 @@ class _ProfilePageState extends State<ProfilePage> {
   Future<void> _signOut() async {
     await FirebaseAuth.instance.signOut();
 
-    // Navigiere zur Start-Seite
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => const StartPage()),
-    );
+    // Navigiere zur Start-Seite FUNKTIONIERT NOCH NICHT
+    // Navigator.push(
+    //   context,
+    //   MaterialPageRoute(builder: (context) => const StartPage()),
+    // );
   }
 
   Future<void> _changePassword(String password) async {
@@ -90,7 +92,7 @@ class _ProfilePageState extends State<ProfilePage> {
               leading: Icon(Icons.logout),
               title: Text("Ausloggen"),
               onTap: () {
-                _signOut();
+                // _signOut();
               },
             ),
           ],
