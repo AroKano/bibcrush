@@ -3,10 +3,15 @@ import 'package:flutter/material.dart';
 import 'register_page.dart';
 import 'login_page.dart';
 
-class StartPage extends StatelessWidget {
+class StartPage extends StatefulWidget {
+  final VoidCallback showRegisterPage;
+  const StartPage({Key? key, required this.showRegisterPage, required }) : super(key: key);
 
-  const StartPage({Key? key}) : super(key: key);
+  @override
+  _StartPageState createState() => _StartPageState();
+}
 
+class _StartPageState extends State<StartPage> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -27,9 +32,10 @@ class StartPage extends StatelessWidget {
               MyButton(
                 text: 'Login',
                 onTap: () {
+                  // Navigate to LoginPage
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => LoginPage()),
+                    MaterialPageRoute(builder: (context) => LoginPage(showStartPage: widget.showRegisterPage,)),
                   );
                 },
               ),
@@ -42,11 +48,13 @@ class StartPage extends StatelessWidget {
                     style: TextStyle(color: Color(0xFFFF7A00)),
                   ),
                   GestureDetector(
-                    onTap: () {    // Navigiere zur Login-Seite
+                    onTap: () {
+                      // Navigate to LoginPage
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => const RegistrationPage()),
-                      );},
+                        MaterialPageRoute(builder: (context) => RegistrationPage(showLoginPage: widget.showRegisterPage,)),
+                      );
+                    },
                     child: const Text(
                       "Hier registrieren!",
                       style: TextStyle(

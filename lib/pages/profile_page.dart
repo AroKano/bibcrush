@@ -1,7 +1,7 @@
 import 'package:bibcrush/pages/home_page.dart';
 import 'package:bibcrush/pages/start_page.dart';
 import 'package:flutter/material.dart';
-import 'custom_nav_bar.dart';
+import '../components/custom_nav_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 //user

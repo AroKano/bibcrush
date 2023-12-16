@@ -7,7 +7,8 @@ import 'package:flutter/material.dart';
 import 'forgot_pw_page.dart';
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({Key? key}) : super(key: key);
+  final VoidCallback showStartPage;
+  const LoginPage({Key? key, required this.showStartPage}) : super(key: key);
 
   @override
   State<LoginPage> createState() => _LoginPageState();
@@ -17,7 +18,9 @@ class _LoginPageState extends State<LoginPage> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
-  Future<void> confirm() async {
+
+
+  Future<void> signIn() async {
     try {
       await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: _emailController.text.trim(),
@@ -25,10 +28,11 @@ class _LoginPageState extends State<LoginPage> {
       );
 
       // Anmeldung erfolgreich, navigiere zur Home-Seite und ersetze die aktuelle Seite
-      Navigator.push(
+      Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const HomePage()),
+        MaterialPageRoute(builder: (context) => HomePage(showStartPage: widget.showStartPage)),
       );
+
     } catch (e) {
       // Fehler bei der Anmeldung
       print("Anmeldungsfehler: $e");
@@ -42,6 +46,7 @@ class _LoginPageState extends State<LoginPage> {
       );
     }
   }
+
 
   @override
   void dispose() {
@@ -59,14 +64,20 @@ class _LoginPageState extends State<LoginPage> {
         appBar: AppBar(
           backgroundColor: Colors.white,
           elevation: 0,
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back, color: Colors.black),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const StartPage()),
-              );
-            },
+          leading: GestureDetector(
+            child: IconButton(
+              icon: const Icon(Icons.arrow_back, color: Colors.black),
+              onPressed: () {
+                // Navigate to LoginPage
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => StartPage(showRegisterPage: widget.showStartPage),
+                  ),
+                );
+              },
+
+            ),
           ),
           title: const Text(
             'Anmeldung',
@@ -148,7 +159,7 @@ class _LoginPageState extends State<LoginPage> {
 
               const SizedBox(height: 20),
 
-              MyButton(text: "Anmelden", onTap: confirm)
+              MyButton(text: "Anmelden", onTap: signIn)
             ],
           ),
         ),
