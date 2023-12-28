@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_nav_bar/google_nav_bar.dart';
 
 class CustomNavBar extends StatelessWidget {
   final Function(int) onTabChange;
@@ -14,62 +13,43 @@ class CustomNavBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(
-        color: Colors.black,
-        boxShadow: [
-          BoxShadow(blurRadius: 20, color: Colors.black.withOpacity(.3)),
-        ],
-      ),
+      color: Colors.transparent,
       child: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8),
-          child: GNav(
-            gap: 8,
-            activeColor: Colors.white,
-            iconSize: 24,
-            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-            duration: Duration(milliseconds: 800),
-            tabBackgroundColor: Colors.black,
-            tabs: [
-              GButton(
-                icon: Icons.home,
-                text: 'Home',
-                iconColor: Colors.white,
-                textColor: Colors.white,
-                backgroundColor: Colors.black,
-              ),
-              GButton(
-                icon: Icons.search,
-                text: 'Search',
-                iconColor: Colors.white,
-                textColor: Colors.white,
-                backgroundColor: Colors.black,
-              ),
-              GButton(
-                icon: Icons.add_box,
-                text: 'Post',
-                iconColor: Colors.white,
-                textColor: Colors.white,
-                backgroundColor: Colors.black,
-              ),
-              GButton(
-                icon: Icons.inbox,
-                text: 'Inbox',
-                iconColor: Colors.white,
-                textColor: Colors.white,
-                backgroundColor: Colors.black,
-              ),
-              GButton(
-                icon: Icons.settings,
-                text: 'Settings',
-                iconColor: Colors.white,
-                textColor: Colors.white,
-                backgroundColor: Colors.black,
-              ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              buildNavItem(Icons.home, 0),
+              buildNavItem(Icons.search, 1),
+              buildNavItem(Icons.add_box, 2),
+              buildNavItem(Icons.inbox, 3),
+              buildNavItem(Icons.person_rounded, 4),
             ],
-            selectedIndex: selectedIndex ?? 0, // Default to 0 if selectedIndex is null
-            onTabChange: onTabChange,
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget buildNavItem(IconData icon, int index) {
+    return GestureDetector(
+      onTap: () {
+        onTabChange(index);
+      },
+      child: Container(
+        padding: EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          border: Border(
+            bottom: BorderSide(
+              color: selectedIndex == index ? Color(0xFFFF7A00) : Colors.transparent,
+              width: 2,
+            ),
+          ),
+        ),
+        child: Icon(
+          icon,
+          color: selectedIndex == index ? Color(0xFFFF7A00) : Colors.black,
         ),
       ),
     );
