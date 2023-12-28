@@ -1,4 +1,5 @@
 import 'package:bibcrush/components/my_button.dart';
+import 'package:bibcrush/pages/profile_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../components/custom_nav_bar.dart';
@@ -21,9 +22,11 @@ class _HomePageState extends State<HomePage> {
 
     // Navigiere zur Start-Seite
     Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => StartPage(showRegisterPage: widget.showStartPage),
-    ));
+        context,
+        MaterialPageRoute(
+          builder: (context) =>
+              StartPage(showRegisterPage: widget.showStartPage),
+        ));
   }
 
   @override
@@ -31,6 +34,17 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Feed'),
+        leading: IconButton(
+          icon: const Icon(Icons.person, color: Colors.black),
+          onPressed: () {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ProfilePage(),
+              ),
+            );
+          },
+        ),
       ),
       body: Center(
         child: Column(
