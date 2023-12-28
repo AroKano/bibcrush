@@ -1,18 +1,5 @@
 import 'package:flutter/material.dart';
 
-void main() {
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: CreatePostPage(),
-    );
-  }
-}
-
 class CreatePostPage extends StatelessWidget {
   const CreatePostPage({Key? key}) : super(key: key);
 
@@ -38,7 +25,7 @@ class CreatePostPage extends StatelessWidget {
               ),
               child: Text('Cancel',
                   style:
-                  TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
+                      TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
             ),
           ),
           title: Text(''),
@@ -117,7 +104,8 @@ class CreatePostPage extends StatelessWidget {
           print('$text tapped!');
         },
         child: Container(
-          padding: EdgeInsets.only(top: 20.0, bottom: 20.0, left: 15.0, right: 15.0),
+          padding:
+              EdgeInsets.only(top: 20.0, bottom: 20.0, left: 15.0, right: 15.0),
           decoration: BoxDecoration(
             color: color,
             borderRadius: BorderRadius.circular(10),

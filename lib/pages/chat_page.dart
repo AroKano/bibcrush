@@ -1,23 +1,5 @@
 import 'package:flutter/material.dart';
 
-void main() {
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Chat UI',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-      ),
-      home: ChatScreen(),
-    );
-  }
-}
-
 class Message {
   String text;
   bool sender; // true for sender, false for receiver
@@ -41,7 +23,8 @@ class _ChatScreenState extends State<ChatScreen> {
     if (text.trim().isNotEmpty) {
       _textController.clear();
       setState(() {
-        _isComposingMessage = false; // Reset the flag when the message is submitted
+        _isComposingMessage =
+            false; // Reset the flag when the message is submitted
         // Add the message to the message list
         messages.insert(0, Message(text: text, sender: true));
       });
@@ -116,20 +99,23 @@ class _ChatScreenState extends State<ChatScreen> {
               itemBuilder: (context, index) {
                 final message = messages[index];
                 return Align(
-                  alignment: message.sender ? Alignment.centerRight : Alignment.centerLeft,
+                  alignment: message.sender
+                      ? Alignment.centerRight
+                      : Alignment.centerLeft,
                   child: Container(
                     margin: const EdgeInsets.all(5.0),
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 16.0, vertical: 12.0),
                     decoration: BoxDecoration(
                       color: message.sender ? Color(0xFFFFE8D3) : Colors.black,
                       borderRadius: BorderRadius.circular(20.0),
                     ),
                     child: Text(
-                        message.text,
-                        style: TextStyle(
-                          fontSize: 18.0,
-                          color: message.sender ? Colors.black : Colors.white,
-                        ),
+                      message.text,
+                      style: TextStyle(
+                        fontSize: 18.0,
+                        color: message.sender ? Colors.black : Colors.white,
+                      ),
                     ),
                   ),
                 );
@@ -145,32 +131,40 @@ class _ChatScreenState extends State<ChatScreen> {
                     controller: _textController,
                     decoration: InputDecoration(
                       hintText: 'Type a message',
-                      hintStyle: TextStyle( fontSize: 18.0, color: Color(0xFFBEBEBE)),
+                      hintStyle:
+                          TextStyle(fontSize: 18.0, color: Color(0xFFBEBEBE)),
                       border: OutlineInputBorder(),
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(25.0),
-                        borderSide: BorderSide(color: Color(0xFFBEBEBE), width: 1.0),
+                        borderSide:
+                            BorderSide(color: Color(0xFFBEBEBE), width: 1.0),
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(25.0),
-                        borderSide: BorderSide(color: Color(0xFFFF7A00), width: 2.0),
+                        borderSide:
+                            BorderSide(color: Color(0xFFFF7A00), width: 2.0),
                       ),
                       filled: true,
                       fillColor: Colors.white,
-                      contentPadding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
+                      contentPadding: EdgeInsets.symmetric(
+                          horizontal: 20.0, vertical: 20.0),
                       suffixIcon: Container(
                         decoration: BoxDecoration(
-                          color: _isComposingMessage ? Color(0xFFFF7A00) : Colors.grey,
+                          color: _isComposingMessage
+                              ? Color(0xFFFF7A00)
+                              : Colors.grey,
                           shape: BoxShape.circle,
                         ),
                         margin: EdgeInsets.only(right: 8.0),
                         child: IconButton(
                           icon: Icon(Icons.send_rounded, color: Colors.white),
-                          onPressed: _isComposingMessage ? () => _handleSubmitted(_textController.text) : null,
+                          onPressed: _isComposingMessage
+                              ? () => _handleSubmitted(_textController.text)
+                              : null,
                         ),
                       ),
                     ),
-                    style: TextStyle( fontSize: 18.0, color: Colors.black),
+                    style: TextStyle(fontSize: 18.0, color: Colors.black),
                     onSubmitted: _handleSubmitted,
                   ),
                 ),

@@ -17,36 +17,20 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   int _selectedIndex = 0;
-
   bool _lightDarkModeEnabled = true;
   bool _notificationsEnabled = true;
 
-  // <Future<void> _signOut() async {
-  //   await FirebaseAuth.instance.signOut();
-
-  //   // Navigiere zur Start-Seite FUNKTIONIERT NOCH NICHT
-  //   // Navigator.pushReplacement(
-  //   //   context,
-  //   //   MaterialPageRoute(
-  //   //       builder: (context) => const StartPage(
-  //   //             showStartPage: widget.showRegisterPage,
-  //   //           )),
-  //   // );
-  // }>
-
-  Future<void> _signOut() async {
-    await FirebaseAuth.instance.signOut();
-  }
-
-  Future<void> _changePassword(String password) async {
-    //Pass in the password to updatePassword.
-    currentUser.updatePassword(password).then((_) {
-      print("Successfully changed password");
-    }).catchError((error) {
-      print("Password can't be changed" + error.toString());
-      //This might happen, when the wrong password is in, the user isn't found, or if the user hasn't logged in recently.
-    });
-  }
+  String _name = 'Max';
+  String _username = '@MaxMusty';
+  String _caption =
+      'Photographer | Music enthusiast | Coffee lover | Lifelong learner';
+  String _posts = '0';
+  String _followers = '0';
+  String _following = '0';
+  String _crushes = '0';
+  String _studying = 'Computer Science';
+  String _semester = '3rd Semester';
+  String _faculty = 'Engineering';
 
   @override
   Widget build(BuildContext context) {
@@ -115,22 +99,17 @@ class _ProfilePageState extends State<ProfilePage> {
           ],
         ),
       ),
-//User profile UI
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           const SizedBox(height: 50),
-
-          // profile pic
           const Icon(
             Icons.person,
             size: 72,
           ),
-
-          // name
           RichText(
             text: TextSpan(
-              text: 'Max',
+              text: _name,
               style: TextStyle(
                 color: Colors.black,
                 fontWeight: FontWeight.bold,
@@ -138,7 +117,7 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
               children: [
                 TextSpan(
-                  text: '@MaxMusty',
+                  text: _username,
                   style: TextStyle(
                     color: Colors.grey,
                     fontSize: 20,
@@ -147,17 +126,14 @@ class _ProfilePageState extends State<ProfilePage> {
               ],
             ),
           ),
-
-          // user caption
           Container(
             child: Text(
-              'Photographer | Music enthusiast | Coffee lover | Lifelong learner',
+              _caption,
               textAlign: TextAlign.center,
             ),
             margin: EdgeInsets.symmetric(horizontal: 80.0),
             padding: EdgeInsets.all(10.0),
           ),
-          //edit button
           TextButton(
             onPressed: () {
               // Navigate to the edit profile screen or show a dialog
@@ -165,24 +141,21 @@ class _ProfilePageState extends State<ProfilePage> {
             },
             style: ButtonStyle(
               shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                borderRadius:
-                    BorderRadius.circular(8), // Set to 0 for a squared button
+                borderRadius: BorderRadius.circular(8),
               )),
               side: MaterialStateProperty.all(BorderSide(
-                color: Colors.grey, // Set the color of the outline
-                width: 0.5, // Set the width of the outline
+                color: Colors.grey,
+                width: 0.5,
               )),
             ),
             child: Text(
               "Edit Profile",
               style: TextStyle(
-                color: Colors.blue, // Set text color to blue
+                color: Colors.blue,
               ),
             ),
           ),
           SizedBox(height: 10),
-
-          //user statistics
           Container(
             decoration: BoxDecoration(
               border: Border(
@@ -195,18 +168,58 @@ class _ProfilePageState extends State<ProfilePage> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  _buildStatisticColumn("Posts", "0"),
-                  _buildStatisticColumn("Followers", "0"),
-                  _buildStatisticColumn("Following", "0"),
-                  _buildStatisticColumn("Crushes", "0"),
+                  _buildStatisticColumn("Posts", _posts),
+                  _buildStatisticColumn("Followers", _followers),
+                  _buildStatisticColumn("Following", _following),
+                  _buildStatisticColumn("Crushes", _crushes),
+                ],
+              ),
+            ),
+          ),
+          // TabBar and TabBarView
+          Expanded(
+            child: DefaultTabController(
+              length: 2, // Number of tabs
+              initialIndex: 0, // Index of the initially selected tab
+              child: Column(
+                children: [
+                  TabBar(
+                    labelColor: Colors.orange,
+                    unselectedLabelColor: Colors.grey,
+                    indicatorColor: Colors.orange,
+                    tabs: [
+                      Tab(text: "My Posts"),
+                      Tab(text: "My Infos"),
+                    ],
+                  ),
+                  Expanded(
+                    child: TabBarView(
+                      children: [
+                        // Tab 1: My Posts
+                        Center(
+                          child: Text("No posts yet."),
+                        ),
+
+                        // Tab 2: My Infos
+                        Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text("Studying: $_studying"),
+                              Text("Semester: $_semester"),
+                              Text("Faculty: $_faculty"),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ],
               ),
             ),
           ),
         ],
       ),
-
-      //untere Leiste
       bottomNavigationBar: CustomNavBar(
         selectedIndex: _selectedIndex,
         onTabChange: (index) {
@@ -217,73 +230,101 @@ class _ProfilePageState extends State<ProfilePage> {
       ),
     );
   }
-}
 
-Widget _buildStatisticColumn(String title, String value) {
-  return Column(
-    children: [
-      Text(
-        value,
-        style: TextStyle(
-          fontSize: 18,
-          fontWeight: FontWeight.bold,
+  Widget _buildStatisticColumn(String title, String value) {
+    return Column(
+      children: [
+        Text(
+          value,
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
         ),
-      ),
-      SizedBox(height: 4),
-      Text(
-        title,
-        style: TextStyle(
-          fontSize: 14,
-          color: Colors.grey,
+        SizedBox(height: 4),
+        Text(
+          title,
+          style: TextStyle(
+            fontSize: 14,
+            color: Colors.grey,
+          ),
         ),
-      ),
-    ],
-  );
-}
+      ],
+    );
+  }
 
-void _showEditProfileDialog(BuildContext context) {
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: Text("Edit Profile"),
-        content: Column(
-          children: [
-            // Create form fields for editing name, username, and caption
-            TextFormField(
-              // Implement logic to update the name
-              // initialValue: currentUser.name,
-              decoration: InputDecoration(labelText: "Name"),
+  Future<void> _signOut() async {
+    await FirebaseAuth.instance.signOut();
+  }
+
+  Future<void> _changePassword(String password) async {
+    //Pass in the password to updatePassword.
+    currentUser.updatePassword(password).then((_) {
+      print("Successfully changed password");
+    }).catchError((error) {
+      print("Password can't be changed" + error.toString());
+      //This might happen, when the wrong password is in, the user isn't found, or if the user hasn't logged in recently.
+    });
+  }
+
+  void _showEditProfileDialog(BuildContext context) {
+    String newName = _name;
+    String newUsername = _username;
+    String newCaption = _caption;
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Edit Profile"),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextFormField(
+                onChanged: (value) {
+                  newName = value;
+                },
+                initialValue: _name,
+                decoration: InputDecoration(labelText: "Name"),
+              ),
+              TextFormField(
+                onChanged: (value) {
+                  newUsername = value;
+                },
+                initialValue: _username,
+                decoration: InputDecoration(labelText: "Username"),
+              ),
+              TextFormField(
+                onChanged: (value) {
+                  newCaption = value;
+                },
+                initialValue: _caption,
+                decoration: InputDecoration(labelText: "Caption"),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text("Cancel"),
             ),
-            TextFormField(
-              // Implement logic to update the username
-              // initialValue: currentUser.username,
-              decoration: InputDecoration(labelText: "Benutzername"),
-            ),
-            TextFormField(
-              // Implement logic to update the caption
-              // initialValue: currentUser.caption,
-              decoration: InputDecoration(labelText: "Beschreibung"),
+            TextButton(
+              onPressed: () {
+                // Save the edited profile information
+                setState(() {
+                  _name = newName;
+                  _username = newUsername;
+                  _caption = newCaption;
+                });
+                Navigator.of(context).pop();
+              },
+              child: Text("Save"),
             ),
           ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            child: Text("Cancel"),
-          ),
-          TextButton(
-            onPressed: () {
-              // Implement logic to save the edited profile information
-
-              Navigator.of(context).pop();
-            },
-            child: Text("Save"),
-          ),
-        ],
-      );
-    },
-  );
+        );
+      },
+    );
+  }
 }
