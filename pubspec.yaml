@@ -39,8 +39,8 @@ dependencies:
   google_nav_bar: ^5.0.6
   easy_dashboard: ^0.0.2
   firebase_core: ^2.24.0
-  firebase_auth: ^4.15.2
-  cloud_firestore: ^4.13.3
+  firebase_auth: ^4.15.3
+  cloud_firestore: ^4.13.6
   flutter_native_splash: ^2.3.8
 
   # Add other Firebase dependencies as needed

@@ -13,71 +13,35 @@ class ForgotPasswordPage extends StatefulWidget {
 class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
   final _emailController = TextEditingController();
 
-  Future<void> passwordReset() async {
-    try {
-      await FirebaseAuth.instance.signOut(); // Log out the current user
-
-      var methods = await FirebaseAuth.instance.fetchSignInMethodsForEmail(_emailController.text.trim());
-
-      if (methods.isEmpty) {
-        // No user found with this email address
-        showDialog(
-          context: context,
-          builder: (context) {
-            return const AlertDialog(
-              content: Text("No user found with this email address."),
-            );
-          },
-        );
-      } else {
-        // Email found, send the password reset email
-        await FirebaseAuth.instance.sendPasswordResetEmail(email: _emailController.text.trim());
-
-        // Show success dialog
-        showDialog(
-          context: context,
-          builder: (context) {
-            return const AlertDialog(
-              content: Text("Password reset email sent successfully!"),
-            );
-          },
-        );
-      }
-    } on FirebaseAuthException catch (e) {
-      print("Password reset failed: ${e.code} - ${e.message}");
-      String errorMessage = "You did not enter an email.";
-
-      if (e.code == 'user-not-found') {
-        errorMessage = "No user found with this email address.";
-      }
-
-      showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            content: Text("Password reset failed: $errorMessage"),
-          );
-        },
-      );
-    } catch (e) {
-      print("Unexpected error: $e");
-      showDialog(
-        context: context,
-        builder: (context) {
-          return const AlertDialog(
-            content: Text("An unexpected error occurred."),
-          );
-        },
-      );
-    }
-  }
-
-
-
   @override
   void dispose() {
     _emailController.dispose();
     super.dispose();
+  }
+
+  Future passwordReset() async {
+    try {
+      await FirebaseAuth.instance
+          .sendPasswordResetEmail(email: _emailController.text.trim());
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            content: Text("Passwort reset link sent"),
+          );
+        },
+      );
+    } on FirebaseAuthException catch (e) {
+      print(e);
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            content: Text(e.message.toString()),
+          );
+        },
+      );
+    }
   }
 
   @override

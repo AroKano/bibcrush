@@ -2,6 +2,7 @@ import 'package:bibcrush/components/my_button.dart';
 import 'package:bibcrush/components/my_textfield.dart';
 import 'package:bibcrush/pages/home_page.dart';
 import 'package:bibcrush/pages/login_page.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -15,23 +16,31 @@ class RegistrationPage extends StatefulWidget {
 
 class _RegistrationPageState extends State<RegistrationPage> {
   final _vornameController = TextEditingController();
-  final _nachnameController = TextEditingController();
   final _usernameController = TextEditingController();
+  final _fakultaetController = TextEditingController();
+  final _studiengangController = TextEditingController();
+  final _semesterController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmpasswordController = TextEditingController();
+
+  String vornameError = "";
   String usernameError = "";
+  String fakultaetError = "";
+  String studiengangError = "";
+  String semesterError = "";
   String emailError = "";
   String passwordError = "";
   String confirmPasswordError = "";
-  String vornameError = "";
-  String nachnameError = "";
+
 
   @override
   void dispose() {
     _vornameController.dispose();
-    _nachnameController.dispose();
     _usernameController.dispose();
+    _fakultaetController.dispose();
+    _studiengangController.dispose();
+    _semesterController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
     _confirmpasswordController.dispose();
@@ -41,12 +50,14 @@ class _RegistrationPageState extends State<RegistrationPage> {
   Future signUp() async {
     // Clear previous error messages
     setState(() {
+      vornameError = "";
       usernameError = "";
+      fakultaetError = "";
+      studiengangError = "";
+      semesterError = "";
       emailError = "";
       passwordError = "";
       confirmPasswordError = "";
-      vornameError = "";
-      nachnameError = "";
     });
 
     if (_vornameController.text.trim().isEmpty) {
@@ -57,19 +68,35 @@ class _RegistrationPageState extends State<RegistrationPage> {
       return;
     }
 
-    if (_nachnameController.text.trim().isEmpty) {
-      setState(() {
-        nachnameError = "Nachname ist erforderlich";
-      });
-      showSnackBar("Nachname is ist erforderlich");
-      return;
-    }
-
     if (_usernameController.text.trim().isEmpty) {
       setState(() {
         usernameError = "Benutzername ist erforderlich";
       });
       showSnackBar("Benutzername ist erforderlich");
+      return;
+    }
+
+    if (_fakultaetController.text.trim().isEmpty) {
+      setState(() {
+        fakultaetError = "Fakultät ist erforderlich";
+      });
+      showSnackBar("Fakultät is ist erforderlich");
+      return;
+    }
+
+    if (_studiengangController.text.trim().isEmpty) {
+      setState(() {
+        studiengangError = "Studiengang ist erforderlich";
+      });
+      showSnackBar("Studiengang is ist erforderlich");
+      return;
+    }
+
+    if (_semesterController.text.trim().isEmpty) {
+      setState(() {
+        semesterError = "Semester ist erforderlich";
+      });
+      showSnackBar("Semester is ist erforderlich");
       return;
     }
 
@@ -95,10 +122,22 @@ class _RegistrationPageState extends State<RegistrationPage> {
       return;
     }
 
+
+    // create user
     try {
       await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: _emailController.text.trim(),
         password: _passwordController.text.trim(),
+      );
+
+      // add user details
+      addUserDetails(
+        _vornameController.text.trim(),
+        _usernameController.text.trim(),
+        _fakultaetController.text.trim(),
+        _studiengangController.text.trim(),
+        int.parse(_semesterController.text.trim()),
+        _emailController.text.trim(),
       );
 
       // Registration successful, navigate to HomePage
@@ -110,6 +149,18 @@ class _RegistrationPageState extends State<RegistrationPage> {
       // Handle registration error
       showSnackBar("Registrierung fehlgeschlagen: $e");
     }
+  }
+
+  Future addUserDetails(
+      String vorname, String username, String fakultaet, String studiengang, int semester, String email) async {
+    await FirebaseFirestore.instance.collection("users").add({
+      "Vorname": vorname,
+      "Benutzername": username,
+      "Fakultät": fakultaet,
+      "Studiengang": studiengang,
+      "Semester": semester,
+      "E-Mail": email,
+    });
   }
 
   void showSnackBar(String message) {
@@ -163,10 +214,10 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         const SizedBox(width: 10),
                         Expanded(
                           child: TextField(
+                            controller: _vornameController,
                             decoration: InputDecoration(
                               hintText: 'Vorname',
                             ),
-                            controller: _vornameController,
                           ),
                         ),
                       ],
@@ -193,11 +244,10 @@ class _RegistrationPageState extends State<RegistrationPage> {
                       children: [
                         const SizedBox(width: 10),
                         Expanded(
-                          child: TextField(
-                            decoration: InputDecoration(
-                              hintText: 'Nachname',
-                            ),
-                            controller: _nachnameController,
+                          child: MyTextField(
+                            controller: _usernameController,
+                            hintText: "Benutzername",
+                            obscureText: false,
                           ),
                         ),
                       ],
@@ -207,11 +257,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
 
                 // Add this Text widget below the TextField
                 Text(
-                  nachnameError,
+                  usernameError,
                   style: TextStyle(color: Colors.red), // Customize the text color
                 ),
-
-                // Your existing UI code...
 
                 const SizedBox(height: 20),
 
@@ -226,10 +274,41 @@ class _RegistrationPageState extends State<RegistrationPage> {
                       children: [
                         const SizedBox(width: 10),
                         Expanded(
-                          child: MyTextField(
-                            hintText: "Benutzername",
-                            obscureText: false,
-                            controller: _usernameController,
+                          child: TextField(
+                            decoration: InputDecoration(
+                              hintText: 'Fakultät',
+                            ),
+                            controller: _fakultaetController,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+
+                Text(
+                  fakultaetError,
+                  style: TextStyle(color: Colors.red), // Customize the text color
+                ),
+
+                const SizedBox(height: 20),
+
+                Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey),
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Row(
+                      children: [
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: TextField(
+                            decoration: InputDecoration(
+                              hintText: 'Studiengang',
+                            ),
+                            controller: _studiengangController,
                           ),
                         ),
                       ],
@@ -239,7 +318,38 @@ class _RegistrationPageState extends State<RegistrationPage> {
 
                 // Add this Text widget below the TextField
                 Text(
-                  usernameError,
+                  studiengangError,
+                  style: TextStyle(color: Colors.red), // Customize the text color
+                ),
+
+                const SizedBox(height: 20),
+
+                Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey),
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Row(
+                      children: [
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: TextField(
+                            decoration: InputDecoration(
+                              hintText: 'Semester',
+                            ),
+                            controller: _semesterController,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+
+                // Add this Text widget below the TextField
+                Text(
+                  semesterError,
                   style: TextStyle(color: Colors.red), // Customize the text color
                 ),
 
