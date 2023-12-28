@@ -1,13 +1,11 @@
 import 'package:bibcrush/components/my_button.dart';
-import 'package:bibcrush/pages/profile_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../components/custom_nav_bar.dart';
 import 'start_page.dart'; // Importiere die Start-Seite
 
 class HomePage extends StatefulWidget {
-  final VoidCallback showStartPage;
-  HomePage({Key? key, required this.showStartPage}) : super(key: key);
+  HomePage({Key? key}) : super(key: key);
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -23,10 +21,8 @@ class _HomePageState extends State<HomePage> {
     // Navigiere zur Start-Seite
     Navigator.push(
       context,
-      MaterialPageRoute(
-        builder: (context) => StartPage(showRegisterPage: widget.showStartPage),
-      ),
-    );
+      MaterialPageRoute(builder: (context) => StartPage(showRegisterPage: () {  },),
+    ));
   }
 
   @override
@@ -34,17 +30,6 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Feed'),
-        leading: IconButton(
-          icon: const Icon(Icons.person, color: Colors.black),
-          onPressed: () {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                builder: (context) => ProfilePage(),
-              ),
-            );
-          },
-        ),
       ),
       body: Center(
         child: Column(
@@ -52,15 +37,9 @@ class _HomePageState extends State<HomePage> {
           children: [
             Text('Eingeloggt als ${user.email!}'),
 
-            const SizedBox(height: 20), // Platz zwischen den Textcontainern
+            const SizedBox(height: 20), // platz zwischen den text containern
 
-            Container(
-              padding: EdgeInsets.all(16), // Hier das Padding auf 16 setzen
-              child: MyButton(
-                text: "Ausloggen",
-                onTap: _signOut,
-              ),
-            ),
+            MyButton(text: "Ausloggen", onTap: _signOut)
           ],
         ),
       ),

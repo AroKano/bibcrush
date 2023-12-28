@@ -5,7 +5,7 @@ import 'login_page.dart';
 
 class StartPage extends StatefulWidget {
   final VoidCallback showRegisterPage;
-  const StartPage({Key? key, required this.showRegisterPage, required }) : super(key: key);
+  const StartPage({Key? key, required this.showRegisterPage,  }) : super(key: key);
 
   @override
   _StartPageState createState() => _StartPageState();
@@ -35,7 +35,7 @@ class _StartPageState extends State<StartPage> {
                   // Navigate to LoginPage
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => LoginPage(showStartPage: widget.showRegisterPage,)),
+                    MaterialPageRoute(builder: (context) => LoginPage(showStartPage: () {  },)),
                   );
                 },
               ),

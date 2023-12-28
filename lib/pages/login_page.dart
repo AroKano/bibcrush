@@ -7,8 +7,7 @@ import 'package:flutter/material.dart';
 import 'forgot_pw_page.dart';
 
 class LoginPage extends StatefulWidget {
-  final VoidCallback showStartPage;
-  const LoginPage({Key? key, required this.showStartPage}) : super(key: key);
+  const LoginPage({Key? key, required void Function() showStartPage}) : super(key: key);
 
   @override
   State<LoginPage> createState() => _LoginPageState();
@@ -30,7 +29,7 @@ class _LoginPageState extends State<LoginPage> {
       // Anmeldung erfolgreich, navigiere zur Home-Seite und ersetze die aktuelle Seite
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => HomePage(showStartPage: widget.showStartPage)),
+        MaterialPageRoute(builder: (context) => HomePage()),
       );
 
     } catch (e) {
@@ -72,7 +71,7 @@ class _LoginPageState extends State<LoginPage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => StartPage(showRegisterPage: widget.showStartPage),
+                    builder: (context) => StartPage(showRegisterPage: () {  },),
                   ),
                 );
               },

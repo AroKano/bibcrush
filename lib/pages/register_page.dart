@@ -143,7 +143,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
       // Registration successful, navigate to HomePage
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => HomePage(showStartPage: widget.showLoginPage)),
+        MaterialPageRoute(builder: (context) => HomePage()),
       );
     } catch (e) {
       // Handle registration error
@@ -456,7 +456,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                       onTap: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => LoginPage(showStartPage: widget.showLoginPage)),
+                          MaterialPageRoute(builder: (context) => LoginPage(showStartPage: () {  },)),
                         );
                       },
                       child: const Text(
