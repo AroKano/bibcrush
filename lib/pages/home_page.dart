@@ -22,11 +22,11 @@ class _HomePageState extends State<HomePage> {
 
     // Navigiere zur Start-Seite
     Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) =>
-              StartPage(showRegisterPage: widget.showStartPage),
-        ));
+      context,
+      MaterialPageRoute(
+        builder: (context) => StartPage(showRegisterPage: widget.showStartPage),
+      ),
+    );
   }
 
   @override
@@ -52,9 +52,15 @@ class _HomePageState extends State<HomePage> {
           children: [
             Text('Eingeloggt als ${user.email!}'),
 
-            const SizedBox(height: 20), // platz zwischen den text containern
+            const SizedBox(height: 20), // Platz zwischen den Textcontainern
 
-            MyButton(text: "Ausloggen", onTap: _signOut)
+            Container(
+              padding: EdgeInsets.all(16), // Hier das Padding auf 16 setzen
+              child: MyButton(
+                text: "Ausloggen",
+                onTap: _signOut,
+              ),
+            ),
           ],
         ),
       ),
