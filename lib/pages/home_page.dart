@@ -13,6 +13,9 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
+  bool isLiked = false;
+  bool isBookmarked = false;
+
   final user = FirebaseAuth.instance.currentUser!;
 
   Future<void> _signOut() async {
@@ -53,45 +56,36 @@ class _HomePageState extends State<HomePage> {
                     title: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('Benutzername'),
-                        PopupMenuButton<String>(
-                          icon: Icon(Icons.more_horiz),
-                          itemBuilder: (context) => [
-                            PopupMenuItem(
-                              value: 'melden',
-                              child: ListTile(
-                                leading: Icon(Icons.flag),
-                                title: Text('Melden'),
-                              ),
-                            ),
-                            PopupMenuItem(
-                              value: 'entfolgen',
-                              child: ListTile(
-                                leading: Icon(Icons.person_remove),
-                                title: Text('Entfolgen'),
-                              ),
-                            ),
+                        Row(
+                          children: [
+                            Text('Vorname', style: TextStyle(fontWeight: FontWeight.bold)),
+                            SizedBox(width: 4), // Fügen Sie einen Abstand zwischen Vorname und Benutzername hinzu
+                            Text('@Benutzername'),
                           ],
-                          onSelected: (value) {
-                            if (value == 'melden') {
-                              // Melden-Funktionalität hier einfügen
-                              print('Melden');
-                            } else if (value == 'entfolgen') {
-                              // Entfolgen-Funktionalität hier einfügen
-                              print('Entfolgen');
-                            }
+                        ),
+                        PopupMenuButton<String>(
+                          itemBuilder: (BuildContext context) {
+                            return {'Melden', 'Entfolgen'}.map((String choice) {
+                              return PopupMenuItem<String>(
+                                value: choice,
+                                child: Text(choice),
+                              );
+                            }).toList();
                           },
                         ),
                       ],
                     ),
-                    subtitle: Text('vor 2 Stunden'),
+                    subtitle: Padding(
+                      padding: const EdgeInsets.only(top: 0), // Änderung hier
+                      child: Text('vor 2 Stunden'),
+                    ),
                   ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Image.network(
                       'https://images.unsplash.com/photo-1556379092-dca659792591?q=80&w=3132&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
                       width: 400,
-                      height: 575,
+                      height: 550,
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -107,20 +101,35 @@ class _HomePageState extends State<HomePage> {
                         },
                       ),
                       IconButton(
-                        icon: Icon(Icons.favorite_border),
+                        icon: Icon(
+                          isLiked ? Icons.favorite : Icons.favorite_border,
+                          color: isLiked ? Colors.red : null,
+                        ),
                         onPressed: () {
+                          // Toggle den Like-Status beim Klicken
+                          setState(() {
+                            isLiked = !isLiked;
+                          });
+
                           // Like-Funktionalität hier einfügen
                           print('Like');
                         },
                       ),
                       IconButton(
-                        icon: Icon(Icons.bookmark_border),
+                        icon: Icon(
+                          isBookmarked ? Icons.bookmark : Icons.bookmark_border,
+                          color: isBookmarked ? Colors.red : null,
+                        ),
                         onPressed: () {
-                          // Speichern-Funktionalität hier einfügen
+                          // Toggle den Like-Status beim Klicken
+                          setState(() {
+                            isBookmarked= !isBookmarked;
+                          });
+
+                          // Like-Funktionalität hier einfügen
                           print('Speichern');
                         },
-                      ),
-                      IconButton(
+                      ),                       IconButton(
                         icon: Icon(Icons.share),
                         onPressed: () {
                           // Teilen-Funktionalität hier einfügen
