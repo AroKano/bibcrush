@@ -255,6 +255,13 @@ class _ProfilePageState extends State<ProfilePage> {
 
   Future<void> _signOut() async {
     await FirebaseAuth.instance.signOut();
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => StartPage(
+            showRegisterPage: () {},
+          ),
+        ));
   }
 
   Future<void> _changePassword(String password) async {
