@@ -34,18 +34,76 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         title: const Text('Feed'),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text('Eingeloggt als ${user.email!}'),
-
-            const SizedBox(height: 20), // platz zwischen den text containern
-
-            MyButton(text: "Ausloggen", onTap: _signOut)
-          ],
-        ),
+      body: ListView.builder(
+        itemCount: 10,
+        itemBuilder: (context, index) {
+          return Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Card(
+              elevation: 3,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ListTile(
+                    leading: CircleAvatar(
+                      radius: 25,
+                      backgroundColor: Colors.blue,
+                      child: Icon(Icons.person, color: Colors.white),
+                    ),
+                    title: Text('Benutzername'),
+                    subtitle: Text('vor 2 Stunden'),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Image.network(
+                      'https://images.unsplash.com/photo-1556379092-dca659792591?q=80&w=3132&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+                      width: 400,
+                      height: 575,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  // Interaktive Schaltflächen für Kommentare, Likes, Speichern, Teilen
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      IconButton(
+                        icon: Icon(Icons.comment),
+                        onPressed: () {
+                          // Kommentar-Funktionalität hier einfügen
+                          print('Kommentar');
+                        },
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.favorite_border),
+                        onPressed: () {
+                          // Like-Funktionalität hier einfügen
+                          print('Like');
+                        },
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.bookmark_border),
+                        onPressed: () {
+                          // Speichern-Funktionalität hier einfügen
+                          print('Speichern');
+                        },
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.share),
+                        onPressed: () {
+                          // Teilen-Funktionalität hier einfügen
+                          print('Teilen');
+                        },
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
       ),
+
+
       bottomNavigationBar: CustomNavBar(
         selectedIndex: 0,
         onTabChange: (index) {

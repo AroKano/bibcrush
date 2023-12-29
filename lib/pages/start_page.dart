@@ -5,7 +5,7 @@ import 'login_page.dart';
 
 class StartPage extends StatefulWidget {
   final VoidCallback showRegisterPage;
-  const StartPage({Key? key, required this.showRegisterPage,  }) : super(key: key);
+  const StartPage({Key? key, required this.showRegisterPage}) : super(key: key);
 
   @override
   _StartPageState createState() => _StartPageState();

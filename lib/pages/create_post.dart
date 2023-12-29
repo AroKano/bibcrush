@@ -1,3 +1,4 @@
+import 'package:bibcrush/pages/home_page.dart';
 import 'package:flutter/material.dart';
 
 class CreatePostPage extends StatelessWidget {
@@ -16,7 +17,10 @@ class CreatePostPage extends StatelessWidget {
             padding: EdgeInsets.only(left: 12.0),
             child: TextButton(
               onPressed: () {
-                // Handle cancel action
+                Navigator.pushReplacement(context,
+                  MaterialPageRoute(builder: (context) => HomePage(),
+                      ),
+                    );
               },
               style: TextButton.styleFrom(
                 foregroundColor: Color(0xFFE85555),
