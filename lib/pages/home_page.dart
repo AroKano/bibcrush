@@ -50,7 +50,40 @@ class _HomePageState extends State<HomePage> {
                       backgroundColor: Colors.blue,
                       child: Icon(Icons.person, color: Colors.white),
                     ),
-                    title: Text('Benutzername'),
+                    title: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text('Benutzername'),
+                        PopupMenuButton<String>(
+                          icon: Icon(Icons.more_horiz),
+                          itemBuilder: (context) => [
+                            PopupMenuItem(
+                              value: 'melden',
+                              child: ListTile(
+                                leading: Icon(Icons.flag),
+                                title: Text('Melden'),
+                              ),
+                            ),
+                            PopupMenuItem(
+                              value: 'entfolgen',
+                              child: ListTile(
+                                leading: Icon(Icons.person_remove),
+                                title: Text('Entfolgen'),
+                              ),
+                            ),
+                          ],
+                          onSelected: (value) {
+                            if (value == 'melden') {
+                              // Melden-Funktionalität hier einfügen
+                              print('Melden');
+                            } else if (value == 'entfolgen') {
+                              // Entfolgen-Funktionalität hier einfügen
+                              print('Entfolgen');
+                            }
+                          },
+                        ),
+                      ],
+                    ),
                     subtitle: Text('vor 2 Stunden'),
                   ),
                   Padding(
@@ -102,7 +135,6 @@ class _HomePageState extends State<HomePage> {
           );
         },
       ),
-
 
       bottomNavigationBar: CustomNavBar(
         selectedIndex: 0,
