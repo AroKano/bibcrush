@@ -1,3 +1,4 @@
+import 'package:bibcrush/pages/home_page.dart';
 import 'package:bibcrush/pages/profile_page.dart';
 
 import 'auth/main_page.dart';
@@ -21,8 +22,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: MainPage(
-      ),
+      home: MainPage(),
     );
   }
 }

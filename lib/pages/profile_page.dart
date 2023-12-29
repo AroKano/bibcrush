@@ -221,12 +221,13 @@ class _ProfilePageState extends State<ProfilePage> {
         ],
       ),
       bottomNavigationBar: CustomNavBar(
-        selectedIndex: _selectedIndex,
+        selectedIndex: 4,
         onTabChange: (index) {
           setState(() {
             _selectedIndex = index;
           });
         },
+        context: context,
       ),
     );
   }

@@ -16,7 +16,7 @@ class MainPage extends StatelessWidget {
           if (snapshot.hasData) {
             // User is logged in, show HomePage
             return HomePage();
-              // Navigate to StartPage or handle as neede);
+            // Navigate to StartPage or handle as neede);
           } else {
             // User is not logged in, show AuthPage
             return AuthPage();

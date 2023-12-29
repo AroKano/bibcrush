@@ -20,9 +20,12 @@ class _HomePageState extends State<HomePage> {
 
     // Navigiere zur Start-Seite
     Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => StartPage(showRegisterPage: () {  },),
-    ));
+        context,
+        MaterialPageRoute(
+          builder: (context) => StartPage(
+            showRegisterPage: () {},
+          ),
+        ));
   }
 
   @override
@@ -44,12 +47,13 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
       bottomNavigationBar: CustomNavBar(
-        selectedIndex: _selectedIndex,
+        selectedIndex: 0,
         onTabChange: (index) {
           setState(() {
             _selectedIndex = index;
           });
         },
+        context: context,
       ),
     );
   }

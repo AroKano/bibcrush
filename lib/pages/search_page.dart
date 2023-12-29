@@ -67,12 +67,13 @@ class _SearchPageState extends State<SearchPage> {
         ),
       ),
       bottomNavigationBar: CustomNavBar(
-        selectedIndex: _selectedIndex,
+        selectedIndex: 1,
         onTabChange: (index) {
           setState(() {
             _selectedIndex = index;
           });
         },
+        context: context,
       ),
     );
   }
