@@ -1,12 +1,12 @@
+import 'package:bibcrush/pages/home_page.dart';
 import 'package:bibcrush/pages/start_page.dart';
 import 'package:flutter/material.dart';
 import '../components/custom_nav_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:bibcrush/pages/home_page.dart';
 
 //user
 final currentUser = FirebaseAuth.instance.currentUser!;
-CollectionReference users = FirebaseFirestore.instance.collection('users');
 
 class ProfilePage extends StatefulWidget {
   ProfilePage({Key? key}) : super(key: key);
@@ -20,24 +20,17 @@ class _ProfilePageState extends State<ProfilePage> {
   bool _lightDarkModeEnabled = true;
   bool _notificationsEnabled = true;
 
-  String _name = '';
-  String _username = '';
-  String _caption = '';
+  String _name = 'Max';
+  String _username = '@MaxMusty';
+  String _caption =
+      'Photographer | Music enthusiast | Coffee lover | Lifelong learner';
   String _posts = '0';
   String _followers = '0';
   String _following = '0';
   String _crushes = '0';
-  String _studying = '';
-  String _semester = '';
-  String _faculty = '';
-
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   _loadUserData();
-  // }
-
-  // Future<void> _loadUserData() async {}
+  String _studying = 'Computer Science';
+  String _semester = '3rd Semester';
+  String _faculty = 'Engineering';
 
   @override
   Widget build(BuildContext context) {
@@ -106,147 +99,129 @@ class _ProfilePageState extends State<ProfilePage> {
           ],
         ),
       ),
-      body: FutureBuilder<DocumentSnapshot>(
-          future: users.doc(currentUser.email).get(),
-          builder:
-              (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return Text("Loading...");
-            }
-
-            if (snapshot.hasError) {
-              return Text("Something went wrong");
-            }
-
-            if (!snapshot.hasData || !snapshot.data!.exists) {
-              return Text("Document does not exist");
-            }
-            Map<String, dynamic> userData =
-                snapshot.data!.data() as Map<String, dynamic>;
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          const SizedBox(height: 50),
+          const Icon(
+            Icons.person,
+            size: 72,
+          ),
+          RichText(
+            text: TextSpan(
+              text: _name,
+              style: TextStyle(
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+                fontSize: 24,
+              ),
               children: [
-                const SizedBox(height: 50),
-                const Icon(
-                  Icons.person,
-                  size: 72,
+                TextSpan(
+                  text: _username,
+                  style: TextStyle(
+                    color: Colors.grey,
+                    fontSize: 20,
+                  ),
                 ),
-                RichText(
-                  text: TextSpan(
-                    text: userData['Vorname'],
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 24,
-                    ),
-                    children: [
-                      TextSpan(
-                        text: userData['Benutzername'],
-                        style: TextStyle(
-                          color: Colors.grey,
-                          fontSize: 20,
-                        ),
-                      ),
+              ],
+            ),
+          ),
+          Container(
+            child: Text(
+              _caption,
+              textAlign: TextAlign.center,
+            ),
+            margin: EdgeInsets.symmetric(horizontal: 80.0),
+            padding: EdgeInsets.all(10.0),
+          ),
+          TextButton(
+            onPressed: () {
+              // Navigate to the edit profile screen or show a dialog
+              _showEditProfileDialog(context);
+            },
+            style: ButtonStyle(
+              shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              )),
+              side: MaterialStateProperty.all(BorderSide(
+                color: Colors.grey,
+                width: 0.5,
+              )),
+            ),
+            child: Text(
+              "Edit Profile",
+              style: TextStyle(
+                color: Colors.blue,
+              ),
+            ),
+          ),
+          SizedBox(height: 10),
+          Container(
+            decoration: BoxDecoration(
+              border: Border(
+                top: BorderSide(color: Colors.grey, width: 0.5),
+                bottom: BorderSide(color: Colors.grey, width: 0.5),
+              ),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  _buildStatisticColumn("Posts", _posts),
+                  _buildStatisticColumn("Followers", _followers),
+                  _buildStatisticColumn("Following", _following),
+                  _buildStatisticColumn("Crushes", _crushes),
+                ],
+              ),
+            ),
+          ),
+          // TabBar and TabBarView
+          Expanded(
+            child: DefaultTabController(
+              length: 2, // Number of tabs
+              initialIndex: 0, // Index of the initially selected tab
+              child: Column(
+                children: [
+                  TabBar(
+                    labelColor: Colors.orange,
+                    unselectedLabelColor: Colors.grey,
+                    indicatorColor: Colors.orange,
+                    tabs: [
+                      Tab(text: "My Posts"),
+                      Tab(text: "My Infos"),
                     ],
                   ),
-                ),
-                Container(
-                  child: Text(
-                    _caption,
-                    textAlign: TextAlign.center,
-                  ),
-                  margin: EdgeInsets.symmetric(horizontal: 80.0),
-                  padding: EdgeInsets.all(10.0),
-                ),
-                TextButton(
-                  onPressed: () {
-                    // Navigate to the edit profile screen or show a dialog
-                    _showEditProfileDialog(context);
-                  },
-                  style: ButtonStyle(
-                    shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    )),
-                    side: MaterialStateProperty.all(BorderSide(
-                      color: Colors.grey,
-                      width: 0.5,
-                    )),
-                  ),
-                  child: Text(
-                    "Edit Profile",
-                    style: TextStyle(
-                      color: Colors.blue,
-                    ),
-                  ),
-                ),
-                SizedBox(height: 10),
-                Container(
-                  decoration: BoxDecoration(
-                    border: Border(
-                      top: BorderSide(color: Colors.grey, width: 0.5),
-                      bottom: BorderSide(color: Colors.grey, width: 0.5),
-                    ),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  Expanded(
+                    child: TabBarView(
                       children: [
-                        _buildStatisticColumn("Posts", _posts),
-                        _buildStatisticColumn("Followers", _followers),
-                        _buildStatisticColumn("Following", _following),
-                        _buildStatisticColumn("Crushes", _crushes),
-                      ],
-                    ),
-                  ),
-                ),
-                // TabBar and TabBarView
-                Expanded(
-                  child: DefaultTabController(
-                    length: 2, // Number of tabs
-                    initialIndex: 0, // Index of the initially selected tab
-                    child: Column(
-                      children: [
-                        TabBar(
-                          labelColor: Colors.orange,
-                          unselectedLabelColor: Colors.grey,
-                          indicatorColor: Colors.orange,
-                          tabs: [
-                            Tab(text: "My Posts"),
-                            Tab(text: "My Infos"),
-                          ],
+                        // Tab 1: My Posts
+                        Center(
+                          child: Text("No posts yet."),
                         ),
-                        Expanded(
-                          child: TabBarView(
-                            children: [
-                              // Tab 1: My Posts
-                              Center(
-                                child: Text("No posts yet."),
-                              ),
 
-                              // Tab 2: My Infos
-                              Center(
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text("Studying: $userData['Studiengang']"),
-                                    Text("Semester: $userData['Semester']"),
-                                    Text("Faculty: $userData['Fakultät']"),
-                                  ],
-                                ),
-                              ),
+                        // Tab 2: My Infos
+                        Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text("Studying: $_studying"),
+                              Text("Semester: $_semester"),
+                              Text("Faculty: $_faculty"),
                             ],
                           ),
                         ),
                       ],
                     ),
                   ),
-                ),
-              ],
-            );
-          }),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
       bottomNavigationBar: CustomNavBar(
-        selectedIndex: 4,
+        selectedIndex: _selectedIndex,
         onTabChange: (index) {
           setState(() {
             _selectedIndex = index;
