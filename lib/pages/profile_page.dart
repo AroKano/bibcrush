@@ -1,9 +1,8 @@
-import 'package:bibcrush/pages/home_page.dart';
 import 'package:bibcrush/pages/start_page.dart';
 import 'package:flutter/material.dart';
 import '../components/custom_nav_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:bibcrush/pages/home_page.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 //user
 final currentUser = FirebaseAuth.instance.currentUser!;
