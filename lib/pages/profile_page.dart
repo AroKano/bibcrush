@@ -94,15 +94,57 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(25.0),
-              child: ListTile(
-                leading: Icon(Icons.logout),
-                title: Text("Ausloggen"),
-                onTap: () {
-                  _signOut();
-                },
-              ),
-            ),
+                padding: const EdgeInsets.all(25.0),
+                child: Column(
+                  children: [
+                    ListTile(
+                      leading: Icon(Icons.delete_rounded),
+                      title: Text("Konto löschen"),
+                      onTap: () {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: const Text('Delete your Account?'),
+                              content: const Text(
+                                  '''If you select Delete we will delete your account on our server.
+
+Your app data will also be deleted and you won't be able to retrieve it.'''),
+                              actions: [
+                                TextButton(
+                                  child: const Text('Cancel'),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                                TextButton(
+                                  child: const Text(
+                                    'Delete',
+                                  ),
+                                  onPressed: () {
+                                    _deleteAccount();
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => StartPage(
+                                            showRegisterPage: () {},
+                                          ),
+                                        ));
+                                  },
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      },
+                    ),
+                    ListTile(
+                      leading: Icon(Icons.logout),
+                      title: Text("Ausloggen"),
+                      onTap: () {},
+                    ),
+                  ],
+                )),
           ],
         ),
       ),
@@ -288,6 +330,10 @@ class _ProfilePageState extends State<ProfilePage> {
             showRegisterPage: () {},
           ),
         ));
+  }
+
+  Future<void> _deleteAccount() async {
+    await currentUser.delete();
   }
 
   Future<void> _changePassword(String password) async {
