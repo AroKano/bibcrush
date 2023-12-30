@@ -1,4 +1,5 @@
 import 'package:bibcrush/components/my_button.dart';
+import 'package:bibcrush/pages/others_profile_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../components/custom_nav_bar.dart';
@@ -48,10 +49,19 @@ class _HomePageState extends State<HomePage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   ListTile(
-                    leading: CircleAvatar(
-                      radius: 25,
-                      backgroundColor: Colors.blue,
-                      child: Icon(Icons.person, color: Colors.white),
+                    leading: GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => OthersProfilePage()),
+                        );
+                      },
+                      child: CircleAvatar(
+                        radius: 25,
+                        backgroundColor: Colors.blue,
+                        child: Icon(Icons.person, color: Colors.white),
+                      ),
                     ),
                     title: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
