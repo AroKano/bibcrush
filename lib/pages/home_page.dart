@@ -35,7 +35,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Feed'),
+        backgroundColor: Theme.of(context).colorScheme.background,
       ),
       body: ListView.builder(
         itemCount: 10,
@@ -58,8 +58,11 @@ class _HomePageState extends State<HomePage> {
                       children: [
                         Row(
                           children: [
-                            Text('Vorname', style: TextStyle(fontWeight: FontWeight.bold)),
-                            SizedBox(width: 4), // Fügen Sie einen Abstand zwischen Vorname und Benutzername hinzu
+                            Text('Vorname',
+                                style: TextStyle(fontWeight: FontWeight.bold)),
+                            SizedBox(
+                                width:
+                                    4), // Fügen Sie einen Abstand zwischen Vorname und Benutzername hinzu
                             Text('@Benutzername'),
                           ],
                         ),
@@ -123,13 +126,14 @@ class _HomePageState extends State<HomePage> {
                         onPressed: () {
                           // Toggle den Like-Status beim Klicken
                           setState(() {
-                            isBookmarked= !isBookmarked;
+                            isBookmarked = !isBookmarked;
                           });
 
                           // Like-Funktionalität hier einfügen
                           print('Speichern');
                         },
-                      ),                       IconButton(
+                      ),
+                      IconButton(
                         icon: Icon(Icons.share),
                         onPressed: () {
                           // Teilen-Funktionalität hier einfügen
@@ -144,7 +148,6 @@ class _HomePageState extends State<HomePage> {
           );
         },
       ),
-
       bottomNavigationBar: CustomNavBar(
         selectedIndex: 0,
         onTabChange: (index) {

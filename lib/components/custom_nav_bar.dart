@@ -20,6 +20,10 @@ class CustomNavBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Brightness iconColor = Theme.of(context).brightness == Brightness.light
+        ? Brightness.dark
+        : Brightness.light;
+
     return Container(
       color: Colors.transparent,
       child: SafeArea(
@@ -41,6 +45,8 @@ class CustomNavBar extends StatelessWidget {
   }
 
   Widget buildNavItem(IconData icon, int index) {
+    ThemeData theme = Theme.of(context);
+
     return GestureDetector(
       onTap: () {
         onTabChange(index);
@@ -60,7 +66,9 @@ class CustomNavBar extends StatelessWidget {
         ),
         child: Icon(
           icon,
-          color: selectedIndex == index ? Color(0xFFFF7A00) : Colors.black,
+          color: selectedIndex == index
+              ? Color(0xFFFF7A00)
+              : theme.colorScheme.onSurface,
         ),
       ),
     );

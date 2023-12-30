@@ -1,5 +1,7 @@
 import 'package:bibcrush/pages/start_page.dart';
+import 'package:bibcrush/theme/theme_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../components/custom_nav_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -49,77 +51,84 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.background,
+      ),
       endDrawer: Drawer(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(top: 50.0),
-              child: Column(
-                children: [
-                  ListTile(
-                    leading: Icon(Icons.sunny),
-                    title: Text("Light/Dark Mode"),
-                    trailing: Switch(
-                      onChanged: (bool? value) {
-                        setState(() {
-                          _lightDarkModeEnabled = value!;
-                        });
-                      },
-                      value: _lightDarkModeEnabled,
-                      activeTrackColor: Colors.orange,
-                      activeColor: Colors.white,
-                    ),
-                  ),
-                  ListTile(
-                    leading: Icon(Icons.notifications),
-                    title: Text(
-                      "Benachrichtigungen",
-                      style: TextStyle(fontSize: 15.0),
-                    ),
-                    trailing: Switch(
-                      onChanged: (bool? value) {
-                        setState(() {
-                          _notificationsEnabled = value!;
-                        });
-                      },
-                      value: _notificationsEnabled,
-                      activeTrackColor: Colors.orange,
-                      activeColor: Colors.white,
-                    ),
-                  ),
-                  ListTile(
-                    leading: Icon(Icons.key),
-                    title: Text("Passwort ändern"),
-                    onTap: () {
-                      _showChangePasswordDialog();
-                    },
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-                padding: const EdgeInsets.all(25.0),
+        child: Container(
+          color: Theme.of(context).colorScheme.primary,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(top: 50.0),
                 child: Column(
                   children: [
                     ListTile(
-                      leading: Icon(Icons.delete_rounded),
-                      title: Text("Konto löschen"),
-                      onTap: () {
-                        _showDeleteAccountDialog();
-                      },
+                      leading: Icon(Icons.sunny),
+                      title: Text("Light/Dark Mode"),
+                      trailing: Switch(
+                        onChanged: (bool? value) {
+                          setState(() {
+                            _lightDarkModeEnabled = value!;
+                          });
+                          Provider.of<ThemeProvider>(context, listen: false)
+                              .toggleTheme();
+                        },
+                        value: _lightDarkModeEnabled,
+                        activeTrackColor: Colors.orange,
+                        activeColor: Colors.white,
+                      ),
                     ),
                     ListTile(
-                      leading: Icon(Icons.logout),
-                      title: Text("Ausloggen"),
+                      leading: Icon(Icons.notifications),
+                      title: Text(
+                        "Benachrichtigungen",
+                        style: TextStyle(fontSize: 15.0),
+                      ),
+                      trailing: Switch(
+                        onChanged: (bool? value) {
+                          setState(() {
+                            _notificationsEnabled = value!;
+                          });
+                        },
+                        value: _notificationsEnabled,
+                        activeTrackColor: Colors.orange,
+                        activeColor: Colors.white,
+                      ),
+                    ),
+                    ListTile(
+                      leading: Icon(Icons.key),
+                      title: Text("Passwort ändern"),
                       onTap: () {
-                        _signOut();
+                        _showChangePasswordDialog();
                       },
                     ),
                   ],
-                )),
-          ],
+                ),
+              ),
+              Padding(
+                  padding: const EdgeInsets.all(25.0),
+                  child: Column(
+                    children: [
+                      ListTile(
+                        leading: Icon(Icons.delete_rounded),
+                        title: Text("Konto löschen"),
+                        onTap: () {
+                          _showDeleteAccountDialog();
+                        },
+                      ),
+                      ListTile(
+                        leading: Icon(Icons.logout),
+                        title: Text("Ausloggen"),
+                        onTap: () {
+                          _signOut();
+                        },
+                      ),
+                    ],
+                  )),
+            ],
+          ),
         ),
       ),
       body: FutureBuilder<DocumentSnapshot>(
@@ -375,10 +384,8 @@ Your app data will also be deleted and you won't be able to retrieve it.'''),
                     ),
                     obscureText: true,
                     validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'You need to type in a password';
-                      }
-                      if (value != _passwordController.text) {
+                      if (_passwordController.text.isNotEmpty &&
+                          value != _passwordController.text) {
                         return 'Passwords do not match';
                       }
                       return null;
@@ -389,7 +396,8 @@ Your app data will also be deleted and you won't be able to retrieve it.'''),
             ),
           ),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(15.0),
+            borderRadius: BorderRadius.circular(
+                10.0), // Adjust the radius for more or less squared appearance
           ),
           actions: <Widget>[
             TextButton(

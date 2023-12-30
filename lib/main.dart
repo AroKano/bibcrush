@@ -1,5 +1,7 @@
 import 'package:bibcrush/pages/home_page.dart';
 import 'package:bibcrush/pages/profile_page.dart';
+import 'package:bibcrush/theme/theme_provider.dart';
+import 'package:provider/provider.dart';
 
 import 'auth/main_page.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +14,10 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(const MyApp());
+  runApp(ChangeNotifierProvider(
+    create: (context) => ThemeProvider(),
+    child: const MyApp(),
+  ));
 }
 
 class MyApp extends StatelessWidget {
@@ -20,9 +25,10 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: MainPage(),
+      home: const MainPage(),
+      theme: Provider.of<ThemeProvider>(context).themeData,
     );
   }
 }
