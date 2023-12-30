@@ -20,6 +20,13 @@ class _ProfilePageState extends State<ProfilePage> {
   bool _lightDarkModeEnabled = true;
   bool _notificationsEnabled = true;
 
+  final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
+  //damit Passwort Übereinstimmung kontrolliert wird ohne auf hot Reload zu drücken
+  final _formKey = GlobalKey<FormState>();
+
+  bool _passwordsMatch = true;
+
   String _name = '';
   String _username = '';
   String _caption = '';
@@ -86,8 +93,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     leading: Icon(Icons.key),
                     title: Text("Passwort ändern"),
                     onTap: () {
-                      //PASSWORT LOGIK EINSETZEN ALSO STRING IN FOLGENDE METHODE REIN
-                      // _changePassword();
+                      _showChangePasswordDialog();
                     },
                   ),
                 ],
@@ -101,47 +107,15 @@ class _ProfilePageState extends State<ProfilePage> {
                       leading: Icon(Icons.delete_rounded),
                       title: Text("Konto löschen"),
                       onTap: () {
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              title: const Text('Delete your Account?'),
-                              content: const Text(
-                                  '''If you select Delete we will delete your account on our server.
-
-Your app data will also be deleted and you won't be able to retrieve it.'''),
-                              actions: [
-                                TextButton(
-                                  child: const Text('Cancel'),
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                ),
-                                TextButton(
-                                  child: const Text(
-                                    'Delete',
-                                  ),
-                                  onPressed: () {
-                                    _deleteAccount();
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => StartPage(
-                                            showRegisterPage: () {},
-                                          ),
-                                        ));
-                                  },
-                                ),
-                              ],
-                            );
-                          },
-                        );
+                        _showDeleteAccountDialog();
                       },
                     ),
                     ListTile(
                       leading: Icon(Icons.logout),
                       title: Text("Ausloggen"),
-                      onTap: () {},
+                      onTap: () {
+                        _signOut();
+                      },
                     ),
                   ],
                 )),
@@ -321,6 +295,131 @@ Your app data will also be deleted and you won't be able to retrieve it.'''),
     );
   }
 
+  void _showDeleteAccountDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Delete your Account?'),
+          content: const Text(
+              '''If you select Delete we will delete your account on our server.
+
+Your app data will also be deleted and you won't be able to retrieve it.'''),
+          actions: [
+            TextButton(
+              child: const Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: const Text(
+                'Delete',
+              ),
+              onPressed: () {
+                _deleteAccount();
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => StartPage(
+                        showRegisterPage: () {},
+                      ),
+                    ));
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showChangePasswordDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Change Password', style: TextStyle(color: Colors.black)),
+          content: Form(
+            key: _formKey,
+            child: SingleChildScrollView(
+              child: ListBody(
+                children: <Widget>[
+                  TextFormField(
+                    controller: _passwordController,
+                    decoration: InputDecoration(
+                      labelText: 'New Password',
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Color(0xFFFF7A00)),
+                      ),
+                      labelStyle: TextStyle(color: Colors.black),
+                    ),
+                    obscureText: true,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'You need to type in a password';
+                      }
+                      return null;
+                    },
+                  ),
+                  TextFormField(
+                    controller: _confirmPasswordController,
+                    decoration: InputDecoration(
+                      labelText: 'Confirm Password',
+                      errorText:
+                          _passwordsMatch ? null : 'Passwords do not match',
+                      errorStyle: TextStyle(color: Colors.red),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Color(0xFFFF7A00)),
+                      ),
+                      labelStyle: TextStyle(color: Colors.black),
+                    ),
+                    obscureText: true,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'You need to type in a password';
+                      }
+                      if (value != _passwordController.text) {
+                        return 'Passwords do not match';
+                      }
+                      return null;
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15.0),
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                _clearTextFields();
+              },
+              child: Text('Cancel', style: TextStyle(color: Color(0xFFFF7A00))),
+            ),
+            TextButton(
+              onPressed: () {
+                if (_formKey.currentState!.validate()) {
+                  _changePassword(_passwordController.text);
+                  Navigator.of(context).pop();
+                  _clearTextFields();
+                }
+              },
+              child: Text('Save', style: TextStyle(color: Color(0xFFFF7A00))),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _clearTextFields() {
+    _passwordController.clear();
+    _confirmPasswordController.clear();
+  }
+
   Future<void> _signOut() async {
     await FirebaseAuth.instance.signOut();
     Navigator.push(
@@ -336,14 +435,8 @@ Your app data will also be deleted and you won't be able to retrieve it.'''),
     await currentUser.delete();
   }
 
-  Future<void> _changePassword(String password) async {
-    //Pass in the password to updatePassword.
-    currentUser.updatePassword(password).then((_) {
-      print("Successfully changed password");
-    }).catchError((error) {
-      print("Password can't be changed" + error.toString());
-      //This might happen, when the wrong password is in, the user isn't found, or if the user hasn't logged in recently.
-    });
+  Future<void> _changePassword(String newPassword) async {
+    await currentUser.updatePassword(newPassword);
   }
 
   void _showEditProfileDialog(BuildContext context) {
