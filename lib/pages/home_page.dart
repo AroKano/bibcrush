@@ -32,17 +32,19 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Feed'),
+        title: Center(
+          child: Text('Feed'),
+        )
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text('Eingeloggt als ${user.email!}'),
+            Text('Logged in as ${user.email!}'),
 
             const SizedBox(height: 20), // platz zwischen den text containern
 
-            MyButton(text: "Ausloggen", onTap: _signOut)
+            MyButton(text: "Log out", onTap: _signOut)
           ],
         ),
       ),
