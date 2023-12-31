@@ -4,7 +4,7 @@ class CreatePostPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).colorScheme.background,
       body: Padding(
         padding: const EdgeInsets.fromLTRB(16.0, 32.0, 16.0, 16.0),
         child: Column(
@@ -14,7 +14,8 @@ class CreatePostPage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 IconButton(
-                  icon: Icon(Icons.clear, color: Color(0xFFFF7A00)), // Akzentfarbe
+                  icon: Icon(Icons.clear,
+                      color: Color(0xFFFF7A00)), // Akzentfarbe
                   onPressed: () {
                     // Hier kannst du die Logik für das Schließen implementieren
                     print('Cancel');
@@ -23,12 +24,12 @@ class CreatePostPage extends StatelessWidget {
                 Text(
                   'New Post',
                   style: TextStyle(
-                    color: Colors.black,
                     fontSize: 20.0,
                   ),
                 ),
                 IconButton(
-                  icon: Icon(Icons.check, color: Color(0xFFFF7A00)), // Akzentfarbe
+                  icon: Icon(Icons.check,
+                      color: Color(0xFFFF7A00)), // Akzentfarbe
                   onPressed: () {
                     // Hier kannst du die Logik für das Bestätigen implementieren
                     print('Post');
@@ -40,7 +41,7 @@ class CreatePostPage extends StatelessWidget {
             Container(
               height: 200.0,
               decoration: BoxDecoration(
-                color: Colors.grey[200],
+                color: Theme.of(context).colorScheme.primary,
                 borderRadius: BorderRadius.circular(10.0),
               ),
               padding: EdgeInsets.all(8.0),
@@ -76,7 +77,8 @@ class CreatePostPage extends StatelessWidget {
                       print('Capture');
                     },
                     style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(Color(0xFFFF7A00)), // Akzentfarbe
+                      backgroundColor: MaterialStateProperty.all(
+                          Color(0xFFFF7A00)), // Akzentfarbe
                       foregroundColor: MaterialStateProperty.all(Colors.white),
                       shape: MaterialStateProperty.all(
                         RoundedRectangleBorder(
@@ -103,7 +105,8 @@ class CreatePostPage extends StatelessWidget {
                       print('Upload');
                     },
                     style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(Color(0xFFFF7A00)), // Akzentfarbe
+                      backgroundColor: MaterialStateProperty.all(
+                          Color(0xFFFF7A00)), // Akzentfarbe
                       foregroundColor: MaterialStateProperty.all(Colors.white),
                       shape: MaterialStateProperty.all(
                         RoundedRectangleBorder(
