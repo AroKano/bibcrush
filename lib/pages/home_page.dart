@@ -1,4 +1,5 @@
 import 'package:bibcrush/components/my_button.dart';
+import 'package:bibcrush/pages/others_profile_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../components/custom_nav_bar.dart';
@@ -13,6 +14,9 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
+  bool isLiked = false;
+  bool isBookmarked = false;
+
   final user = FirebaseAuth.instance.currentUser!;
 
   Future<void> _signOut() async {
@@ -32,19 +36,17 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Center(
-          child: Text('Feed'),
-        )
+        title: const Text('Feed'),
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text('Logged in as ${user.email!}'),
+            Text('Eingeloggt als ${user.email!}'),
 
             const SizedBox(height: 20), // platz zwischen den text containern
 
-            MyButton(text: "Log out", onTap: _signOut)
+            MyButton(text: "Ausloggen", onTap: _signOut)
           ],
         ),
       ),

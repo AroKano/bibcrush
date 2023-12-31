@@ -1,3 +1,4 @@
+import 'package:bibcrush/pages/chat_page.dart';
 import 'package:bibcrush/pages/create_post.dart';
 import 'package:bibcrush/pages/home_page.dart';
 import 'package:bibcrush/pages/notification_page.dart';
@@ -19,6 +20,10 @@ class CustomNavBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Brightness iconColor = Theme.of(context).brightness == Brightness.light
+        ? Brightness.dark
+        : Brightness.light;
+
     return Container(
       color: Colors.transparent,
       child: SafeArea(
@@ -40,6 +45,8 @@ class CustomNavBar extends StatelessWidget {
   }
 
   Widget buildNavItem(IconData icon, int index) {
+    ThemeData theme = Theme.of(context);
+
     return GestureDetector(
       onTap: () {
         onTabChange(index);
@@ -59,7 +66,9 @@ class CustomNavBar extends StatelessWidget {
         ),
         child: Icon(
           icon,
-          color: selectedIndex == index ? Color(0xFFFF7A00) : Colors.black,
+          color: selectedIndex == index
+              ? Color(0xFFFF7A00)
+              : theme.colorScheme.onSurface,
         ),
       ),
     );
@@ -68,24 +77,34 @@ class CustomNavBar extends StatelessWidget {
   void navigateToPage(BuildContext context, int index) {
     switch (index) {
       case 0:
-        Navigator.of(context)
-            .pushReplacement(MaterialPageRoute(builder: (_) => HomePage()));
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (_) => HomePage()),
+          (route) => false,
+        );
         break;
       case 1:
-        Navigator.of(context)
-            .pushReplacement(MaterialPageRoute(builder: (_) => SearchPage()));
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (_) => SearchPage()),
+          (route) => false,
+        );
         break;
       case 2:
-        Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (_) => CreatePostPage()));
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (_) => CreatePostPage()),
+          (route) => false,
+        );
         break;
       case 3:
-        Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (_) => NotificationPage()));
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (_) => ChatScreen()),
+          (route) => false,
+        );
         break;
       case 4:
-        Navigator.of(context)
-            .pushReplacement(MaterialPageRoute(builder: (_) => ProfilePage()));
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (_) => ProfilePage()),
+          (route) => false,
+        );
         break;
     }
   }

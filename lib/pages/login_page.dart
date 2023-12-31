@@ -7,7 +7,8 @@ import 'package:flutter/material.dart';
 import 'forgot_pw_page.dart';
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({Key? key, required void Function() showStartPage}) : super(key: key);
+  const LoginPage({Key? key, required void Function() showStartPage})
+      : super(key: key);
 
   @override
   State<LoginPage> createState() => _LoginPageState();
@@ -17,8 +18,6 @@ class _LoginPageState extends State<LoginPage> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
-
-
   Future signIn() async {
     try {
       await FirebaseAuth.instance.signInWithEmailAndPassword(
@@ -27,11 +26,11 @@ class _LoginPageState extends State<LoginPage> {
       );
 
       // Anmeldung erfolgreich, navigiere zur Home-Seite und ersetze die aktuelle Seite
-      Navigator.pushReplacement(
+      Navigator.pushAndRemoveUntil(
         context,
-        MaterialPageRoute(builder: (context) => HomePage()),
+        MaterialPageRoute(builder: (_) => HomePage()),
+        (route) => false,
       );
-
     } catch (e) {
       // Fehler bei der Anmeldung
       print("Anmeldungsfehler: $e");
@@ -45,7 +44,6 @@ class _LoginPageState extends State<LoginPage> {
       );
     }
   }
-
 
   @override
   void dispose() {
@@ -71,11 +69,12 @@ class _LoginPageState extends State<LoginPage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => StartPage(showRegisterPage: () {  },),
+                    builder: (context) => StartPage(
+                      showRegisterPage: () {},
+                    ),
                   ),
                 );
               },
-
             ),
           ),
           title: const Text(
@@ -104,8 +103,7 @@ class _LoginPageState extends State<LoginPage> {
                         child: MyTextField(
                             hintText: "E-Mail eingeben",
                             obscureText: false,
-                            controller: _emailController
-                        ),
+                            controller: _emailController),
                       ),
                     ],
                   ),
@@ -124,12 +122,10 @@ class _LoginPageState extends State<LoginPage> {
                       const Icon(Icons.lock, color: Colors.grey),
                       const SizedBox(width: 10),
                       Expanded(
-                        child: MyTextField(
-                            hintText: 'Passwort eingeben',
-                            obscureText: true,
-                            controller: _passwordController
-                        )
-                      ),
+                          child: MyTextField(
+                              hintText: 'Passwort eingeben',
+                              obscureText: true,
+                              controller: _passwordController)),
                     ],
                   ),
                 ),
@@ -155,9 +151,7 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
               ),
-
               const SizedBox(height: 20),
-
               MyButton(text: "Anmelden", onTap: signIn)
             ],
           ),

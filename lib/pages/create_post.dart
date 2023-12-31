@@ -3,44 +3,32 @@ import 'package:flutter/material.dart';
 class CreatePostPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    Color customOrangeColor = Color(0xFFFF7A00);
-
     return Scaffold(
       backgroundColor: Colors.white,
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.fromLTRB(16.0, 32.0, 16.0, 16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            SizedBox(height: 20.0), // Vergrößert den Abstand oben
-
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 IconButton(
-                  icon: Icon(Icons.clear, color: customOrangeColor),
+                  icon: Icon(Icons.clear, color: Color(0xFFFF7A00)), // Akzentfarbe
                   onPressed: () {
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(
-                    //     builder: (context) => HomePage(),
-                    //   ),
-                    // );
-                    print('Quit');
+                    // Hier kannst du die Logik für das Schließen implementieren
+                    print('Cancel');
                   },
                 ),
-                SizedBox(width: 16.0), // Erhöht den Abstand zwischen den Icons und dem Text
                 Text(
                   'New Post',
                   style: TextStyle(
                     color: Colors.black,
-                    fontWeight: FontWeight.normal,
-                    fontSize: 20.0, // Vergrößert die Schriftgröße von 'New Post'
+                    fontSize: 20.0,
                   ),
                 ),
-                SizedBox(width: 16.0), // Erhöht den Abstand zwischen den Icons und dem Text
                 IconButton(
-                  icon: Icon(Icons.check, color: customOrangeColor),
+                  icon: Icon(Icons.check, color: Color(0xFFFF7A00)), // Akzentfarbe
                   onPressed: () {
                     // Hier kannst du die Logik für das Bestätigen implementieren
                     print('Post');
@@ -59,13 +47,13 @@ class CreatePostPage extends StatelessWidget {
               child: Theme(
                 data: Theme.of(context).copyWith(
                   textSelectionTheme: TextSelectionThemeData(
-                    cursorColor: customOrangeColor,
-                    selectionColor: customOrangeColor,
-                    selectionHandleColor: customOrangeColor,
+                    cursorColor: Color(0xFFFF7A00), // Akzentfarbe
+                    selectionColor: Color(0xFFFF7A00), // Akzentfarbe
+                    selectionHandleColor: Color(0xFFFF7A00), // Akzentfarbe
                   ),
                 ),
                 child: TextField(
-                  cursorColor: customOrangeColor,
+                  cursorColor: Color(0xFFFF7A00), // Akzentfarbe
                   style: TextStyle(color: Colors.black),
                   maxLines: null,
                   decoration: InputDecoration(
@@ -88,7 +76,7 @@ class CreatePostPage extends StatelessWidget {
                       print('Capture');
                     },
                     style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(customOrangeColor),
+                      backgroundColor: MaterialStateProperty.all(Color(0xFFFF7A00)), // Akzentfarbe
                       foregroundColor: MaterialStateProperty.all(Colors.white),
                       shape: MaterialStateProperty.all(
                         RoundedRectangleBorder(
@@ -115,7 +103,7 @@ class CreatePostPage extends StatelessWidget {
                       print('Upload');
                     },
                     style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(customOrangeColor),
+                      backgroundColor: MaterialStateProperty.all(Color(0xFFFF7A00)), // Akzentfarbe
                       foregroundColor: MaterialStateProperty.all(Colors.white),
                       shape: MaterialStateProperty.all(
                         RoundedRectangleBorder(

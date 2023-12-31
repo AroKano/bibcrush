@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'home_page.dart';
+
 class Message {
   String text;
   bool sender; // true for sender, false for receiver
@@ -63,7 +65,12 @@ class _ChatScreenState extends State<ChatScreen> {
             IconButton(
               icon: Icon(Icons.arrow_back_ios),
               onPressed: () {
-                Navigator.maybePop(context);
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => HomePage(),
+                  ),
+                );
               },
             ),
             CircleAvatar(

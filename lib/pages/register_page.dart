@@ -8,7 +8,8 @@ import 'package:flutter/material.dart';
 
 class RegistrationPage extends StatefulWidget {
   final VoidCallback showLoginPage;
-  const RegistrationPage({Key? key, required this.showLoginPage}) : super(key: key);
+  const RegistrationPage({Key? key, required this.showLoginPage})
+      : super(key: key);
 
   @override
   State<RegistrationPage> createState() => _RegistrationPageState();
@@ -32,7 +33,6 @@ class _RegistrationPageState extends State<RegistrationPage> {
   String emailError = "";
   String passwordError = "";
   String confirmPasswordError = "";
-
 
   @override
   void dispose() {
@@ -122,7 +122,6 @@ class _RegistrationPageState extends State<RegistrationPage> {
       return;
     }
 
-
     // create user
     try {
       await FirebaseAuth.instance.createUserWithEmailAndPassword(
@@ -141,9 +140,10 @@ class _RegistrationPageState extends State<RegistrationPage> {
       );
 
       // Registration successful, navigate to HomePage
-      Navigator.push(
+      Navigator.pushAndRemoveUntil(
         context,
-        MaterialPageRoute(builder: (context) => HomePage()),
+        MaterialPageRoute(builder: (_) => HomePage()),
+        (route) => false,
       );
     } catch (e) {
       // Handle registration error
@@ -151,8 +151,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
     }
   }
 
-  Future addUserDetails(
-      String vorname, String username, String fakultaet, String studiengang, int semester, String email) async {
+  Future addUserDetails(String vorname, String username, String fakultaet,
+      String studiengang, int semester, String email) async {
     await FirebaseFirestore.instance.collection("users").add({
       "Vorname": vorname,
       "Benutzername": username,
@@ -173,7 +173,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
   }
 
   bool passwordConfirmed() {
-    if (_passwordController.text.trim() != _confirmpasswordController.text.trim()) {
+    if (_passwordController.text.trim() !=
+        _confirmpasswordController.text.trim()) {
       setState(() {
         confirmPasswordError = "Passwörter stimmen nicht überein";
       });
@@ -228,7 +229,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
                 // Add this Text widget below the TextField
                 Text(
                   vornameError,
-                  style: TextStyle(color: Colors.red), // Customize the text color
+                  style:
+                      TextStyle(color: Colors.red), // Customize the text color
                 ),
 
                 const SizedBox(height: 20),
@@ -258,7 +260,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
                 // Add this Text widget below the TextField
                 Text(
                   usernameError,
-                  style: TextStyle(color: Colors.red), // Customize the text color
+                  style:
+                      TextStyle(color: Colors.red), // Customize the text color
                 ),
 
                 const SizedBox(height: 20),
@@ -288,7 +291,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
 
                 Text(
                   fakultaetError,
-                  style: TextStyle(color: Colors.red), // Customize the text color
+                  style:
+                      TextStyle(color: Colors.red), // Customize the text color
                 ),
 
                 const SizedBox(height: 20),
@@ -319,7 +323,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
                 // Add this Text widget below the TextField
                 Text(
                   studiengangError,
-                  style: TextStyle(color: Colors.red), // Customize the text color
+                  style:
+                      TextStyle(color: Colors.red), // Customize the text color
                 ),
 
                 const SizedBox(height: 20),
@@ -350,7 +355,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
                 // Add this Text widget below the TextField
                 Text(
                   semesterError,
-                  style: TextStyle(color: Colors.red), // Customize the text color
+                  style:
+                      TextStyle(color: Colors.red), // Customize the text color
                 ),
 
                 const SizedBox(height: 20),
@@ -380,7 +386,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
                 // Add this Text widget below the TextField
                 Text(
                   emailError,
-                  style: TextStyle(color: Colors.red), // Customize the text color
+                  style:
+                      TextStyle(color: Colors.red), // Customize the text color
                 ),
 
                 const SizedBox(height: 20),
@@ -410,7 +417,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
                 // Add this Text widget below the TextField
                 Text(
                   passwordError,
-                  style: TextStyle(color: Colors.red), // Customize the text color
+                  style:
+                      TextStyle(color: Colors.red), // Customize the text color
                 ),
 
                 const SizedBox(height: 20),
@@ -440,7 +448,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
                 // Add this Text widget below the TextField
                 Text(
                   confirmPasswordError,
-                  style: TextStyle(color: Colors.red), // Customize the text color
+                  style:
+                      TextStyle(color: Colors.red), // Customize the text color
                 ),
 
                 const SizedBox(height: 20),
@@ -456,7 +465,10 @@ class _RegistrationPageState extends State<RegistrationPage> {
                       onTap: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => LoginPage(showStartPage: () {  },)),
+                          MaterialPageRoute(
+                              builder: (context) => LoginPage(
+                                    showStartPage: () {},
+                                  )),
                         );
                       },
                       child: const Text(

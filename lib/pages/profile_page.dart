@@ -1,9 +1,11 @@
 import 'package:bibcrush/pages/home_page.dart';
 import 'package:bibcrush/pages/start_page.dart';
+import 'package:bibcrush/theme/theme_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 import '../components/custom_nav_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:bibcrush/pages/home_page.dart';
 
 //user
 final currentUser = FirebaseAuth.instance.currentUser!;
@@ -20,6 +22,12 @@ class _ProfilePageState extends State<ProfilePage> {
   bool _lightDarkModeEnabled = true;
   bool _notificationsEnabled = true;
 
+  final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
+  //damit Passwort Übereinstimmung kontrolliert wird ohne auf hot Reload zu drücken
+  final _formKey = GlobalKey<FormState>();
+  bool _passwordsMatch = true;
+
   String _name = 'Max';
   String _username = '@MaxMusty';
   String _caption =
@@ -30,73 +38,89 @@ class _ProfilePageState extends State<ProfilePage> {
   String _crushes = '0';
   String _studying = 'Computer Science';
   String _semester = '3rd Semester';
-  String _faculty = 'Engineering';
+  String _faculty = '3';
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.background,
+      ),
       endDrawer: Drawer(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(top: 50.0),
-              child: Column(
-                children: [
-                  ListTile(
-                    leading: Icon(Icons.sunny),
-                    title: Text("Light/Dark Mode"),
-                    trailing: Switch(
-                      onChanged: (bool? value) {
-                        setState(() {
-                          _lightDarkModeEnabled = value!;
-                        });
+        child: Container(
+          color: Theme.of(context).colorScheme.primary,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(top: 50.0),
+                child: Column(
+                  children: [
+                    ListTile(
+                      leading: Icon(Icons.sunny),
+                      title: Text("Light/Dark Mode"),
+                      trailing: Switch(
+                        onChanged: (bool? value) {
+                          setState(() {
+                            _lightDarkModeEnabled = value!;
+                          });
+                          Provider.of<ThemeProvider>(context, listen: false)
+                              .toggleTheme();
+                        },
+                        value: _lightDarkModeEnabled,
+                        activeTrackColor: Colors.orange,
+                        activeColor: Colors.white,
+                      ),
+                    ),
+                    ListTile(
+                      leading: Icon(Icons.notifications),
+                      title: Text(
+                        "Benachrichtigungen",
+                        style: TextStyle(fontSize: 15.0),
+                      ),
+                      trailing: Switch(
+                        onChanged: (bool? value) {
+                          setState(() {
+                            _notificationsEnabled = value!;
+                          });
+                        },
+                        value: _notificationsEnabled,
+                        activeTrackColor: Colors.orange,
+                        activeColor: Colors.white,
+                      ),
+                    ),
+                    ListTile(
+                      leading: Icon(Icons.key),
+                      title: Text("Passwort ändern"),
+                      onTap: () {
+                        _showChangePasswordDialog();
                       },
-                      value: _lightDarkModeEnabled,
-                      activeTrackColor: Colors.orange,
-                      activeColor: Colors.white,
                     ),
-                  ),
-                  ListTile(
-                    leading: Icon(Icons.notifications),
-                    title: Text(
-                      "Benachrichtigungen",
-                      style: TextStyle(fontSize: 15.0),
-                    ),
-                    trailing: Switch(
-                      onChanged: (bool? value) {
-                        setState(() {
-                          _notificationsEnabled = value!;
-                        });
-                      },
-                      value: _notificationsEnabled,
-                      activeTrackColor: Colors.orange,
-                      activeColor: Colors.white,
-                    ),
-                  ),
-                  ListTile(
-                    leading: Icon(Icons.key),
-                    title: Text("Passwort ändern"),
-                    onTap: () {
-                      //PASSWORT LOGIK EINSETZEN ALSO STRING IN FOLGENDE METHODE REIN
-                      // _changePassword();
-                    },
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(25.0),
-              child: ListTile(
-                leading: Icon(Icons.logout),
-                title: Text("Ausloggen"),
-                onTap: () {
-                  _signOut();
-                },
-              ),
-            ),
-          ],
+              Padding(
+                  padding: const EdgeInsets.all(25.0),
+                  child: Column(
+                    children: [
+                      ListTile(
+                        leading: Icon(Icons.delete_rounded),
+                        title: Text("Konto löschen"),
+                        onTap: () {
+                          _showDeleteAccountDialog();
+                        },
+                      ),
+                      ListTile(
+                        leading: Icon(Icons.logout),
+                        title: Text("Ausloggen"),
+                        onTap: () {
+                          _signOut();
+                        },
+                      ),
+                    ],
+                  )),
+            ],
+          ),
         ),
       ),
       body: Column(
@@ -111,9 +135,11 @@ class _ProfilePageState extends State<ProfilePage> {
             text: TextSpan(
               text: _name,
               style: TextStyle(
-                color: Colors.black,
                 fontWeight: FontWeight.bold,
                 fontSize: 24,
+                color: Theme.of(context).brightness == Brightness.dark
+                    ? Colors.white
+                    : Colors.black,
               ),
               children: [
                 TextSpan(
@@ -136,7 +162,6 @@ class _ProfilePageState extends State<ProfilePage> {
           ),
           TextButton(
             onPressed: () {
-              // Navigate to the edit profile screen or show a dialog
               _showEditProfileDialog(context);
             },
             style: ButtonStyle(
@@ -176,11 +201,14 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
             ),
           ),
+          SizedBox(
+            height: 10,
+          ),
           // TabBar and TabBarView
           Expanded(
             child: DefaultTabController(
-              length: 2, // Number of tabs
-              initialIndex: 0, // Index of the initially selected tab
+              length: 2,
+              initialIndex: 0,
               child: Column(
                 children: [
                   TabBar(
@@ -201,16 +229,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         ),
 
                         // Tab 2: My Infos
-                        Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text("Studying: $_studying"),
-                              Text("Semester: $_semester"),
-                              Text("Faculty: $_faculty"),
-                            ],
-                          ),
-                        ),
+                        _buildMyInfosTab(),
                       ],
                     ),
                   ),
@@ -254,25 +273,103 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  Future<void> _signOut() async {
-    await FirebaseAuth.instance.signOut();
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => StartPage(
-            showRegisterPage: () {},
-          ),
-        ));
+  Widget _buildMyInfosTab() {
+    return ListView(
+      padding: EdgeInsets.all(16.0),
+      children: [
+        _buildInfoSection("Studying", _studying),
+        _buildInfoSection("Semester", _semester),
+        _buildInfoSection("Faculty", _faculty),
+      ],
+    );
   }
 
-  Future<void> _changePassword(String password) async {
-    //Pass in the password to updatePassword.
-    currentUser.updatePassword(password).then((_) {
-      print("Successfully changed password");
-    }).catchError((error) {
-      print("Password can't be changed" + error.toString());
-      //This might happen, when the wrong password is in, the user isn't found, or if the user hasn't logged in recently.
-    });
+  Widget _buildInfoSection(String title, String caption) {
+    return Column(
+      children: [
+        ListTile(
+          title: Text(
+            title,
+            style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+          ),
+          subtitle: Text(
+            caption,
+            style: TextStyle(fontSize: 16.0),
+          ),
+          trailing: IconButton(
+            icon: Icon(Icons.edit),
+            onPressed: () {
+              _showEditInfoDialog(context, title, caption);
+            },
+          ),
+        ),
+        Divider(
+          color: Colors.grey,
+          thickness: 0.5,
+        ),
+      ],
+    );
+  }
+
+  void _showEditInfoDialog(
+      BuildContext context, String title, String initialValue) {
+    String newValue = initialValue;
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Edit $title"),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextFormField(
+                onChanged: (value) {
+                  newValue = value;
+                },
+                initialValue: initialValue,
+                decoration: InputDecoration(labelText: title),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text(
+                "Cancel",
+                style: TextStyle(color: Color(0xFFFF7A00)),
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                // Save the edited information
+                setState(() {
+                  switch (title) {
+                    case "Studying":
+                      _studying = newValue;
+                      break;
+                    case "Semester":
+                      _semester = newValue;
+                      break;
+                    case "Faculty":
+                      _faculty = newValue;
+                      break;
+                    // Add more cases for other info sections if needed
+                  }
+                });
+                Navigator.of(context).pop();
+              },
+              child: Text(
+                "Save",
+                style: TextStyle(color: Color(0xFFFF7A00)),
+              ),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   void _showEditProfileDialog(BuildContext context) {
@@ -316,7 +413,10 @@ class _ProfilePageState extends State<ProfilePage> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text("Cancel"),
+              child: Text(
+                "Cancel",
+                style: TextStyle(color: Color(0xFFFF7A00)),
+              ),
             ),
             TextButton(
               onPressed: () {
@@ -328,11 +428,157 @@ class _ProfilePageState extends State<ProfilePage> {
                 });
                 Navigator.of(context).pop();
               },
-              child: Text("Save"),
+              child: Text(
+                "Save",
+                style: TextStyle(color: Color(0xFFFF7A00)),
+              ),
             ),
           ],
         );
       },
     );
+  }
+
+  void _showDeleteAccountDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Delete your Account?'),
+          content: const Text(
+            '''If you select Delete we will delete your account on our server.
+
+Your app data will also be deleted and you won't be able to retrieve it.''',
+          ),
+          actions: [
+            TextButton(
+              child: const Text(
+                'Cancel',
+                style: TextStyle(color: Color(0xFFFF7A00)),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: const Text(
+                'Delete',
+                style: TextStyle(color: Color(0xFFFF7A00)),
+              ),
+              onPressed: () {
+                _deleteAccount();
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => StartPage(
+                      showRegisterPage: () {},
+                    ),
+                  ),
+                );
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showChangePasswordDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Change Password'),
+          content: Form(
+            key: _formKey,
+            child: SingleChildScrollView(
+              child: ListBody(
+                children: <Widget>[
+                  TextFormField(
+                    controller: _passwordController,
+                    decoration: InputDecoration(
+                      labelText: 'New Password',
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Color(0xFFFF7A00)),
+                      ),
+                    ),
+                    obscureText: true,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'You need to type in a password';
+                      }
+                      return null;
+                    },
+                  ),
+                  TextFormField(
+                    controller: _confirmPasswordController,
+                    decoration: InputDecoration(
+                      labelText: 'Confirm Password',
+                      errorText:
+                          _passwordsMatch ? null : 'Passwords do not match',
+                      errorStyle: TextStyle(color: Colors.red),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Color(0xFFFF7A00)),
+                      ),
+                    ),
+                    obscureText: true,
+                    validator: (value) {
+                      if (_passwordController.text.isNotEmpty &&
+                          value != _passwordController.text) {
+                        return 'Passwords do not match';
+                      }
+                      return null;
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                _clearTextFields();
+              },
+              child: Text('Cancel', style: TextStyle(color: Color(0xFFFF7A00))),
+            ),
+            TextButton(
+              onPressed: () {
+                if (_formKey.currentState!.validate()) {
+                  _changePassword(_passwordController.text);
+                  Navigator.of(context).pop();
+                  _clearTextFields();
+                }
+              },
+              child: Text('Save', style: TextStyle(color: Color(0xFFFF7A00))),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _clearTextFields() {
+    _passwordController.clear();
+    _confirmPasswordController.clear();
+  }
+
+  Future<void> _signOut() async {
+    await FirebaseAuth.instance.signOut();
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => StartPage(
+            showRegisterPage: () {},
+          ),
+        ));
+  }
+
+  Future<void> _deleteAccount() async {
+    await currentUser.delete();
+  }
+
+  Future<void> _changePassword(String newPassword) async {
+    await currentUser.updatePassword(newPassword);
   }
 }
