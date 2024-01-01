@@ -33,12 +33,12 @@ class _LoginPageState extends State<LoginPage> {
       );
     } catch (e) {
       // Fehler bei der Anmeldung
-      print("Anmeldungsfehler: $e");
+      print("Login error: $e");
       showDialog(
         context: context,
         builder: (context) {
           return AlertDialog(
-            content: Text("Anmeldung fehlgeschlagen: $e"),
+            content: Text("Login failed: $e"),
           );
         },
       );
@@ -78,7 +78,7 @@ class _LoginPageState extends State<LoginPage> {
             ),
           ),
           title: const Text(
-            'Anmeldung',
+            'Login',
             style: TextStyle(color: Colors.black),
           ),
         ),
@@ -101,7 +101,7 @@ class _LoginPageState extends State<LoginPage> {
                       const SizedBox(width: 10),
                       Expanded(
                         child: MyTextField(
-                            hintText: "E-Mail eingeben",
+                            hintText: "Enter email",
                             obscureText: false,
                             controller: _emailController),
                       ),
@@ -123,7 +123,7 @@ class _LoginPageState extends State<LoginPage> {
                       const SizedBox(width: 10),
                       Expanded(
                           child: MyTextField(
-                              hintText: 'Passwort eingeben',
+                              hintText: 'Enter password',
                               obscureText: true,
                               controller: _passwordController)),
                     ],
@@ -145,14 +145,14 @@ class _LoginPageState extends State<LoginPage> {
                 child: const SizedBox(
                   width: double.infinity,
                   child: Text(
-                    'Passwort vergessen?',
+                    'Forgot password?',
                     style: TextStyle(color: Color(0xFFFF7A00)),
                     textAlign: TextAlign.center,
                   ),
                 ),
               ),
               const SizedBox(height: 20),
-              MyButton(text: "Anmelden", onTap: signIn)
+              MyButton(text: "Sign In", onTap: signIn)
             ],
           ),
         ),

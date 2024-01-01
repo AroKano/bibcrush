@@ -30,7 +30,7 @@ class _StartPageState extends State<StartPage> {
               ),
               const SizedBox(height: 20),
               MyButton(
-                text: 'Login',
+                text: 'Sign in',
                 onTap: () {
                   // Navigate to LoginPage
                   Navigator.push(
@@ -44,7 +44,7 @@ class _StartPageState extends State<StartPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    "Kein Konto? ",
+                    "No account? ",
                     style: TextStyle(color: Color(0xFFFF7A00)),
                   ),
                   GestureDetector(
@@ -56,7 +56,7 @@ class _StartPageState extends State<StartPage> {
                       );
                     },
                     child: const Text(
-                      "Hier registrieren!",
+                      "Sign up here!",
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         color: Color(0xFFFF7A00),

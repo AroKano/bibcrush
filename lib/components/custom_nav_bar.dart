@@ -1,7 +1,6 @@
 import 'package:bibcrush/pages/chat_page.dart';
 import 'package:bibcrush/pages/create_post.dart';
 import 'package:bibcrush/pages/home_page.dart';
-import 'package:bibcrush/pages/notification_page.dart';
 import 'package:bibcrush/pages/profile_page.dart';
 import 'package:bibcrush/pages/search_page.dart';
 import 'package:flutter/material.dart';
