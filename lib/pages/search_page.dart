@@ -1,3 +1,7 @@
+import 'package:bibcrush/pages/others_profile_page.dart';
+import 'package:bibcrush/read%20data/get_user_and_first_name.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../components/custom_nav_bar.dart';
 
@@ -9,21 +13,60 @@ class SearchPage extends StatefulWidget {
 class _SearchPageState extends State<SearchPage> {
   int _selectedIndex = 1;
   TextEditingController _searchController = TextEditingController();
-  List<String> _searchResults = [];
+  List<String> docIDs = [];
+  List<String> filteredDocIDs = [];
 
-  void _performSearch(String query) {
-    List<String> dummyData = [
-      "Result 1",
-      "Result 2",
-      "Result 3",
-      // ... weitere Ergebnisse
-    ];
+  @override
+  void initState() {
+    super.initState();
+    getDocId();
+  }
 
+  Future getDocId() async {
+    docIDs.clear();
+    await FirebaseFirestore.instance.collection('users').get().then(
+          (snapshot) => snapshot.docs.forEach(
+            (document) {
+              print(document.reference);
+              docIDs.add(document.reference.id);
+            },
+          ),
+        );
     setState(() {
-      _searchResults = dummyData
-          .where((result) => result.toLowerCase().contains(query.toLowerCase()))
-          .toList();
+      filteredDocIDs = docIDs;
     });
+  }
+
+  void _performSearch(String query) async {
+    if (query.isEmpty) {
+      setState(() {
+        filteredDocIDs = docIDs;
+      });
+    } else {
+      List<String> results = [];
+
+      for (String docID in docIDs) {
+        final username = await _getUsernameFromDocId(docID);
+        if (docID.toLowerCase().contains(query.toLowerCase()) ||
+            username.toLowerCase().contains(query.toLowerCase())) {
+          results.add(docID);
+        }
+      }
+
+      setState(() {
+        filteredDocIDs = results;
+      });
+    }
+  }
+
+  Future<String> _getUsernameFromDocId(String docID) async {
+    final document =
+        await FirebaseFirestore.instance.collection('users').doc(docID).get();
+    if (document.exists) {
+      return document.data()?['Username'] ?? '';
+    } else {
+      return '';
+    }
   }
 
   @override
@@ -40,61 +83,64 @@ class _SearchPageState extends State<SearchPage> {
           children: [
             Container(
               decoration: BoxDecoration(
-                color: Colors.grey[200],
+                color: Theme.of(context).colorScheme.primary,
                 borderRadius: BorderRadius.circular(12),
               ),
               padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              child: Row(
+              child: Stack(
                 children: [
-                  Icon(Icons.search, color: Color(0xFFFF7A00)), // Farbe für Lupe geändert
-                  SizedBox(width: 8),
-                  Expanded(
-                    child: TextField(
-                      controller: _searchController,
-                      decoration: InputDecoration(
-                        hintText: 'Who are you looking for?',
-                        border: InputBorder.none,
+                  Row(
+                    children: [
+                      Icon(Icons.search, color: Color(0xFFFF7A00)),
+                      SizedBox(width: 8),
+                      Expanded(
+                        child: TextField(
+                          controller: _searchController,
+                          onChanged: (query) {
+                            _performSearch(query);
+                          },
+                          decoration: InputDecoration(
+                            hintText: 'Who are you looking for?',
+                            border: InputBorder.none,
+                          ),
+                          cursorColor: Color(0xFFFF7A00),
+                        ),
                       ),
-                      cursorColor: Color(0xFFFF7A00), // Farbe für Cursor geändert
-                    ),
+                      SizedBox(width: 8),
+                    ],
                   ),
-                  SizedBox(width: 8),
-                  GestureDetector(
-                    onTap: () {
-                      _performSearch(_searchController.text);
-                    },
-                    child: Container(
-                      width: 40,
-                      height: 40,
-                      decoration: BoxDecoration(
-                        color: Colors.transparent,
-                        shape: BoxShape.rectangle,
+                  if (_searchController.text.isNotEmpty)
+                    Positioned(
+                      right: 8,
+                      child: GestureDetector(
+                        onTap: () {
+                          _searchController.clear();
+                          _performSearch('');
+                        },
+                        child: Icon(Icons.clear, color: Color(0xFFFF7A00)),
                       ),
                     ),
-                  ),
                 ],
               ),
             ),
             SizedBox(height: 16),
             Expanded(
-              child: _searchResults.isEmpty
-                  ? Center(
-                      child: Text('No results found.'),
-                    )
-                  : ListView.separated(
-                      separatorBuilder: (context, index) {
-                        return Container(
-                          color: Color(0xFFFF7A00),
-                          height: 2,
-                        );
-                      },
-                      itemCount: _searchResults.length,
-                      itemBuilder: (context, index) {
-                        return ListTile(
-                          title: Text(_searchResults[index]),
-                        );
-                      },
+              child: ListView.builder(
+                itemCount: filteredDocIDs.length,
+                itemBuilder: (context, index) {
+                  return GestureDetector(
+                    onTap: () => _navigateToAccount(filteredDocIDs[index]),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: ListTile(
+                        title: GetUserAndFirstName(
+                            documentId: filteredDocIDs[index]),
+                        tileColor: Theme.of(context).colorScheme.primary,
+                      ),
                     ),
+                  );
+                },
+              ),
             ),
           ],
         ),
@@ -108,6 +154,12 @@ class _SearchPageState extends State<SearchPage> {
         },
         context: context,
       ),
+    );
+  }
+
+  void _navigateToAccount(String documentId) {
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (context) => OthersProfilePage()),
     );
   }
 }
