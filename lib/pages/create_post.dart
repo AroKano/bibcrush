@@ -1,6 +1,11 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import '../pages/home_page.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
 
 void main() {
   runApp(CreatePost());
@@ -27,6 +32,14 @@ class CreatePostPage extends StatefulWidget {
 
 class _CreatePostPageState extends State<CreatePostPage> {
   XFile? _image;
+  TextEditingController textController = TextEditingController();
+
+  // Override the dispose method here
+  @override
+  void dispose() {
+    textController.dispose();
+    super.dispose();
+  }
 
   void _captureImage() async {
     final ImagePicker _picker = ImagePicker();
@@ -50,6 +63,40 @@ class _CreatePostPageState extends State<CreatePostPage> {
     }
   }
 
+  Future<void> _createPost(String text, File? imageFile) async {
+    try {
+      String? imageUrl;
+      if (imageFile != null) {
+        String fileName = 'posts/${DateTime.now().millisecondsSinceEpoch}_${imageFile.path.split('/').last}';
+        firebase_storage.Reference ref = firebase_storage.FirebaseStorage.instance.ref().child(fileName);
+        firebase_storage.UploadTask uploadTask = ref.putFile(imageFile);
+        firebase_storage.TaskSnapshot taskSnapshot = await uploadTask;
+        imageUrl = await taskSnapshot.ref.getDownloadURL();
+      }
+
+      Map<String, dynamic> postData = {
+        'userId': FirebaseAuth.instance.currentUser!.uid,
+        'text': text,
+        'imageUrl': imageUrl,
+        'timestamp': FieldValue.serverTimestamp(),
+      };
+
+      await FirebaseFirestore.instance.collection('posts').add(postData);
+    } catch (e) {
+      print(e);
+    }
+  }
+
+
+  // Call _createPost when the Post button is pressed
+  void _handlePostButtonPressed() {
+    // Get the text from the text field controller
+    String postText = textController.text;
+
+    // Call the _createPost method with the text and image file
+    _createPost(postText, _image != null ? File(_image!.path) : null);
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -65,7 +112,11 @@ class _CreatePostPageState extends State<CreatePostPage> {
               padding: EdgeInsets.only(left: 15.0),
               child: TextButton(
                 onPressed: () {
-                  Navigator.of(context).pop();
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(builder: (context) => HomePage()),
+                        (Route<dynamic> route) => false,
+                  );
                 },
                 style: TextButton.styleFrom(
                   padding: EdgeInsets.zero,
@@ -80,9 +131,7 @@ class _CreatePostPageState extends State<CreatePostPage> {
             Padding(
               padding: EdgeInsets.only(right: 10.0),
               child: TextButton(
-                onPressed: () {
-                  // Handle post action
-                },
+                onPressed: _handlePostButtonPressed,
                 child: Text('Post', style: TextStyle(fontSize: 18.0, color: Color(0xFFFF7A00), fontWeight: FontWeight.bold)),
               ),
             ),
@@ -99,6 +148,7 @@ class _CreatePostPageState extends State<CreatePostPage> {
               Padding(
                 padding: EdgeInsets.all(12.0),
                 child: TextField(
+                  controller: textController,
                   decoration: InputDecoration(
                     hintText: 'Type something...',
                     hintStyle: TextStyle(fontSize: 18.0, color: Color(0xFF939393), fontWeight: FontWeight.normal),
