@@ -5,6 +5,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
+import 'comment_page.dart';
+
 class HomePage extends StatefulWidget {
   HomePage({Key? key}) : super(key: key);
 
@@ -103,7 +105,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                       PopupMenuButton<String>(
                         itemBuilder: (BuildContext context) {
-                          return {'Melden', 'Entfolgen'}.map((String choice) {
+                          return {'Report', 'Unfollow'}.map((String choice) {
                             return PopupMenuItem<String>(
                               value: choice,
                               child: Text(choice),
@@ -140,7 +142,12 @@ class _HomePageState extends State<HomePage> {
                     IconButton(
                       icon: Icon(Icons.comment),
                       onPressed: () {
-                        print('Kommentar');
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => CommentPage(postId: postDoc.id),
+                          ),
+                        );
                       },
                     ),
                     IconButton(
@@ -164,13 +171,13 @@ class _HomePageState extends State<HomePage> {
                         setState(() {
                           isBookmarked = !isBookmarked;
                         });
-                        print('Speichern');
+                        print('Bookmark');
                       },
                     ),
                     IconButton(
                       icon: Icon(Icons.share),
                       onPressed: () {
-                        print('Teilen');
+                        print('Share');
                       },
                     ),
                   ],
