@@ -1,11 +1,12 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import '../pages/home_page.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
+import 'home_page.dart';
 
 void main() {
   runApp(CreatePost());
@@ -34,7 +35,6 @@ class _CreatePostPageState extends State<CreatePostPage> {
   XFile? _image;
   TextEditingController textController = TextEditingController();
 
-  // Override the dispose method here
   @override
   void dispose() {
     textController.dispose();
@@ -63,7 +63,8 @@ class _CreatePostPageState extends State<CreatePostPage> {
     }
   }
 
-  Future<void> _createPost(String text, File? imageFile) async {
+// Inside the _createPost method
+  void _createPost(String text, File? imageFile) async {
     try {
       String? imageUrl;
       if (imageFile != null) {
@@ -74,8 +75,15 @@ class _CreatePostPageState extends State<CreatePostPage> {
         imageUrl = await taskSnapshot.ref.getDownloadURL();
       }
 
+      // Get current user data
+      User? currentUser = FirebaseAuth.instance.currentUser;
+
       Map<String, dynamic> postData = {
-        'userId': FirebaseAuth.instance.currentUser!.uid,
+        'users': {
+          'UID': currentUser!.uid,
+          'First Name': currentUser.displayName ?? 'Unknown', // Use the display name if available, or a default value
+          'Username': currentUser.displayName ?? 'Unknown', // Use the display name if available, or a default value
+        },
         'text': text,
         'imageUrl': imageUrl,
         'timestamp': FieldValue.serverTimestamp(),
@@ -88,13 +96,23 @@ class _CreatePostPageState extends State<CreatePostPage> {
   }
 
 
-  // Call _createPost when the Post button is pressed
-  void _handlePostButtonPressed() {
-    // Get the text from the text field controller
-    String postText = textController.text;
+  String _formatTimestamp(Timestamp timestamp) {
+    var now = DateTime.now();
+    var postTime = timestamp.toDate();
+    var difference = now.difference(postTime);
 
-    // Call the _createPost method with the text and image file
+    return timeago.format(now.subtract(difference));
+  }
+
+  void _handlePostButtonPressed() {
+    String postText = textController.text;
     _createPost(postText, _image != null ? File(_image!.path) : null);
+
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(builder: (context) => HomePage()),
+          (Route<dynamic> route) => false,
+    );
   }
 
   @override
@@ -159,7 +177,6 @@ class _CreatePostPageState extends State<CreatePostPage> {
                   maxLines: null,
                 ),
               ),
-              // ... Rest of the widgets ...
             ],
           ),
         ),
@@ -207,4 +224,3 @@ class _CreatePostPageState extends State<CreatePostPage> {
     );
   }
 }
-
