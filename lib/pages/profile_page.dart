@@ -1,12 +1,11 @@
-import 'package:bibcrush/pages/home_page.dart';
 import 'package:bibcrush/pages/start_page.dart';
-import 'package:bibcrush/theme/theme_provider.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:bibcrush/read%20data/get_user_and_first_name.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:provider/provider.dart';
 import '../components/custom_nav_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:provider/provider.dart';
+import 'package:bibcrush/theme/theme_provider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ProfilePage extends StatefulWidget {
   ProfilePage({Key? key}) : super(key: key);
@@ -16,38 +15,85 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  //user
   final currentUser = FirebaseAuth.instance.currentUser!;
-  final String? uid = FirebaseAuth.instance.currentUser?.uid;
-
   int _selectedIndex = 0;
   bool _lightDarkModeEnabled = true;
   bool _notificationsEnabled = true;
 
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
+
   //damit Passwort Übereinstimmung kontrolliert wird ohne auf hot Reload zu drücken
   final _formKey = GlobalKey<FormState>();
   bool _passwordsMatch = true;
 
-  String _name = 'Max';
-  String _username = '@MaxMusty';
-  String _caption =
-      'Photographer | Music enthusiast | Coffee lover | Lifelong learner';
-  String _posts = '0';
-  String _followers = '0';
-  String _following = '0';
-  String _crushes = '0';
-  String _studying = 'Computer Science';
-  String _semester = '3rd Semester';
-  String _faculty = '3';
+  int _posts = 0;
+  int _follower = 0;
+  int _following = 0;
+  int _crushes = 0;
+  String _first_name = '';
+  String _username = '';
+  String _caption = '';
+  String _courseOfStudy = '';
+  int? _semester;
+  int? _faculty;
+
+  List<String> docIDs = [];
+  User? user = FirebaseAuth.instance.currentUser;
+
+  @override
+  void initState() {
+    super.initState();
+    getDocs();
+  }
+
+  Future<void> getDocs() async {
+    try {
+      await FirebaseFirestore.instance
+          .collection("users")
+          .where('UID', isEqualTo: user?.uid ?? '')
+          .get()
+          .then((snapshot) {
+        if (snapshot.docs.isNotEmpty) {
+          final document = snapshot.docs[0];
+
+          if (document.reference != null &&
+              document.reference.path.isNotEmpty) {
+            print(document.reference);
+            docIDs.add(document.reference.id);
+
+            // Update local state with user details
+            setState(() {
+              _first_name = document['First Name'] ?? '';
+              _username = document['Username'] ?? '';
+
+              _caption = document['Caption'] ?? '';
+              _posts = document['Posts'] ?? 0;
+              _follower = document['Follower'] ?? 0;
+              _following = document['Following'] ?? 0;
+              _crushes = document['Crushes'] ?? 0;
+              _courseOfStudy = document['Course of Study'] ?? '';
+
+              // Treat faculty and semester as int
+              _semester = document['Semester'] as int?;
+              _faculty = document['Faculty'] as int?;
+            });
+          } else {
+            print("Error: Document reference is null or empty");
+            // Handle the error accordingly
+          }
+        }
+      });
+    } catch (e) {
+      print("Error fetching user details: $e");
+      // Handle the error accordingly
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.background,
-      ),
+      appBar: AppBar(),
       endDrawer: Drawer(
         child: Container(
           color: Theme.of(context).colorScheme.primary,
@@ -133,27 +179,7 @@ class _ProfilePageState extends State<ProfilePage> {
             Icons.person,
             size: 72,
           ),
-          RichText(
-            text: TextSpan(
-              text: _name,
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 24,
-                color: Theme.of(context).brightness == Brightness.dark
-                    ? Colors.white
-                    : Colors.black,
-              ),
-              children: [
-                TextSpan(
-                  text: _username,
-                  style: TextStyle(
-                    color: Colors.grey,
-                    fontSize: 20,
-                  ),
-                ),
-              ],
-            ),
-          ),
+          GetUserAndFirstName(documentId: docIDs.isNotEmpty ? docIDs[0] : ""),
           Container(
             child: Text(
               _caption,
@@ -164,6 +190,7 @@ class _ProfilePageState extends State<ProfilePage> {
           ),
           TextButton(
             onPressed: () {
+              // Navigate to the edit profile screen or show a dialog
               _showEditProfileDialog(context);
             },
             style: ButtonStyle(
@@ -195,22 +222,19 @@ class _ProfilePageState extends State<ProfilePage> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  _buildStatisticColumn("Posts", _posts),
-                  _buildStatisticColumn("Followers", _followers),
-                  _buildStatisticColumn("Following", _following),
-                  _buildStatisticColumn("Crushes", _crushes),
+                  _buildStatisticColumn("Posts", _posts.toString()),
+                  _buildStatisticColumn("Follower", _follower.toString()),
+                  _buildStatisticColumn("Following", _following.toString()),
+                  _buildStatisticColumn("Crushes", _crushes.toString()),
                 ],
               ),
             ),
           ),
-          SizedBox(
-            height: 10,
-          ),
           // TabBar and TabBarView
           Expanded(
             child: DefaultTabController(
-              length: 2,
-              initialIndex: 0,
+              length: 2, // Number of tabs
+              initialIndex: 0, // Index of the initially selected tab
               child: Column(
                 children: [
                   TabBar(
@@ -279,14 +303,14 @@ class _ProfilePageState extends State<ProfilePage> {
     return ListView(
       padding: EdgeInsets.all(16.0),
       children: [
-        _buildInfoSection("Studying", _studying),
-        _buildInfoSection("Semester", _semester),
-        _buildInfoSection("Faculty", _faculty),
+        _buildInfoSection("Studying", _courseOfStudy),
+        _buildInfoSection("Semester", _semester?.toString() ?? ""),
+        _buildInfoSection("Faculty", _faculty?.toString() ?? ""),
       ],
     );
   }
 
-  Widget _buildInfoSection(String title, String caption) {
+  Widget _buildInfoSection(String title, String? caption) {
     return Column(
       children: [
         ListTile(
@@ -295,13 +319,13 @@ class _ProfilePageState extends State<ProfilePage> {
             style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
           ),
           subtitle: Text(
-            caption,
+            caption ?? "N/A",
             style: TextStyle(fontSize: 16.0),
           ),
           trailing: IconButton(
             icon: Icon(Icons.edit),
             onPressed: () {
-              _showEditInfoDialog(context, title, caption);
+              _showEditInfoDialog(context, title, caption ?? "");
             },
           ),
         ),
@@ -313,8 +337,7 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  void _showEditInfoDialog(
-      BuildContext context, String title, String initialValue) {
+  void _showEditInfoDialog(BuildContext context, String title, String initialValue) {
     String newValue = initialValue;
 
     showDialog(
@@ -345,23 +368,43 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
             ),
             TextButton(
-              onPressed: () {
+              onPressed: () async {
                 // Save the edited information
-                setState(() {
-                  switch (title) {
-                    case "Studying":
-                      _studying = newValue;
-                      break;
-                    case "Semester":
-                      _semester = newValue;
-                      break;
-                    case "Faculty":
-                      _faculty = newValue;
-                      break;
+                try {
+                  await _updateEditInfoInFirestore(title, newValue);
+
+                  setState(() {
+                    switch (title) {
+                      case "Course of Study":
+                        _courseOfStudy = newValue;
+                        break;
+                      case "Semester":
+                      // Check if newValue is a valid integer string before parsing
+                        if (int.tryParse(newValue) != null) {
+                          _semester = int.parse(newValue);
+                        } else {
+                          print("Invalid integer for Semester: $newValue");
+                          // Handle the error accordingly
+                        }
+                        break;
+                      case "Faculty":
+                      // Check if newValue is a valid integer string before parsing
+                        if (int.tryParse(newValue) != null) {
+                          _faculty = int.parse(newValue);
+                        } else {
+                          print("Invalid integer for Faculty: $newValue");
+                          // Handle the error accordingly
+                        }
+                        break;
                     // Add more cases for other info sections if needed
-                  }
-                });
-                Navigator.of(context).pop();
+                    }
+                  });
+
+                  Navigator.of(context).pop();
+                } catch (e) {
+                  print("Error saving edited information: $e");
+                  // Handle the error accordingly
+                }
               },
               child: Text(
                 "Save",
@@ -375,7 +418,7 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   void _showEditProfileDialog(BuildContext context) {
-    String newName = _name;
+    String newFirstName = _first_name;
     String newUsername = _username;
     String newCaption = _caption;
 
@@ -389,10 +432,10 @@ class _ProfilePageState extends State<ProfilePage> {
             children: [
               TextFormField(
                 onChanged: (value) {
-                  newName = value;
+                  newFirstName = value;
                 },
-                initialValue: _name,
-                decoration: InputDecoration(labelText: "Name"),
+                initialValue: _first_name,
+                decoration: InputDecoration(labelText: "First Name"),
               ),
               TextFormField(
                 onChanged: (value) {
@@ -415,23 +458,24 @@ class _ProfilePageState extends State<ProfilePage> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text(
-                "Cancel",
-                style: TextStyle(color: Color(0xFFFF7A00)),
-              ),
+              child: Text("Cancel"),
             ),
             TextButton(
-              onPressed: () {
-                // Save the edited profile information
+              onPressed: () async {
+                // Update the caption in Firestore
+                await _updateEditProfileInFirestore(
+                    newFirstName, newUsername, newCaption);
+
+                // Update the local state
                 setState(() {
-                  _name = newName;
+                  _first_name = newFirstName;
                   _username = newUsername;
                   _caption = newCaption;
                 });
+
                 Navigator.of(context).pop();
               },
-              child: Text(
-                "Save",
+              child: Text("Save",
                 style: TextStyle(color: Color(0xFFFF7A00)),
               ),
             ),
@@ -472,9 +516,10 @@ Your app data will also be deleted and you won't be able to retrieve it.''',
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => StartPage(
-                      showRegisterPage: () {},
-                    ),
+                    builder: (context) =>
+                        StartPage(
+                          showRegisterPage: () {},
+                        ),
                   ),
                 );
               },
@@ -517,7 +562,7 @@ Your app data will also be deleted and you won't be able to retrieve it.''',
                     decoration: InputDecoration(
                       labelText: 'Confirm Password',
                       errorText:
-                          _passwordsMatch ? null : 'Passwords do not match',
+                      _passwordsMatch ? null : 'Passwords do not match',
                       errorStyle: TextStyle(color: Colors.red),
                       focusedBorder: UnderlineInputBorder(
                         borderSide: BorderSide(color: Color(0xFFFF7A00)),
@@ -565,20 +610,91 @@ Your app data will also be deleted and you won't be able to retrieve it.''',
     _confirmPasswordController.clear();
   }
 
+  Future<void> _updateEditInfoInFirestore(String title, String newValue) async {
+    try {
+      // Get the current user's document ID
+      String userId = FirebaseAuth.instance.currentUser?.uid ?? "";
+      print("Current User UID: $userId");
+
+      // Fetch the current user document
+      DocumentSnapshot<Map<String, dynamic>> userDocument =
+      await FirebaseFirestore.instance.collection("users").doc(userId).get();
+
+      // Get the current data from the document
+      Map<String, dynamic> currentData = userDocument.data() ?? {};
+
+      // Update the specific field based on the title
+      switch (title) {
+        case "Course of Study":
+          currentData["Course of Study"] = newValue;
+          break;
+        case "Semester":
+        // Check if newValue is a valid integer string before parsing
+          if (int.tryParse(newValue) != null) {
+            currentData["Semester"] = int.parse(newValue);
+          } else {
+            print("Invalid integer for Semester: $newValue");
+            // Handle the error accordingly
+          }
+          break;
+        case "Faculty":
+        // Check if newValue is a valid integer string before parsing
+          if (int.tryParse(newValue) != null) {
+            currentData["Faculty"] = int.parse(newValue);
+          } else {
+            print("Invalid integer for Faculty: $newValue");
+            // Handle the error accordingly
+          }
+          break;
+      // Add more cases for other info sections if needed
+      }
+
+      // Update the entire user information in Firestore
+      await FirebaseFirestore.instance.collection("users").doc(userId).set(currentData);
+
+      print("$title updated in Firestore");
+    } catch (e) {
+      print("Error updating $title in Firestore: $e");
+      // Handle the error accordingly
+    }
+  }
+
+  Future<void> _updateEditProfileInFirestore(String newFirstName, String newUsername, String newCaption) async {
+    try {
+      // Get the current user's document ID
+      String userId = FirebaseAuth.instance.currentUser?.uid ?? "";
+
+      // Update the user information in Firestore
+      await FirebaseFirestore.instance
+          .collection("users")
+          .doc(userId)
+          .update({
+        "First Name": newFirstName,
+        "Username": newUsername,
+        "Caption": newCaption,
+      });
+
+      print("User information updated in Firestore");
+    } catch (e) {
+      print("Error updating user information in Firestore: $e");
+      // Handle the error accordingly
+    }
+  }
+
   Future<void> _signOut() async {
     await FirebaseAuth.instance.signOut();
     Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => StartPage(
-            showRegisterPage: () {},
-          ),
+          builder: (context) =>
+              StartPage(
+                showRegisterPage: () {},
+              ),
         ));
   }
 
   Future<void> _deleteAccount() async {
-    await FirebaseFirestore.instance.collection('users').doc(uid).delete();
-    currentUser.delete();
+    await currentUser.delete();
   }
 
   Future<void> _changePassword(String newPassword) async {
