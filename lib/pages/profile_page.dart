@@ -16,10 +16,13 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   final currentUser = FirebaseAuth.instance.currentUser!;
+  final String? uid = FirebaseAuth.instance.currentUser?.uid;
+
   int _selectedIndex = 0;
   bool _lightDarkModeEnabled = true;
   bool _notificationsEnabled = true;
 
+  final _currentPasswordController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
 
@@ -93,7 +96,9 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.background,
+      ),
       endDrawer: Drawer(
         child: Container(
           color: Theme.of(context).colorScheme.primary,
@@ -123,8 +128,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     ListTile(
                       leading: Icon(Icons.notifications),
                       title: Text(
-                        "Benachrichtigungen",
-                        style: TextStyle(fontSize: 15.0),
+                        "Notifications",
                       ),
                       trailing: Switch(
                         onChanged: (bool? value) {
@@ -139,7 +143,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                     ListTile(
                       leading: Icon(Icons.key),
-                      title: Text("Passwort ändern"),
+                      title: Text("Change password"),
                       onTap: () {
                         _showChangePasswordDialog();
                       },
@@ -153,14 +157,14 @@ class _ProfilePageState extends State<ProfilePage> {
                     children: [
                       ListTile(
                         leading: Icon(Icons.delete_rounded),
-                        title: Text("Konto löschen"),
+                        title: Text("Delete account"),
                         onTap: () {
                           _showDeleteAccountDialog();
                         },
                       ),
                       ListTile(
                         leading: Icon(Icons.logout),
-                        title: Text("Ausloggen"),
+                        title: Text("Log out"),
                         onTap: () {
                           _signOut();
                         },
@@ -179,7 +183,27 @@ class _ProfilePageState extends State<ProfilePage> {
             Icons.person,
             size: 72,
           ),
-          GetUserAndFirstName(documentId: docIDs.isNotEmpty ? docIDs[0] : ""),
+          RichText(
+            text: TextSpan(
+              text: _first_name,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 24,
+                color: Theme.of(context).brightness == Brightness.dark
+                    ? Colors.white
+                    : Colors.black,
+              ),
+              children: [
+                TextSpan(
+                  text: ' @' + _username,
+                  style: TextStyle(
+                    color: Colors.grey,
+                    fontSize: 20,
+                  ),
+                ),
+              ],
+            ),
+          ),
           Container(
             child: Text(
               _caption,
@@ -233,8 +257,8 @@ class _ProfilePageState extends State<ProfilePage> {
           // TabBar and TabBarView
           Expanded(
             child: DefaultTabController(
-              length: 2, // Number of tabs
-              initialIndex: 0, // Index of the initially selected tab
+              length: 2,
+              initialIndex: 0,
               child: Column(
                 children: [
                   TabBar(
@@ -243,7 +267,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     indicatorColor: Colors.orange,
                     tabs: [
                       Tab(text: "My Posts"),
-                      Tab(text: "My Infos"),
+                      Tab(text: "My Info"),
                     ],
                   ),
                   Expanded(
@@ -337,7 +361,8 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  void _showEditInfoDialog(BuildContext context, String title, String initialValue) {
+  void _showEditInfoDialog(
+      BuildContext context, String title, String initialValue) {
     String newValue = initialValue;
 
     showDialog(
@@ -379,7 +404,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         _courseOfStudy = newValue;
                         break;
                       case "Semester":
-                      // Check if newValue is a valid integer string before parsing
+                        // Check if newValue is a valid integer string before parsing
                         if (int.tryParse(newValue) != null) {
                           _semester = int.parse(newValue);
                         } else {
@@ -388,7 +413,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         }
                         break;
                       case "Faculty":
-                      // Check if newValue is a valid integer string before parsing
+                        // Check if newValue is a valid integer string before parsing
                         if (int.tryParse(newValue) != null) {
                           _faculty = int.parse(newValue);
                         } else {
@@ -396,7 +421,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           // Handle the error accordingly
                         }
                         break;
-                    // Add more cases for other info sections if needed
+                      // Add more cases for other info sections if needed
                     }
                   });
 
@@ -419,7 +444,6 @@ class _ProfilePageState extends State<ProfilePage> {
 
   void _showEditProfileDialog(BuildContext context) {
     String newFirstName = _first_name;
-    String newUsername = _username;
     String newCaption = _caption;
 
     showDialog(
@@ -438,9 +462,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 decoration: InputDecoration(labelText: "First Name"),
               ),
               TextFormField(
-                onChanged: (value) {
-                  newUsername = value;
-                },
+                readOnly: true,
                 initialValue: _username,
                 decoration: InputDecoration(labelText: "Username"),
               ),
@@ -458,24 +480,26 @@ class _ProfilePageState extends State<ProfilePage> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text("Cancel"),
+              child: Text(
+                "Cancel",
+                style: TextStyle(color: Color(0xFFFF7A00)),
+              ),
             ),
             TextButton(
               onPressed: () async {
                 // Update the caption in Firestore
-                await _updateEditProfileInFirestore(
-                    newFirstName, newUsername, newCaption);
+                await _updateEditProfileInFirestore(newFirstName, newCaption);
 
                 // Update the local state
                 setState(() {
                   _first_name = newFirstName;
-                  _username = newUsername;
                   _caption = newCaption;
                 });
 
                 Navigator.of(context).pop();
               },
-              child: Text("Save",
+              child: Text(
+                "Save",
                 style: TextStyle(color: Color(0xFFFF7A00)),
               ),
             ),
@@ -516,10 +540,9 @@ Your app data will also be deleted and you won't be able to retrieve it.''',
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) =>
-                        StartPage(
-                          showRegisterPage: () {},
-                        ),
+                    builder: (context) => StartPage(
+                      showRegisterPage: () {},
+                    ),
                   ),
                 );
               },
@@ -542,6 +565,22 @@ Your app data will also be deleted and you won't be able to retrieve it.''',
               child: ListBody(
                 children: <Widget>[
                   TextFormField(
+                    controller: _currentPasswordController,
+                    decoration: InputDecoration(
+                      labelText: 'Current password',
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Color(0xFFFF7A00)),
+                      ),
+                    ),
+                    obscureText: true,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'You need to type in your current password';
+                      }
+                      return null;
+                    },
+                  ),
+                  TextFormField(
                     controller: _passwordController,
                     decoration: InputDecoration(
                       labelText: 'New Password',
@@ -562,7 +601,7 @@ Your app data will also be deleted and you won't be able to retrieve it.''',
                     decoration: InputDecoration(
                       labelText: 'Confirm Password',
                       errorText:
-                      _passwordsMatch ? null : 'Passwords do not match',
+                          _passwordsMatch ? null : 'Passwords do not match',
                       errorStyle: TextStyle(color: Colors.red),
                       focusedBorder: UnderlineInputBorder(
                         borderSide: BorderSide(color: Color(0xFFFF7A00)),
@@ -592,7 +631,8 @@ Your app data will also be deleted and you won't be able to retrieve it.''',
             TextButton(
               onPressed: () {
                 if (_formKey.currentState!.validate()) {
-                  _changePassword(_passwordController.text);
+                  _changePassword(_currentPasswordController.text,
+                      _passwordController.text);
                   Navigator.of(context).pop();
                   _clearTextFields();
                 }
@@ -606,8 +646,75 @@ Your app data will also be deleted and you won't be able to retrieve it.''',
   }
 
   void _clearTextFields() {
+    _currentPasswordController.clear();
     _passwordController.clear();
     _confirmPasswordController.clear();
+  }
+
+  void _showErrorPopup(String message) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Error'),
+          content: Text(message),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('OK', style: TextStyle(color: Color(0xFFFF7A00))),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<String?> _changePassword(
+      String oldPassword, String newPassword) async {
+    User user = FirebaseAuth.instance.currentUser!;
+    AuthCredential credential =
+        EmailAuthProvider.credential(email: user.email!, password: oldPassword);
+
+    Map<String, String?> codeResponses = {
+      // Re-auth responses
+      "user-mismatch": null,
+      "user-not-found": null,
+      "invalid-credential": null,
+      "invalid-email": null,
+      "wrong-password": null,
+      "invalid-verification-code": null,
+      "invalid-verification-id": null,
+      "weak-password": null,
+      "requires-recent-login": null
+    };
+
+    try {
+      await user.reauthenticateWithCredential(credential);
+      await user.updatePassword(newPassword);
+      await _signOut();
+    } on FirebaseAuthException catch (error) {
+      String errorMessage =
+          codeResponses[error.code] ?? "Wrong current password";
+      _showErrorPopup(errorMessage);
+    }
+  }
+
+  Future<void> _signOut() async {
+    await FirebaseAuth.instance.signOut();
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => StartPage(
+            showRegisterPage: () {},
+          ),
+        ));
+  }
+
+  Future<void> _deleteAccount() async {
+    await FirebaseFirestore.instance.collection('users').doc(uid).delete();
+    currentUser.delete();
   }
 
   Future<void> _updateEditInfoInFirestore(String title, String newValue) async {
@@ -618,7 +725,10 @@ Your app data will also be deleted and you won't be able to retrieve it.''',
 
       // Fetch the current user document
       DocumentSnapshot<Map<String, dynamic>> userDocument =
-      await FirebaseFirestore.instance.collection("users").doc(userId).get();
+          await FirebaseFirestore.instance
+              .collection("users")
+              .doc(userId)
+              .get();
 
       // Get the current data from the document
       Map<String, dynamic> currentData = userDocument.data() ?? {};
@@ -629,7 +739,7 @@ Your app data will also be deleted and you won't be able to retrieve it.''',
           currentData["Course of Study"] = newValue;
           break;
         case "Semester":
-        // Check if newValue is a valid integer string before parsing
+          // Check if newValue is a valid integer string before parsing
           if (int.tryParse(newValue) != null) {
             currentData["Semester"] = int.parse(newValue);
           } else {
@@ -638,7 +748,7 @@ Your app data will also be deleted and you won't be able to retrieve it.''',
           }
           break;
         case "Faculty":
-        // Check if newValue is a valid integer string before parsing
+          // Check if newValue is a valid integer string before parsing
           if (int.tryParse(newValue) != null) {
             currentData["Faculty"] = int.parse(newValue);
           } else {
@@ -646,11 +756,14 @@ Your app data will also be deleted and you won't be able to retrieve it.''',
             // Handle the error accordingly
           }
           break;
-      // Add more cases for other info sections if needed
+        // Add more cases for other info sections if needed
       }
 
       // Update the entire user information in Firestore
-      await FirebaseFirestore.instance.collection("users").doc(userId).set(currentData);
+      await FirebaseFirestore.instance
+          .collection("users")
+          .doc(userId)
+          .set(currentData);
 
       print("$title updated in Firestore");
     } catch (e) {
@@ -659,18 +772,15 @@ Your app data will also be deleted and you won't be able to retrieve it.''',
     }
   }
 
-  Future<void> _updateEditProfileInFirestore(String newFirstName, String newUsername, String newCaption) async {
+  Future<void> _updateEditProfileInFirestore(
+      String newFirstName, String newCaption) async {
     try {
       // Get the current user's document ID
       String userId = FirebaseAuth.instance.currentUser?.uid ?? "";
 
       // Update the user information in Firestore
-      await FirebaseFirestore.instance
-          .collection("users")
-          .doc(userId)
-          .update({
+      await FirebaseFirestore.instance.collection("users").doc(userId).update({
         "First Name": newFirstName,
-        "Username": newUsername,
         "Caption": newCaption,
       });
 
@@ -679,25 +789,5 @@ Your app data will also be deleted and you won't be able to retrieve it.''',
       print("Error updating user information in Firestore: $e");
       // Handle the error accordingly
     }
-  }
-
-  Future<void> _signOut() async {
-    await FirebaseAuth.instance.signOut();
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) =>
-              StartPage(
-                showRegisterPage: () {},
-              ),
-        ));
-  }
-
-  Future<void> _deleteAccount() async {
-    await currentUser.delete();
-  }
-
-  Future<void> _changePassword(String newPassword) async {
-    await currentUser.updatePassword(newPassword);
   }
 }

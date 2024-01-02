@@ -7,7 +7,15 @@ ThemeData lightMode = ThemeData(
     background: Colors.white,
     primary: Colors.grey.shade200,
   ),
-  textTheme: GoogleFonts.dmSansTextTheme(),
+  textTheme: GoogleFonts.dmSansTextTheme().apply(
+    bodyColor: Colors.black,
+    displayColor: Colors.black,
+  ),
+  inputDecorationTheme: InputDecorationTheme(
+    labelStyle: TextStyle(
+      color: Colors.black,
+    ),
+  ),
 );
 
 ThemeData darkMode = ThemeData(
