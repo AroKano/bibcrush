@@ -17,12 +17,12 @@ ThemeData darkMode = ThemeData(
     primary: Colors.grey.shade800,
   ),
   textTheme: GoogleFonts.dmSansTextTheme().apply(
-    bodyColor: Colors.white, // Set the default text color in dark mode
-    displayColor: Colors.white, // Set the display text color in dark mode
+    bodyColor: Colors.white,
+    displayColor: Colors.white,
   ),
   inputDecorationTheme: InputDecorationTheme(
     labelStyle: TextStyle(
-      color: Colors.white, // Set the color of label text in dark mode
+      color: Colors.white,
     ),
   ),
 );
