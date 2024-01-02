@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:bibcrush/pages/home_page.dart';
 
 void main() {
   runApp(CreatePost());
@@ -65,13 +66,18 @@ class _CreatePostPageState extends State<CreatePostPage> {
               padding: EdgeInsets.only(left: 15.0),
               child: TextButton(
                 onPressed: () {
-                  Navigator.of(context).pop();
+                  Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (BuildContext context) => HomePage()));
                 },
                 style: TextButton.styleFrom(
                   padding: EdgeInsets.zero,
                   foregroundColor: Color(0xFFE85555),
                 ),
-                child: Text('Cancel', style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
+                child: Text('Cancel',
+                    style:
+                        TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
               ),
             ),
           ),
@@ -83,7 +89,11 @@ class _CreatePostPageState extends State<CreatePostPage> {
                 onPressed: () {
                   // Handle post action
                 },
-                child: Text('Post', style: TextStyle(fontSize: 18.0, color: Color(0xFFFF7A00), fontWeight: FontWeight.bold)),
+                child: Text('Post',
+                    style: TextStyle(
+                        fontSize: 18.0,
+                        color: Color(0xFFFF7A00),
+                        fontWeight: FontWeight.bold)),
               ),
             ),
           ],
@@ -101,9 +111,13 @@ class _CreatePostPageState extends State<CreatePostPage> {
                 child: TextField(
                   decoration: InputDecoration(
                     hintText: 'Type something...',
-                    hintStyle: TextStyle(fontSize: 18.0, color: Color(0xFF939393), fontWeight: FontWeight.normal),
+                    hintStyle: TextStyle(
+                        fontSize: 18.0,
+                        color: Color(0xFF939393),
+                        fontWeight: FontWeight.normal),
                     border: InputBorder.none,
-                    contentPadding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                    contentPadding:
+                        EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
                   ),
                   keyboardType: TextInputType.multiline,
                   maxLines: null,
@@ -120,11 +134,13 @@ class _CreatePostPageState extends State<CreatePostPage> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Expanded(
-                child: _buildActionItem(context, 'Capture', Icons.camera_alt, Color(0xFFC6D2DD), Color(0xFF41698D), _captureImage),
+                child: _buildActionItem(context, 'Capture', Icons.camera_alt,
+                    Color(0xFFC6D2DD), Color(0xFF41698D), _captureImage),
               ),
               SizedBox(width: 12),
               Expanded(
-                child: _buildActionItem(context, 'Upload', Icons.file_upload, Color(0xFFD6ECCF), Color(0xFF78C05F), _uploadMedia),
+                child: _buildActionItem(context, 'Upload', Icons.file_upload,
+                    Color(0xFFD6ECCF), Color(0xFF78C05F), _uploadMedia),
               ),
             ],
           ),
@@ -133,7 +149,8 @@ class _CreatePostPageState extends State<CreatePostPage> {
     );
   }
 
-  Widget _buildActionItem(BuildContext context, String text, IconData icon, Color color, Color iconColor, VoidCallback onPressed) {
+  Widget _buildActionItem(BuildContext context, String text, IconData icon,
+      Color color, Color iconColor, VoidCallback onPressed) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 20.0),
       child: ElevatedButton(
@@ -150,7 +167,9 @@ class _CreatePostPageState extends State<CreatePostPage> {
           children: <Widget>[
             Icon(icon, color: iconColor),
             SizedBox(width: 8),
-            Text(text, style: TextStyle(color: Color(0xFF323232), fontWeight: FontWeight.bold)),
+            Text(text,
+                style: TextStyle(
+                    color: Color(0xFF323232), fontWeight: FontWeight.bold)),
           ],
         ),
       ),
