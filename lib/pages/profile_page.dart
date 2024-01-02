@@ -1,14 +1,12 @@
 import 'package:bibcrush/pages/home_page.dart';
 import 'package:bibcrush/pages/start_page.dart';
 import 'package:bibcrush/theme/theme_provider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import '../components/custom_nav_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
-//user
-final currentUser = FirebaseAuth.instance.currentUser!;
 
 class ProfilePage extends StatefulWidget {
   ProfilePage({Key? key}) : super(key: key);
@@ -18,6 +16,10 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  //user
+  final currentUser = FirebaseAuth.instance.currentUser!;
+  final String? uid = FirebaseAuth.instance.currentUser?.uid;
+
   int _selectedIndex = 0;
   bool _lightDarkModeEnabled = true;
   bool _notificationsEnabled = true;
@@ -575,7 +577,8 @@ Your app data will also be deleted and you won't be able to retrieve it.''',
   }
 
   Future<void> _deleteAccount() async {
-    await currentUser.delete();
+    await FirebaseFirestore.instance.collection('users').doc(uid).delete();
+    currentUser.delete();
   }
 
   Future<void> _changePassword(String newPassword) async {

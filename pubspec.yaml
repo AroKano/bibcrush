@@ -41,6 +41,7 @@ dependencies:
   cloud_firestore: ^4.13.6
   flutter_native_splash: ^2.3.8
   provider:
+  google_fonts: 6.1.0
 
   # Add other Firebase dependencies as needed
 

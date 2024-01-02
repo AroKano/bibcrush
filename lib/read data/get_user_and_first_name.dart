@@ -3,8 +3,12 @@ import 'package:flutter/material.dart';
 
 class GetUserAndFirstName extends StatelessWidget {
   final String documentId;
+  final TextStyle? textStyle;
 
-  GetUserAndFirstName({required this.documentId});
+  GetUserAndFirstName({
+    required this.documentId,
+    this.textStyle,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -22,8 +26,12 @@ class GetUserAndFirstName extends StatelessWidget {
           }
 
           Map<String, dynamic> data =
-          snapshot.data!.data() as Map<String, dynamic>;
-          return Text("${data["First Name"]}" + " @${data["Username"]}");
+              snapshot.data!.data() as Map<String, dynamic>;
+          return Text(
+            "${data["First Name"]}" + " @${data["Username"]}",
+            style: textStyle
+                ?.merge(TextStyle(fontSize: textStyle?.fontSize ?? 14)),
+          );
         }
         return Text("Loading...");
       },

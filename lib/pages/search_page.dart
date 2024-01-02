@@ -1,7 +1,6 @@
 import 'package:bibcrush/pages/others_profile_page.dart';
 import 'package:bibcrush/read%20data/get_user_and_first_name.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../components/custom_nav_bar.dart';
 
@@ -112,6 +111,7 @@ class _SearchPageState extends State<SearchPage> {
                   if (_searchController.text.isNotEmpty)
                     Positioned(
                       right: 8,
+                      top: (_searchController.text.isNotEmpty) ? 14.0 : 0.0,
                       child: GestureDetector(
                         onTap: () {
                           _searchController.clear();
@@ -132,10 +132,28 @@ class _SearchPageState extends State<SearchPage> {
                     onTap: () => _navigateToAccount(filteredDocIDs[index]),
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: ListTile(
-                        title: GetUserAndFirstName(
-                            documentId: filteredDocIDs[index]),
-                        tileColor: Theme.of(context).colorScheme.primary,
+                      child: Card(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        color: Theme.of(context).colorScheme.primary,
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.person,
+                              ),
+                              SizedBox(width: 16),
+                              GetUserAndFirstName(
+                                documentId: filteredDocIDs[index],
+                                textStyle: TextStyle(
+                                  fontSize: 19,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
                     ),
                   );
