@@ -177,7 +177,8 @@ class _SearchPageState extends State<SearchPage> {
 
   void _navigateToAccount(String documentId) {
     Navigator.of(context).push(
-      MaterialPageRoute(builder: (context) => OthersProfilePage()),
+      MaterialPageRoute(
+          builder: (context) => OthersProfilePage(documentId: documentId)),
     );
   }
 }
