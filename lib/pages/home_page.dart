@@ -127,6 +127,13 @@ class _HomePageState extends State<HomePage> {
                     fit: BoxFit.cover,
                   ),
                 ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    post['text'] ?? '',
+                    style: TextStyle(fontSize: 16.0),
+                  ),
+                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
@@ -154,12 +161,11 @@ class _HomePageState extends State<HomePage> {
                         color: isBookmarked ? Colors.red : null,
                       ),
                       onPressed: () {
-                        // Toggle den Like-Status beim Klicken
                         setState(() {
-                          isBookmarked= !isBookmarked;
+                          isBookmarked = !isBookmarked;
                         });
-                    print('Speichern');
-                    },
+                        print('Speichern');
+                      },
                     ),
                     IconButton(
                       icon: Icon(Icons.share),
