@@ -1,8 +1,5 @@
-import 'package:bibcrush/pages/home_page.dart';
-import 'package:bibcrush/pages/profile_page.dart';
 import 'package:bibcrush/theme/theme_provider.dart';
 import 'package:provider/provider.dart';
-
 import 'auth/main_page.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -25,10 +22,12 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ThemeData appTheme = Provider.of<ThemeProvider>(context).themeData;
+
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: const MainPage(),
-      theme: Provider.of<ThemeProvider>(context).themeData,
+      theme: appTheme,
     );
   }
 }
