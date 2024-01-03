@@ -74,15 +74,19 @@ class _HomePageState extends State<HomePage> {
         }
 
         if (userSnapshot.hasError) {
-          print('Error fetching user data: ${userSnapshot.error}'); // Add this line
+          print('Error fetching user data: ${userSnapshot.error}');
           return Text('Error: ${userSnapshot.error}');
         }
 
         var post = postDoc.data() as Map<String, dynamic>;
-        var userData = userSnapshot.data?.data() as Map<String, dynamic>;
+        var userData = userSnapshot.data?.data() as Map<String, dynamic> ?? {};
 
-        print("User Document: ${userSnapshot.data}"); // Corrected line
+        if (userData == null) {
+          print('Error: userData is null');
+          return Container();  // or any other suitable widget
+        }
 
+        print("User Document: ${userSnapshot.data}");
 
         return Padding(
           padding: const EdgeInsets.all(8.0),
@@ -126,12 +130,14 @@ class _HomePageState extends State<HomePage> {
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Image.network(
-                    post['imageUrl'] ?? '', // Provide a default empty string or placeholder if imageUrl is null
+                  child: post['imageUrl'] != null
+                      ? Image.network(
+                    post['imageUrl'],
                     width: 400,
                     height: 550,
                     fit: BoxFit.cover,
-                  ),
+                  )
+                      : Container(),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
@@ -156,26 +162,30 @@ class _HomePageState extends State<HomePage> {
                     ),
                     IconButton(
                       icon: Icon(
-                        isLiked ? Icons.favorite : Icons.favorite_border,
-                        color: isLiked ? Colors.red : null,
+                        post['likes'] != null && post['likes']! > 0 ? Icons.favorite : Icons.favorite_border,
+                        color: post['likes'] != null && post['likes']! > 0 ? Colors.red : null,
                       ),
-                      onPressed: () {
+                      onPressed: () async {
+                        int newLikes = post['likes'] != null && post['likes']! > 0 ? post['likes']! - 1 : post['likes']! + 1;
+                        await FirebaseFirestore.instance.collection('posts').doc(postDoc.id).update({'likes': newLikes});
                         setState(() {
-                          isLiked = !isLiked;
+                          post['likes'] = newLikes;
                         });
-                        print('Like');
                       },
                     ),
                     IconButton(
                       icon: Icon(
-                        isBookmarked ? Icons.bookmark : Icons.bookmark_border,
-                        color: isBookmarked ? Colors.red : null,
+                        post['bookmarks'] != null && post['bookmarks']! > 0 ? Icons.bookmark : Icons.bookmark_border,
+                        color: post['bookmarks'] != null && post['bookmarks']! > 0 ? Colors.red : null,
                       ),
-                      onPressed: () {
+                      onPressed: () async {
+                        int newBookmarks = post['bookmarks'] != null && post['bookmarks']! > 0
+                            ? post['bookmarks']! - 1
+                            : post['bookmarks']! + 1;
+                        await FirebaseFirestore.instance.collection('posts').doc(postDoc.id).update({'bookmarks': newBookmarks});
                         setState(() {
-                          isBookmarked = !isBookmarked;
+                          post['bookmarks'] = newBookmarks;
                         });
-                        print('Bookmark');
                       },
                     ),
                     IconButton(

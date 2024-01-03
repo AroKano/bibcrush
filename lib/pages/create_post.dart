@@ -63,7 +63,6 @@ class _CreatePostPageState extends State<CreatePostPage> {
     }
   }
 
-// Inside the _createPost method
   void _createPost(String text, File? imageFile) async {
     try {
       String? imageUrl;
@@ -75,10 +74,8 @@ class _CreatePostPageState extends State<CreatePostPage> {
         imageUrl = await taskSnapshot.ref.getDownloadURL();
       }
 
-      // Get current user data
       User? currentUser = FirebaseAuth.instance.currentUser;
 
-      // Fetch user data from Firestore using UID
       DocumentSnapshot userSnapshot = await FirebaseFirestore.instance.collection('users').doc(currentUser!.uid).get();
       Map<String, dynamic> userData = userSnapshot.data() as Map<String, dynamic>;
 
@@ -91,6 +88,8 @@ class _CreatePostPageState extends State<CreatePostPage> {
         'text': text,
         'imageUrl': imageUrl,
         'timestamp': FieldValue.serverTimestamp(),
+        'likes': 0,
+        'bookmarks': 0,
       };
 
       await FirebaseFirestore.instance.collection('posts').add(postData);
@@ -98,7 +97,6 @@ class _CreatePostPageState extends State<CreatePostPage> {
       print(e);
     }
   }
-
 
   String _formatTimestamp(Timestamp timestamp) {
     var now = DateTime.now();
