@@ -178,7 +178,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => HomePage(),
+          builder: (context) => LoginPage(
+            showStartPage: () {},
+          ),
         ),
       );
     } catch (e) {
