@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'chat_page.dart';
 import '../components/custom_nav_bar.dart';
+import 'package:bibcrush/pages/profile_page.dart';
+import 'package:bibcrush/pages/search_page.dart';
 
 
 class NotificationPage extends StatelessWidget {
@@ -27,6 +29,9 @@ class _InboxNotificationsPageState extends State<InboxNotificationsPage> {
 
   @override
   Widget build(BuildContext context) {
+
+    final ColorScheme colors = Theme.of(context).colorScheme;
+
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(kToolbarHeight),
@@ -34,32 +39,49 @@ class _InboxNotificationsPageState extends State<InboxNotificationsPage> {
           decoration: BoxDecoration(
             boxShadow: [
               BoxShadow(
-                color: Colors.grey.withOpacity(0.3),
+                color: Colors.grey.withOpacity(0.2),
                 spreadRadius: 1,
                 blurRadius: 20,
                 offset: Offset(0, 2),
               ),
             ],
-            color: Colors.white,
+            color: colors.background,
           ),
           child: AppBar(
             backgroundColor: Colors.transparent,
-            leading: Padding(
-              padding: const EdgeInsets.only(left: 16.0),
-              child: CircleAvatar(
-                backgroundImage: NetworkImage('https://via.placeholder.com/150'),
+            leading: InkWell(
+              onTap: () {
+                // Navigate to the Profile Page
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ProfilePage()),
+                );
+              },
+              child: Padding(
+                padding: const EdgeInsets.only(left: 16.0),
+                child: CircleAvatar(
+                  backgroundImage: NetworkImage('https://via.placeholder.com/150'),
+                ),
               ),
             ),
             title: Center(
-              child: FlutterLogo(size: 32),
+                child: Image.asset(
+                  'assets/bibcrush_logo_top.png',
+                  width: 60,
+                  height: 60,
+                )
             ),
             actions: [
               Padding(
                 padding: const EdgeInsets.only(right: 16.0),
                 child: IconButton(
-                  icon: Icon(Icons.search, color: Colors.grey),
+                  icon: Icon(Icons.search, color: Theme.of(context).iconTheme.color),
                   onPressed: () {
-                    // Implement the search functionality
+                    // Navigate to the Search Page
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => SearchPage()),
+                    );
                   },
                 ),
               ),
@@ -72,7 +94,7 @@ class _InboxNotificationsPageState extends State<InboxNotificationsPage> {
           SizedBox(height: 1),
           Container(
             padding: EdgeInsets.only(top: 20, bottom: 10),
-            color: Colors.white,
+            color: colors.background,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -95,8 +117,10 @@ class _InboxNotificationsPageState extends State<InboxNotificationsPage> {
     );
   }
 
+
   Widget _buildTabButton({required String title, required int index, required int notificationCount}) {
     bool isSelected = _currentInnerTabIndex == index;
+    final ColorScheme colors = Theme.of(context).colorScheme;
     return GestureDetector(
       onTap: () {
         setState(() {
