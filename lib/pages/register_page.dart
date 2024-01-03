@@ -43,7 +43,6 @@ class _RegistrationPageState extends State<RegistrationPage> {
     );
   }
 
-
   bool passwordConfirmed() {
     if (_passwordController.text.trim() !=
         _confirmpasswordController.text.trim()) {
@@ -81,9 +80,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
       confirmPasswordError = "";
     });
 
-    if (_firstNameController.text
-        .trim()
-        .isEmpty) {
+    if (_firstNameController.text.trim().isEmpty) {
       setState(() {
         firstNameError = "First Name is necessary";
       });
@@ -91,9 +88,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
       return;
     }
 
-    if (_usernameController.text
-        .trim()
-        .isEmpty) {
+    if (_usernameController.text.trim().isEmpty) {
       setState(() {
         usernameError = "Username is necessary";
       });
@@ -101,9 +96,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
       return;
     }
 
-    if (_facultyController.text
-        .trim()
-        .isEmpty) {
+    if (_facultyController.text.trim().isEmpty) {
       setState(() {
         facultyError = "Faculty is necessary";
       });
@@ -111,9 +104,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
       return;
     }
 
-    if (_courseOfStudyController.text
-        .trim()
-        .isEmpty) {
+    if (_courseOfStudyController.text.trim().isEmpty) {
       setState(() {
         courseOfStudyError = "Course of Study is necessary";
       });
@@ -121,9 +112,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
       return;
     }
 
-    if (_semesterController.text
-        .trim()
-        .isEmpty) {
+    if (_semesterController.text.trim().isEmpty) {
       setState(() {
         semesterError = "Semester is necessary";
       });
@@ -131,19 +120,23 @@ class _RegistrationPageState extends State<RegistrationPage> {
       return;
     }
 
-    if (_emailController.text
-        .trim()
-        .isEmpty) {
+    if (_emailController.text.trim().isEmpty) {
       setState(() {
         emailError = "E-Mail adress is necessary";
       });
       showSnackBar("E-Mail adress is necessary");
       return;
     }
+    // Check if the email address has the correct domain
+    if (!_emailController.text.trim().endsWith("@stud.hs-hannover.de")) {
+      setState(() {
+        emailError = "Invalid email domain. Please use @stud.hs-hannover.de";
+      });
+      showSnackBar("Invalid email domain. Please use @stud.hs-hannover.de");
+      return;
+    }
 
-    if (_passwordController.text
-        .trim()
-        .isEmpty) {
+    if (_passwordController.text.trim().isEmpty) {
       setState(() {
         passwordError = "Passwort is necessary";
       });
@@ -164,7 +157,10 @@ class _RegistrationPageState extends State<RegistrationPage> {
         password: _passwordController.text.trim(),
       );
 
-      // add user details
+      // Send email verification
+      await FirebaseAuth.instance.currentUser!.sendEmailVerification();
+
+      // Add user details
       addUserDetails(
         _firstNameController.text.trim(),
         _usernameController.text.trim(),
@@ -176,11 +172,14 @@ class _RegistrationPageState extends State<RegistrationPage> {
         "Hey, edit your caption!", // Placeholder for caption
       );
 
-      // Registration successful, navigate to HomePage
-      Navigator.pushAndRemoveUntil(
+      // Registration successful, show a message and navigate to the login page
+      showSnackBar(
+          "Registration successful. Please check your email for verification.");
+      Navigator.push(
         context,
-        MaterialPageRoute(builder: (_) => HomePage()),
-            (route) => false,
+        MaterialPageRoute(
+          builder: (context) => LoginPage(showStartPage: () {}),
+        ),
       );
     } catch (e) {
       // Handle registration error
@@ -189,15 +188,15 @@ class _RegistrationPageState extends State<RegistrationPage> {
   }
 
   Future<void> addUserDetails(
-      String first_name,
-      String username,
-      int faculty,
-      String course_of_study,
-      int semester,
-      String email,
-      String uid,
-      String caption,
-      ) async {
+    String first_name,
+    String username,
+    int faculty,
+    String course_of_study,
+    int semester,
+    String email,
+    String uid,
+    String caption,
+  ) async {
     await FirebaseFirestore.instance.collection("users").doc(uid).set({
       "First Name": first_name,
       "Username": username,
@@ -207,14 +206,12 @@ class _RegistrationPageState extends State<RegistrationPage> {
       "E-Mail": email,
       "UID": uid,
       "Caption": "Hey, edit your caption!", // Placeholder for captions
-      "Posts": 0,        // Default value for Posts
-      "Follower": 0,     // Default value for Follower
-      "Following": 0,    // Default value for Following
-      "Crushes": 0,      // Default value for Crushes
+      "Posts": 0, // Default value for Posts
+      "Follower": 0, // Default value for Follower
+      "Following": 0, // Default value for Following
+      "Crushes": 0, // Default value for Crushes
     });
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -263,7 +260,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                 Text(
                   firstNameError,
                   style:
-                  TextStyle(color: Colors.red), // Customize the text color
+                      TextStyle(color: Colors.red), // Customize the text color
                 ),
 
                 const SizedBox(height: 20),
@@ -294,7 +291,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                 Text(
                   usernameError,
                   style:
-                  TextStyle(color: Colors.red), // Customize the text color
+                      TextStyle(color: Colors.red), // Customize the text color
                 ),
 
                 const SizedBox(height: 20),
@@ -325,7 +322,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                 Text(
                   facultyError,
                   style:
-                  TextStyle(color: Colors.red), // Customize the text color
+                      TextStyle(color: Colors.red), // Customize the text color
                 ),
 
                 const SizedBox(height: 20),
@@ -357,7 +354,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                 Text(
                   courseOfStudyError,
                   style:
-                  TextStyle(color: Colors.red), // Customize the text color
+                      TextStyle(color: Colors.red), // Customize the text color
                 ),
 
                 const SizedBox(height: 20),
@@ -389,7 +386,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                 Text(
                   semesterError,
                   style:
-                  TextStyle(color: Colors.red), // Customize the text color
+                      TextStyle(color: Colors.red), // Customize the text color
                 ),
 
                 const SizedBox(height: 20),
@@ -420,7 +417,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                 Text(
                   emailError,
                   style:
-                  TextStyle(color: Colors.red), // Customize the text color
+                      TextStyle(color: Colors.red), // Customize the text color
                 ),
 
                 const SizedBox(height: 20),
@@ -451,7 +448,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                 Text(
                   passwordError,
                   style:
-                  TextStyle(color: Colors.red), // Customize the text color
+                      TextStyle(color: Colors.red), // Customize the text color
                 ),
 
                 const SizedBox(height: 20),
@@ -482,7 +479,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                 Text(
                   confirmPasswordError,
                   style:
-                  TextStyle(color: Colors.red), // Customize the text color
+                      TextStyle(color: Colors.red), // Customize the text color
                 ),
 
                 const SizedBox(height: 20),
@@ -499,8 +496,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) =>
-                                  LoginPage(
+                              builder: (context) => LoginPage(
                                     showStartPage: () {},
                                   )),
                         );

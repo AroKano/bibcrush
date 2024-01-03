@@ -724,6 +724,8 @@ Your app data will also be deleted and you won't be able to retrieve it.''',
 
   Future<void> _deleteAccount() async {
     await FirebaseFirestore.instance.collection('users').doc(uid).delete();
+    // FirebaseFirestore.instance.collection('posts').doc(uid).delete();
+    // FirebaseFirestore.instance.collection('comments').doc(uid).delete();
     currentUser.delete();
   }
 

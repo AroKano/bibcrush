@@ -24,13 +24,25 @@ class _LoginPageState extends State<LoginPage> {
         email: _emailController.text.trim(),
         password: _passwordController.text.trim(),
       );
-
-      // Anmeldung erfolgreich, navigiere zur Home-Seite und ersetze die aktuelle Seite
-      Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(builder: (_) => HomePage()),
-        (route) => false,
-      );
+      if (FirebaseAuth.instance.currentUser!.emailVerified) {
+        // Navigate to the home page or any other authenticated page
+        // Anmeldung erfolgreich, navigiere zur Home-Seite und ersetze die aktuelle Seite
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (_) => HomePage()),
+          (route) => false,
+        );
+      } else {
+        print("Login error: not verified yet.");
+        showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              content: Text('Please verify your email before logging in.'),
+            );
+          },
+        );
+      }
     } catch (e) {
       // Fehler bei der Anmeldung
       print("Login error: $e");
