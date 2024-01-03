@@ -46,9 +46,8 @@ class _CommentPageState extends State<CommentPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         ListTile(
-                          title: Text('${post['text'] ?? 'No text available'}'),
-                          subtitle: FutureBuilder<DocumentSnapshot>(
-                            future: FirebaseFirestore.instance.collection('users').doc(post['userId']).get(), // Change 'UID' to 'userId'
+                          title: FutureBuilder<DocumentSnapshot>(
+                            future: FirebaseFirestore.instance.collection('users').doc(post['users']['UID']).get(),
                             builder: (context, userSnapshot) {
                               if (userSnapshot.connectionState == ConnectionState.waiting) {
                                 return Text('Loading...');
@@ -60,13 +59,44 @@ class _CommentPageState extends State<CommentPage> {
 
                               var userData = userSnapshot.data!.data() as Map<String, dynamic>;
 
-                              return Text('@${userData['Username'] ?? 'No username'}');
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Text(
+                                            '${userData['First Name'] ?? 'No First Name'}',
+                                            style: TextStyle(fontWeight: FontWeight.bold),
+                                          ),
+                                          SizedBox(width: 4),
+                                          Text('@${userData['Username'] ?? 'No username'}'),
+                                        ],
+                                      ),
+                                      PopupMenuButton<String>(
+                                        itemBuilder: (BuildContext context) {
+                                          return {'Report', 'Unfollow'}.map((String choice) {
+                                            return PopupMenuItem<String>(
+                                              value: choice,
+                                              child: Text(choice),
+                                            );
+                                          }).toList();
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(height: 8),
+                                  _buildPostImage(post['imageUrl']),
+                                ],
+                              );
                             },
                           ),
                         ),
                         Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: _buildPostImage(post['imageUrl']),
+                          child: Text(post['text'] ?? 'No text available'),
                         ),
                       ],
                     ),
@@ -89,24 +119,41 @@ class _CommentPageState extends State<CommentPage> {
 
                 var comments = snapshot.data!.docs;
 
-                return Column(
-                  children: [
-                    for (var comment in comments) _buildCommentWidget(comment.data() as Map<String, dynamic>),
-                  ],
+                return ListView.builder(
+                  shrinkWrap: true, // Important to prevent vertical scrolling conflict
+                  physics: NeverScrollableScrollPhysics(), // Prevent vertical scrolling
+                  itemCount: comments.length,
+                  itemBuilder: (context, index) => _buildCommentWidget(comments[index].data() as Map<String, dynamic>),
                 );
               },
             ),
-
             // Comment Text Field
             Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextField(
-                controller: commentController,
-                decoration: InputDecoration(
-                  hintText: 'Add a comment...',
-                  suffixIcon: IconButton(
-                    icon: Icon(Icons.send),
-                    onPressed: _postComment,
+              padding: const EdgeInsets.fromLTRB(20.0, 30.0, 20.0, 20.0), // Increased top padding
+              child: Container(
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey),
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: Row(
+                    children: [
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: TextField(
+                          controller: commentController,
+                          decoration: InputDecoration(
+                            hintText: 'Add a comment...',
+                            border: InputBorder.none,
+                            suffixIcon: IconButton(
+                              icon: Icon(Icons.send),
+                              onPressed: _postComment,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
@@ -132,8 +179,7 @@ class _CommentPageState extends State<CommentPage> {
 
   Widget _buildCommentWidget(Map<String, dynamic> comment) {
     return ListTile(
-      title: Text(comment['text'] ?? 'No text available'),
-      subtitle: FutureBuilder<DocumentSnapshot>(
+      title: FutureBuilder<DocumentSnapshot>(
         future: FirebaseFirestore.instance.collection('users').doc(comment['UID']).get(),
         builder: (context, userSnapshot) {
           if (userSnapshot.connectionState == ConnectionState.waiting) {
@@ -146,7 +192,32 @@ class _CommentPageState extends State<CommentPage> {
 
           var userData = userSnapshot.data!.data() as Map<String, dynamic>;
 
-          return Text('@${userData['Username'] ?? 'No username'}');
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    '@${userData['Username'] ?? 'No username'}',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  PopupMenuButton<String>(
+                    itemBuilder: (BuildContext context) {
+                      return {'Report', 'Unfollow'}.map((String choice) {
+                        return PopupMenuItem<String>(
+                          value: choice,
+                          child: Text(choice),
+                        );
+                      }).toList();
+                    },
+                  ),
+                ],
+              ),
+              SizedBox(height: 4), // Adjust the height as needed
+              Text(comment['text'] ?? 'No text available'),
+            ],
+          );
         },
       ),
       // Add more comment details as needed

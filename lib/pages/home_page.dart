@@ -67,18 +67,22 @@ class _HomePageState extends State<HomePage> {
 
   Widget _buildPostWidget(DocumentSnapshot postDoc) {
     return FutureBuilder<DocumentSnapshot>(
-      future: FirebaseFirestore.instance.collection('users').doc(postDoc['userId']).get(),
+      future: FirebaseFirestore.instance.collection('users').doc(postDoc['users']['UID']).get(),
       builder: (context, userSnapshot) {
         if (userSnapshot.connectionState == ConnectionState.waiting) {
           return CircularProgressIndicator();
         }
 
         if (userSnapshot.hasError) {
+          print('Error fetching user data: ${userSnapshot.error}'); // Add this line
           return Text('Error: ${userSnapshot.error}');
         }
 
         var post = postDoc.data() as Map<String, dynamic>;
-        var userData = userSnapshot.data!.data() as Map<String, dynamic>;
+        var userData = userSnapshot.data?.data() as Map<String, dynamic>;
+
+        print("User Document: ${userSnapshot.data}"); // Corrected line
+
 
         return Padding(
           padding: const EdgeInsets.all(8.0),
@@ -98,9 +102,9 @@ class _HomePageState extends State<HomePage> {
                     children: [
                       Row(
                         children: [
-                          Text(userData['First Name'] ?? 'Unknown', style: TextStyle(fontWeight: FontWeight.bold)),
+                          Text(userData?['First Name'] ?? 'Unknown', style: TextStyle(fontWeight: FontWeight.bold)),
                           SizedBox(width: 4),
-                          Text('@${userData['Username'] ?? 'Unknown'}'),
+                          Text('@${userData?['Username'] ?? 'Unknown'}'),
                         ],
                       ),
                       PopupMenuButton<String>(

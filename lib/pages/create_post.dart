@@ -78,11 +78,15 @@ class _CreatePostPageState extends State<CreatePostPage> {
       // Get current user data
       User? currentUser = FirebaseAuth.instance.currentUser;
 
+      // Fetch user data from Firestore using UID
+      DocumentSnapshot userSnapshot = await FirebaseFirestore.instance.collection('users').doc(currentUser!.uid).get();
+      Map<String, dynamic> userData = userSnapshot.data() as Map<String, dynamic>;
+
       Map<String, dynamic> postData = {
         'users': {
-          'UID': currentUser!.uid,
-          'First Name': currentUser.displayName ?? 'Unknown', // Use the display name if available, or a default value
-          'Username': currentUser.displayName ?? 'Unknown', // Use the display name if available, or a default value
+          'UID': currentUser.uid,
+          'First Name': userData['First Name'] ?? 'Unknown',
+          'Username': userData['Username'] ?? 'Unknown',
         },
         'text': text,
         'imageUrl': imageUrl,
