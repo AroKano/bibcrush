@@ -6,17 +6,7 @@ import '../components/custom_nav_bar.dart';
 class NotificationPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Inbox/Notifications',
-      theme: ThemeData(
-        primarySwatch: Colors.orange,
-        appBarTheme: AppBarTheme(
-          iconTheme: IconThemeData(color: Colors.black),
-        ),
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-      ),
-      home: InboxNotificationsPage(),
-    );
+    return InboxNotificationsPage();
   }
 }
 
@@ -26,7 +16,14 @@ class InboxNotificationsPage extends StatefulWidget {
 }
 
 class _InboxNotificationsPageState extends State<InboxNotificationsPage> {
-  int _currentTabIndex = 0;
+  int _currentBottomNavIndex = 3;
+  int _currentInnerTabIndex = 0;
+
+  void _onTabChange(int index) {
+    setState(() {
+      _currentBottomNavIndex = index;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -79,34 +76,31 @@ class _InboxNotificationsPageState extends State<InboxNotificationsPage> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                _buildTabButton(
-                  title: 'Messages',
-                  index: 0,
-                  notificationCount: 4,
-                ),
+                _buildTabButton(title: 'Messages', index: 0, notificationCount: 4),
                 SizedBox(width: 10),
-                _buildTabButton(
-                  title: 'Notifications',
-                  index: 1,
-                  notificationCount: 2,
-                ),
+                _buildTabButton(title: 'Notifications', index: 1, notificationCount: 2),
               ],
             ),
           ),
           Expanded(
-            child: _currentTabIndex == 0 ? _buildMessagesList() : _buildNotificationsList(),
+            child: _currentInnerTabIndex == 0 ? _buildMessagesList() : _buildNotificationsList(),
           ),
         ],
+      ),
+      bottomNavigationBar: CustomNavBar(
+        onTabChange: _onTabChange,
+        selectedIndex: _currentBottomNavIndex,
+        context: context,
       ),
     );
   }
 
   Widget _buildTabButton({required String title, required int index, required int notificationCount}) {
-    bool isSelected = _currentTabIndex == index;
+    bool isSelected = _currentInnerTabIndex == index;
     return GestureDetector(
       onTap: () {
         setState(() {
-          _currentTabIndex = index;
+          _currentInnerTabIndex = index;
         });
       },
       child: Container(
