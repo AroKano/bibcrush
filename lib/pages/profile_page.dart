@@ -459,7 +459,12 @@ class _ProfilePageState extends State<ProfilePage> {
                   newFirstName = value;
                 },
                 initialValue: _first_name,
-                decoration: InputDecoration(labelText: "First Name"),
+                decoration: InputDecoration(
+                  labelText: "First Name",
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Color(0xFFFF7A00)),
+                  ),
+                ),
               ),
               TextFormField(
                 readOnly: true,
@@ -471,7 +476,12 @@ class _ProfilePageState extends State<ProfilePage> {
                   newCaption = value;
                 },
                 initialValue: _caption,
-                decoration: InputDecoration(labelText: "Caption"),
+                decoration: InputDecoration(
+                  labelText: "Caption",
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Color(0xFFFF7A00)),
+                  ),
+                ),
               ),
             ],
           ),
