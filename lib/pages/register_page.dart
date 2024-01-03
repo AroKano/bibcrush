@@ -220,7 +220,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => LoginPage(showStartPage: () {}),
+          builder: (context) => HomePage(),
         ),
       );
     } catch (e) {
