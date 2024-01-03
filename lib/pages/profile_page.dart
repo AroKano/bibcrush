@@ -6,6 +6,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
 import 'package:bibcrush/theme/theme_provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:timeago/timeago.dart' as timeago;
+import 'comment_page.dart';
 
 class ProfilePage extends StatefulWidget {
   ProfilePage({Key? key}) : super(key: key);
@@ -91,6 +93,11 @@ class _ProfilePageState extends State<ProfilePage> {
       print("Error fetching user details: $e");
       // Handle the error accordingly
     }
+  }
+
+  String _formatTimestamp(Timestamp timestamp) {
+    var postTime = timestamp.toDate();
+    return timeago.format(postTime, locale: 'en_short');
   }
 
   @override
@@ -274,9 +281,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     child: TabBarView(
                       children: [
                         // Tab 1: My Posts
-                        Center(
-                          child: Text("No posts yet."),
-                        ),
+                        _buildMyPostsTab(),
 
                         // Tab 2: My Infos
                         _buildMyInfosTab(),
@@ -360,6 +365,175 @@ class _ProfilePageState extends State<ProfilePage> {
       ],
     );
   }
+
+
+
+  Widget _buildMyPostsTab() {
+    return FutureBuilder<QuerySnapshot>(
+      future: FirebaseFirestore.instance
+          .collection('posts')
+          .where('users.UID', isEqualTo: FirebaseAuth.instance.currentUser?.uid)
+          .get(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return CircularProgressIndicator();
+        }
+
+        if (snapshot.hasError) {
+          return Text('Error: ${snapshot.error}');
+        }
+
+        var posts = snapshot.data!.docs;
+
+        return ListView.builder(
+          itemCount: posts.length,
+          itemBuilder: (context, index) {
+            return _buildMyPostWidget(posts[index]);
+          },
+        );
+      },
+    );
+  }
+
+  Widget _buildMyPostWidget(DocumentSnapshot postDoc) {
+    return FutureBuilder<DocumentSnapshot>(
+      future: FirebaseFirestore.instance.collection('users').doc(postDoc['users']['UID']).get(),
+      builder: (context, userSnapshot) {
+        if (userSnapshot.connectionState == ConnectionState.waiting) {
+          return CircularProgressIndicator();
+        }
+
+        if (userSnapshot.hasError) {
+          print('Error fetching user data: ${userSnapshot.error}');
+          return Text('Error: ${userSnapshot.error}');
+        }
+
+        var post = postDoc.data() as Map<String, dynamic>;
+        var userData = userSnapshot.data?.data() as Map<String, dynamic> ?? {};
+
+        if (userData == null) {
+          print('Error: userData is null');
+          return Container();  // or any other suitable widget
+        }
+
+        print("User Document: ${userSnapshot.data}");
+
+        return Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Card(
+            elevation: 3,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ListTile(
+                  leading: CircleAvatar(
+                    radius: 25,
+                    backgroundColor: Colors.blue,
+                    child: Icon(Icons.person, color: Colors.white),
+                  ),
+                  title: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          Text(userData?['First Name'] ?? 'Unknown', style: TextStyle(fontWeight: FontWeight.bold)),
+                          SizedBox(width: 4),
+                          Text('@${userData?['Username'] ?? 'Unknown'}'),
+                        ],
+                      ),
+                      PopupMenuButton<String>(
+                        itemBuilder: (BuildContext context) {
+                          return {'Report', 'Unfollow'}.map((String choice) {
+                            return PopupMenuItem<String>(
+                              value: choice,
+                              child: Text(choice),
+                            );
+                          }).toList();
+                        },
+                      ),
+                    ],
+                  ),
+                  subtitle: Padding(
+                    padding: const EdgeInsets.only(top: 0),
+                    child: Text(_formatTimestamp(post['timestamp'])),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: post['imageUrl'] != null
+                      ? Image.network(
+                    post['imageUrl'],
+                    width: 400,
+                    height: 550,
+                    fit: BoxFit.cover,
+                  )
+                      : Container(),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    post['text'] ?? '',
+                    style: TextStyle(fontSize: 16.0),
+                  ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    IconButton(
+                      icon: Icon(Icons.comment),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => CommentPage(postId: postDoc.id),
+                          ),
+                        );
+                      },
+                    ),
+                    IconButton(
+                      icon: Icon(
+                        post['likes'] != null && post['likes']! > 0 ? Icons.favorite : Icons.favorite_border,
+                        color: post['likes'] != null && post['likes']! > 0 ? Colors.red : null,
+                      ),
+                      onPressed: () async {
+                        int newLikes = post['likes'] != null && post['likes']! > 0 ? post['likes']! - 1 : post['likes']! + 1;
+                        await FirebaseFirestore.instance.collection('posts').doc(postDoc.id).update({'likes': newLikes});
+                        setState(() {
+                          post['likes'] = newLikes;
+                        });
+                      },
+                    ),
+                    IconButton(
+                      icon: Icon(
+                        post['bookmarks'] != null && post['bookmarks']! > 0 ? Icons.bookmark : Icons.bookmark_border,
+                        color: post['bookmarks'] != null && post['bookmarks']! > 0 ? Colors.red : null,
+                      ),
+                      onPressed: () async {
+                        int newBookmarks = post['bookmarks'] != null && post['bookmarks']! > 0
+                            ? post['bookmarks']! - 1
+                            : post['bookmarks']! + 1;
+                        await FirebaseFirestore.instance.collection('posts').doc(postDoc.id).update({'bookmarks': newBookmarks});
+                        setState(() {
+                          post['bookmarks'] = newBookmarks;
+                        });
+                      },
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.share),
+                      onPressed: () {
+                        print('Share');
+                      },
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
 
   void _showEditInfoDialog(
       BuildContext context, String title, String initialValue) {
@@ -681,8 +855,7 @@ Your app data will also be deleted and you won't be able to retrieve it.''',
     );
   }
 
-  Future<String?> _changePassword(
-      String oldPassword, String newPassword) async {
+  Future<String?> _changePassword(String oldPassword, String newPassword) async {
     User user = FirebaseAuth.instance.currentUser!;
     AuthCredential credential =
         EmailAuthProvider.credential(email: user.email!, password: oldPassword);
@@ -711,8 +884,7 @@ Your app data will also be deleted and you won't be able to retrieve it.''',
     }
   }
 
-  Future<void> _signOut() async {
-    await FirebaseAuth.instance.signOut();
+  Future<void> _signOut() async {await FirebaseAuth.instance.signOut();
     Navigator.push(
         context,
         MaterialPageRoute(
@@ -784,8 +956,7 @@ Your app data will also be deleted and you won't be able to retrieve it.''',
     }
   }
 
-  Future<void> _updateEditProfileInFirestore(
-      String newFirstName, String newCaption) async {
+  Future<void> _updateEditProfileInFirestore(String newFirstName, String newCaption) async {
     try {
       // Get the current user's document ID
       String userId = FirebaseAuth.instance.currentUser?.uid ?? "";
