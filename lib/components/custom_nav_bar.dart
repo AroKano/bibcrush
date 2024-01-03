@@ -1,4 +1,4 @@
-import 'package:bibcrush/pages/chat_page.dart';
+import 'package:bibcrush/pages/notification_inbox_page.dart';
 import 'package:bibcrush/pages/create_post.dart';
 import 'package:bibcrush/pages/home_page.dart';
 import 'package:bibcrush/pages/profile_page.dart';
@@ -95,7 +95,7 @@ class CustomNavBar extends StatelessWidget {
         break;
       case 3:
         Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (_) => ChatScreen()),
+          MaterialPageRoute(builder: (_) => NotificationPage()),
           (route) => false,
         );
         break;

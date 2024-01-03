@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'home_page.dart';
 
 class Message {
@@ -12,6 +11,11 @@ class Message {
 }
 
 class ChatScreen extends StatefulWidget {
+  final String peerName;
+  final String peerImageUrl;
+
+  ChatScreen({required this.peerName, required this.peerImageUrl});
+
   @override
   _ChatScreenState createState() => _ChatScreenState();
 }
