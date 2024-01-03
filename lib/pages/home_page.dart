@@ -79,11 +79,11 @@ class _HomePageState extends State<HomePage> {
         }
 
         var post = postDoc.data() as Map<String, dynamic>;
-        var userData = userSnapshot.data?.data() as Map<String, dynamic>?;
+        var userData = userSnapshot.data?.data() as Map<String, dynamic> ?? {};
 
         if (userData == null) {
           print('Error: userData is null');
-          return Container();
+          return Container();  // or any other suitable widget
         }
 
         print("User Document: ${userSnapshot.data}");
