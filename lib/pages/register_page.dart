@@ -150,6 +150,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
       return;
     }
 
+    // create user
     try {
       await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: _emailController.text.trim(),
@@ -158,42 +159,6 @@ class _RegistrationPageState extends State<RegistrationPage> {
 
       // Send email verification
       await FirebaseAuth.instance.currentUser!.sendEmailVerification();
-
-      // Check if the email is verified before proceeding
-      if (!FirebaseAuth.instance.currentUser!.emailVerified) {
-        // If not verified, delete the created user and show a message
-        await FirebaseAuth.instance.currentUser!.delete();
-        showDialog(
-          context: context,
-          builder: (context) {
-            return AlertDialog(
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text('Please verify your email before you press continue.'),
-                  SizedBox(height: 20),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      primary: Colors.orange,
-                    ),
-                    onPressed: () {
-                      Navigator.pop(context); // Close the dialog
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => LoginPage(showStartPage: () {}),
-                        ),
-                      );
-                    },
-                    child: Text('Continue'),
-                  ),
-                ],
-              ),
-            );
-          },
-        );
-        return;
-      }
 
       // Add user details
       addUserDetails(
@@ -208,15 +173,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
       );
 
       // Registration successful, show a message and navigate to the login page
-      showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            content: Text(
-                'Registration successful. Please check your email for verification.'),
-          );
-        },
-      );
+      showSnackBar(
+          "Registration successful. Please check your email for verification.");
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -225,14 +183,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
       );
     } catch (e) {
       // Handle registration error
-      showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            content: Text('Registration failed: $e'),
-          );
-        },
-      );
+      showSnackBar("Registration failed: $e");
     }
   }
 
