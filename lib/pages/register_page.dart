@@ -169,7 +169,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
         int.parse(_semesterController.text.trim()),
         _emailController.text.trim(),
         FirebaseAuth.instance.currentUser!.uid,
-        "Hey, edit your caption!", // Placeholder for caption
+        "Hey, edit your caption!",
       );
 
       // Registration successful, show a message and navigate to the login page
