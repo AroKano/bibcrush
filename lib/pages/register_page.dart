@@ -217,308 +217,297 @@ class _RegistrationPageState extends State<RegistrationPage> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
+    return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
         backgroundColor: Colors.white,
-        appBar: AppBar(
-          backgroundColor: Colors.white,
-          elevation: 0,
-          title: const Text(
-            'Sign Up',
-            style: TextStyle(color: Colors.black),
-          ),
+        elevation: 0,
+        title: const Text(
+          'Sign Up',
+          style: TextStyle(color: Colors.black),
         ),
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey),
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                    child: Row(
-                      children: [
-                        const SizedBox(width: 10),
-                        Expanded(
-                          child: TextField(
-                            controller: _firstNameController,
-                            decoration: InputDecoration(
-                              hintText: 'First Name',
-                            ),
+      ),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey),
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: Row(
+                    children: [
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: TextField(
+                          controller: _firstNameController,
+                          decoration: InputDecoration(
+                            hintText: 'First Name',
                           ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-
-                // Add this Text widget below the TextField
-                Text(
-                  firstNameError,
-                  style:
-                      TextStyle(color: Colors.red), // Customize the text color
-                ),
-
-                const SizedBox(height: 20),
-
-                Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey),
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                    child: Row(
-                      children: [
-                        const SizedBox(width: 10),
-                        Expanded(
-                          child: MyTextField(
-                            controller: _usernameController,
-                            hintText: "Username",
-                            obscureText: false,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-
-                // Add this Text widget below the TextField
-                Text(
-                  usernameError,
-                  style:
-                      TextStyle(color: Colors.red), // Customize the text color
-                ),
-
-                const SizedBox(height: 20),
-
-                Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey),
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                    child: Row(
-                      children: [
-                        const SizedBox(width: 10),
-                        Expanded(
-                          child: TextField(
-                            decoration: InputDecoration(
-                              hintText: 'Faculty',
-                            ),
-                            controller: _facultyController,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-
-                Text(
-                  facultyError,
-                  style:
-                      TextStyle(color: Colors.red), // Customize the text color
-                ),
-
-                const SizedBox(height: 20),
-
-                Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey),
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                    child: Row(
-                      children: [
-                        const SizedBox(width: 10),
-                        Expanded(
-                          child: TextField(
-                            decoration: InputDecoration(
-                              hintText: 'Course of Study',
-                            ),
-                            controller: _courseOfStudyController,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-
-                // Add this Text widget below the TextField
-                Text(
-                  courseOfStudyError,
-                  style:
-                      TextStyle(color: Colors.red), // Customize the text color
-                ),
-
-                const SizedBox(height: 20),
-
-                Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey),
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                    child: Row(
-                      children: [
-                        const SizedBox(width: 10),
-                        Expanded(
-                          child: TextField(
-                            decoration: InputDecoration(
-                              hintText: 'Semester',
-                            ),
-                            controller: _semesterController,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-
-                // Add this Text widget below the TextField
-                Text(
-                  semesterError,
-                  style:
-                      TextStyle(color: Colors.red), // Customize the text color
-                ),
-
-                const SizedBox(height: 20),
-
-                Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey),
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                    child: Row(
-                      children: [
-                        const SizedBox(width: 10),
-                        Expanded(
-                          child: MyTextField(
-                            hintText: "E-Mail",
-                            obscureText: false,
-                            controller: _emailController,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-
-                // Add this Text widget below the TextField
-                Text(
-                  emailError,
-                  style:
-                      TextStyle(color: Colors.red), // Customize the text color
-                ),
-
-                const SizedBox(height: 20),
-
-                Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey),
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                    child: Row(
-                      children: [
-                        const SizedBox(width: 10),
-                        Expanded(
-                          child: MyTextField(
-                            hintText: "Password",
-                            obscureText: true,
-                            controller: _passwordController,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-
-                // Add this Text widget below the TextField
-                Text(
-                  passwordError,
-                  style:
-                      TextStyle(color: Colors.red), // Customize the text color
-                ),
-
-                const SizedBox(height: 20),
-
-                Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey),
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                    child: Row(
-                      children: [
-                        const SizedBox(width: 10),
-                        Expanded(
-                          child: MyTextField(
-                            hintText: "Confirm Password",
-                            obscureText: true,
-                            controller: _confirmpasswordController,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-
-                // Add this Text widget below the TextField
-                Text(
-                  confirmPasswordError,
-                  style:
-                      TextStyle(color: Colors.red), // Customize the text color
-                ),
-
-                const SizedBox(height: 20),
-
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      "Already have an account? ",
-                      style: TextStyle(color: Color(0xFFFF7A00)),
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => LoginPage(
-                                    showStartPage: () {},
-                                  )),
-                        );
-                      },
-                      child: const Text(
-                        "Sign in",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xFFFF7A00),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
+              ),
 
-                const SizedBox(height: 20),
+              // Add this Text widget below the TextField
+              Text(
+                firstNameError,
+                style: TextStyle(color: Colors.red), // Customize the text color
+              ),
 
-                MyButton(text: "Register", onTap: signUp),
-              ],
-            ),
+              const SizedBox(height: 20),
+
+              Container(
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey),
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: Row(
+                    children: [
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: MyTextField(
+                          controller: _usernameController,
+                          hintText: "Username",
+                          obscureText: false,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+
+              // Add this Text widget below the TextField
+              Text(
+                usernameError,
+                style: TextStyle(color: Colors.red), // Customize the text color
+              ),
+
+              const SizedBox(height: 20),
+
+              Container(
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey),
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: Row(
+                    children: [
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: TextField(
+                          decoration: InputDecoration(
+                            hintText: 'Faculty',
+                          ),
+                          controller: _facultyController,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+
+              Text(
+                facultyError,
+                style: TextStyle(color: Colors.red), // Customize the text color
+              ),
+
+              const SizedBox(height: 20),
+
+              Container(
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey),
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: Row(
+                    children: [
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: TextField(
+                          decoration: InputDecoration(
+                            hintText: 'Course of Study',
+                          ),
+                          controller: _courseOfStudyController,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+
+              // Add this Text widget below the TextField
+              Text(
+                courseOfStudyError,
+                style: TextStyle(color: Colors.red), // Customize the text color
+              ),
+
+              const SizedBox(height: 20),
+
+              Container(
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey),
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: Row(
+                    children: [
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: TextField(
+                          decoration: InputDecoration(
+                            hintText: 'Semester',
+                          ),
+                          controller: _semesterController,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+
+              // Add this Text widget below the TextField
+              Text(
+                semesterError,
+                style: TextStyle(color: Colors.red), // Customize the text color
+              ),
+
+              const SizedBox(height: 20),
+
+              Container(
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey),
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: Row(
+                    children: [
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: MyTextField(
+                          hintText: "E-Mail",
+                          obscureText: false,
+                          controller: _emailController,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+
+              // Add this Text widget below the TextField
+              Text(
+                emailError,
+                style: TextStyle(color: Colors.red), // Customize the text color
+              ),
+
+              const SizedBox(height: 20),
+
+              Container(
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey),
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: Row(
+                    children: [
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: MyTextField(
+                          hintText: "Password",
+                          obscureText: true,
+                          controller: _passwordController,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+
+              // Add this Text widget below the TextField
+              Text(
+                passwordError,
+                style: TextStyle(color: Colors.red), // Customize the text color
+              ),
+
+              const SizedBox(height: 20),
+
+              Container(
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey),
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: Row(
+                    children: [
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: MyTextField(
+                          hintText: "Confirm Password",
+                          obscureText: true,
+                          controller: _confirmpasswordController,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+
+              // Add this Text widget below the TextField
+              Text(
+                confirmPasswordError,
+                style: TextStyle(color: Colors.red), // Customize the text color
+              ),
+
+              const SizedBox(height: 20),
+
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    "Already have an account? ",
+                    style: TextStyle(color: Color(0xFFFF7A00)),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => LoginPage(
+                                  showStartPage: () {},
+                                )),
+                      );
+                    },
+                    child: const Text(
+                      "Sign in",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFFFF7A00),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+
+              const SizedBox(height: 20),
+
+              MyButton(text: "Register", onTap: signUp),
+            ],
           ),
         ),
       ),

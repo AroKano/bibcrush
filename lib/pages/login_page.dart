@@ -66,107 +66,104 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
+    return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
         backgroundColor: Colors.white,
-        appBar: AppBar(
-          backgroundColor: Colors.white,
-          elevation: 0,
-          leading: GestureDetector(
-            child: IconButton(
-              icon: const Icon(Icons.arrow_back, color: Colors.black),
-              onPressed: () {
-                // Navigate to LoginPage
+        elevation: 0,
+        leading: GestureDetector(
+          child: IconButton(
+            icon: const Icon(Icons.arrow_back, color: Colors.black),
+            onPressed: () {
+              // Navigate to LoginPage
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => StartPage(
+                    showRegisterPage: () {},
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
+        title: const Text(
+          'Login',
+          style: TextStyle(color: Colors.black),
+        ),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: 20),
+            Container(
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.grey),
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Row(
+                  children: [
+                    const Icon(Icons.mail, color: Colors.grey),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: MyTextField(
+                          hintText: "Enter email",
+                          obscureText: false,
+                          controller: _emailController),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 20),
+            Container(
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.grey),
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Row(
+                  children: [
+                    const Icon(Icons.lock, color: Colors.grey),
+                    const SizedBox(width: 10),
+                    Expanded(
+                        child: MyTextField(
+                            hintText: 'Enter password',
+                            obscureText: true,
+                            controller: _passwordController)),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 20),
+            GestureDetector(
+              onTap: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => StartPage(
-                      showRegisterPage: () {},
-                    ),
+                    builder: (context) {
+                      return const ForgotPasswordPage();
+                    },
                   ),
                 );
               },
+              child: const SizedBox(
+                width: double.infinity,
+                child: Text(
+                  'Forgot password?',
+                  style: TextStyle(color: Color(0xFFFF7A00)),
+                  textAlign: TextAlign.center,
+                ),
+              ),
             ),
-          ),
-          title: const Text(
-            'Login',
-            style: TextStyle(color: Colors.black),
-          ),
-        ),
-        body: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: 20),
-              Container(
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.grey),
-                  borderRadius: BorderRadius.circular(10.0),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  child: Row(
-                    children: [
-                      const Icon(Icons.mail, color: Colors.grey),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: MyTextField(
-                            hintText: "Enter email",
-                            obscureText: false,
-                            controller: _emailController),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              const SizedBox(height: 20),
-              Container(
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.grey),
-                  borderRadius: BorderRadius.circular(10.0),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  child: Row(
-                    children: [
-                      const Icon(Icons.lock, color: Colors.grey),
-                      const SizedBox(width: 10),
-                      Expanded(
-                          child: MyTextField(
-                              hintText: 'Enter password',
-                              obscureText: true,
-                              controller: _passwordController)),
-                    ],
-                  ),
-                ),
-              ),
-              const SizedBox(height: 20),
-              GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) {
-                        return const ForgotPasswordPage();
-                      },
-                    ),
-                  );
-                },
-                child: const SizedBox(
-                  width: double.infinity,
-                  child: Text(
-                    'Forgot password?',
-                    style: TextStyle(color: Color(0xFFFF7A00)),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-              ),
-              const SizedBox(height: 20),
-              MyButton(text: "Sign In", onTap: signIn)
-            ],
-          ),
+            const SizedBox(height: 20),
+            MyButton(text: "Sign In", onTap: signIn)
+          ],
         ),
       ),
     );
