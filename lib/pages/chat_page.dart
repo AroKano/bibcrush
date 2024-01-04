@@ -36,61 +36,29 @@ class _ChatScreenState extends State<ChatScreen> {
 
   String get chatId {
     final currentUser = FirebaseAuth.instance.currentUser!;
-    return getChatId(currentUser.uid, widget.peerId);  // Assuming widget.peerId contains the peer's user ID
+    return getChatId(currentUser.uid,
+        widget.peerId); // Assuming widget.peerId contains the peer's user ID
   }
 
   void _handleSubmitted(String text) {
-    if (text.trim().isNotEmpty) {
+    if (text
+        .trim()
+        .isNotEmpty) {
       _textController.clear();
       setState(() {
-        _isComposingMessage = false; // Reset the flag when the message is submitted
+        _isComposingMessage =
+        false; // Reset the flag when the message is submitted
       });
 
       // Add the message to Firestore in the chat's 'messages' subcollection
-      FirebaseFirestore.instance.collection('chats').doc(chatId) // You need to define chatId
-        .collection('messages').add({
-          'senderId': FirebaseAuth.instance.currentUser!.uid,
-          'text': text,
-          'timestamp': FieldValue.serverTimestamp(),
-        });
-    }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _textController.addListener(_handleTextChange);
-
-    // Firestore listener setup
-    FirebaseFirestore.instance.collection('chats').doc(chatId)
-      .collection('messages').orderBy('timestamp', descending: true)
-        .snapshots().listen((snapshot) {
-          List<Message> newMessages = [];
-          for (var doc in snapshot.docs) {
-            var data = doc.data();
-            newMessages.add(Message(
-              text: data['text'],
-              sender: data['senderId'] == FirebaseAuth.instance.currentUser!.uid,
-              dateTime: (data['dateTime'] as Timestamp).toDate(),
-            ));
-          }
-          setState(() {
-            messages = newMessages;
-          });
+      FirebaseFirestore.instance.collection('chats').doc(
+          chatId) // You need to define chatId
+          .collection('messages').add({
+        'senderId': FirebaseAuth.instance.currentUser!.uid,
+        'text': text,
+        'timestamp': FieldValue.serverTimestamp(),
       });
-  }
-
-  void _handleTextChange() {
-    setState(() {
-      _isComposingMessage = _textController.text.isNotEmpty;
-    });
-  }
-
-  @override
-  void dispose() {
-    _textController.removeListener(_handleTextChange);
-    _textController.dispose();
-    super.dispose();
+    }
   }
 
   @override
@@ -98,6 +66,7 @@ class _ChatScreenState extends State<ChatScreen> {
     return Scaffold(
       appBar: AppBar(
         titleSpacing: 0.0,
+        automaticallyImplyLeading: false,
         title: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -105,20 +74,15 @@ class _ChatScreenState extends State<ChatScreen> {
             IconButton(
               icon: Icon(Icons.arrow_back_ios),
               onPressed: () {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => HomePage(),
-                  ),
-                );
+                Navigator.pop(context);
               },
             ),
             CircleAvatar(
-              backgroundImage: NetworkImage('https://via.placeholder.com/150'),
+              backgroundImage: NetworkImage(widget.peerImageUrl),
               radius: 23,
             ),
             SizedBox(width: 10),
-            Text('Max Mustermann'),
+            Text(widget.peerName),
           ],
         ),
         actions: [
@@ -140,32 +104,65 @@ class _ChatScreenState extends State<ChatScreen> {
             thickness: 1,
           ),
           Expanded(
-            child: ListView.builder(
-              reverse: true, // Makes sure that the list starts from the bottom
-              itemCount: messages.length,
-              itemBuilder: (context, index) {
-                final message = messages[index];
-                return Align(
-                  alignment: message.sender
-                      ? Alignment.centerRight
-                      : Alignment.centerLeft,
-                  child: Container(
-                    margin: const EdgeInsets.all(5.0),
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 16.0, vertical: 12.0),
-                    decoration: BoxDecoration(
-                      color: message.sender ? Color(0xFFFFE8D3) : Colors.black,
-                      borderRadius: BorderRadius.circular(20.0),
-                    ),
-                    child: Text(
-                      message.text,
-                      style: TextStyle(
-                        fontSize: 18.0,
-                        color: message.sender ? Colors.black : Colors.white,
-                      ),
-                    ),
-                  ),
-                );
+            child: StreamBuilder<QuerySnapshot>(
+              stream: FirebaseFirestore.instance
+                  .collection('chats/$chatId/messages')
+                  .orderBy('timestamp', descending: true)
+                  .snapshots(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: CircularProgressIndicator());
+                } else if (snapshot.hasError) {
+                  print('Error loading messages: ${snapshot.error}');
+                  return Center(child: Text('Error loading messages'));
+                } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                  print('No messages found.');
+                  return Center(child: Text('No messages yet.'));
+                } else {
+                  // Debug print the number of messages
+                  print('Number of messages: ${snapshot.data!.docs.length}');
+                  messages = snapshot.data!.docs.map((doc) {
+                    var data = doc.data() as Map<String, dynamic>;
+                    // Debug print message content
+                    print('Message text: ${data['text']}');
+                    return Message(
+                      text: data['text'],
+                      sender: data['senderId'] ==
+                          FirebaseAuth.instance.currentUser!.uid,
+                      dateTime: (data['timestamp'] as Timestamp).toDate(),
+                    );
+                  }).toList();
+                  return ListView.builder(
+                    reverse: true, // Start the list from the bottom
+                    itemCount: messages.length,
+                    itemBuilder: (context, index) {
+                      final message = messages[index];
+                      return Align(
+                        alignment: message.sender
+                            ? Alignment.centerRight
+                            : Alignment.centerLeft,
+                        child: Container(
+                          margin: const EdgeInsets.all(5.0),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 16.0, vertical: 12.0),
+                          decoration: BoxDecoration(
+                            color: message.sender ? Color(0xFFFFE8D3) : Colors
+                                .black,
+                            borderRadius: BorderRadius.circular(20.0),
+                          ),
+                          child: Text(
+                            message.text,
+                            style: TextStyle(
+                              fontSize: 18.0,
+                              color: message.sender ? Colors.black : Colors
+                                  .white,
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                }
               },
             ),
           ),
@@ -178,18 +175,18 @@ class _ChatScreenState extends State<ChatScreen> {
                     controller: _textController,
                     decoration: InputDecoration(
                       hintText: 'Type a message',
-                      hintStyle:
-                          TextStyle(fontSize: 18.0, color: Color(0xFFBEBEBE)),
+                      hintStyle: TextStyle(
+                          fontSize: 18.0, color: Color(0xFFBEBEBE)),
                       border: OutlineInputBorder(),
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(25.0),
-                        borderSide:
-                            BorderSide(color: Color(0xFFBEBEBE), width: 1.0),
+                        borderSide: BorderSide(color: Color(0xFFBEBEBE),
+                            width: 1.0),
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(25.0),
-                        borderSide:
-                            BorderSide(color: Color(0xFFFF7A00), width: 2.0),
+                        borderSide: BorderSide(color: Color(0xFFFF7A00),
+                            width: 2.0),
                       ),
                       filled: true,
                       fillColor: Colors.white,
@@ -205,9 +202,8 @@ class _ChatScreenState extends State<ChatScreen> {
                         margin: EdgeInsets.only(right: 8.0),
                         child: IconButton(
                           icon: Icon(Icons.send_rounded, color: Colors.white),
-                          onPressed: _isComposingMessage
-                              ? () => _handleSubmitted(_textController.text)
-                              : null,
+                          onPressed: _isComposingMessage ? () =>
+                              _handleSubmitted(_textController.text) : null,
                         ),
                       ),
                     ),

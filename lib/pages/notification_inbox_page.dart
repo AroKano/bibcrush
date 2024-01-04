@@ -173,52 +173,106 @@ class _InboxNotificationsPageState extends State<InboxNotificationsPage> {
   }
 
   Widget _buildMessagesList() {
+    var currentUser = FirebaseAuth.instance.currentUser;
+
+    if (currentUser == null) {
+      return Center(child: Text('You need to be logged in to see messages.'));
+    }
+
     return StreamBuilder<QuerySnapshot>(
-      stream: FirebaseFirestore.instance.collection('your_chat_collection')
-        // Query to get the current user's conversations
-        .where('participants', arrayContains: FirebaseAuth.instance.currentUser!.uid)
+      stream: FirebaseFirestore.instance.collection('chats')
+        .where('participants', arrayContains: currentUser.uid)
         .snapshots(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
+      builder: (context, chatSnapshot) {
+        if (chatSnapshot.connectionState == ConnectionState.waiting) {
           return Center(child: CircularProgressIndicator());
         }
 
-        if (!snapshot.hasData) {
+        if (!chatSnapshot.hasData || chatSnapshot.data!.docs.isEmpty) {
           return Center(child: Text('No messages yet.'));
         }
 
-        var chats = snapshot.data!.docs;
+        var chats = chatSnapshot.data!.docs;
 
         return ListView.builder(
           itemCount: chats.length,
           itemBuilder: (context, index) {
             var chatData = chats[index].data() as Map<String, dynamic>;
-            String peerId = chatData['peerId'];
-            String peerName = chatData['peerName'];
-            String peerImageUrl = chatData['peerImageUrl'];
+            var peerId = chatData['participants'].firstWhere((id) => id != currentUser.uid);
 
-            // Logic to extract peerId, peerName, and peerImageUrl from chatData
-            // ...
+            // Here we use FutureBuilder to handle the asynchronous operation
+            return FutureBuilder<DocumentSnapshot>(
+                future: FirebaseFirestore.instance.collection('users').doc(peerId).get(),
+                builder: (context, AsyncSnapshot<DocumentSnapshot> peerSnapshot) {
+                  if (peerSnapshot.connectionState == ConnectionState.waiting) {
+                    return ListTile(
+                        title: Text('Loading...'),
+                    );
+                  }
 
-            return ListTile(
-              leading: CircleAvatar(
-                backgroundImage: NetworkImage(peerImageUrl),
-              ),
-              title: Text(peerName),
-              subtitle: Text('Last message...'), // Replace with actual last message preview
-              trailing: Text('Time'), // Replace with actual time of last message
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ChatScreen(
-                      peerName: peerName,
-                      peerImageUrl: peerImageUrl,
-                      peerId: peerId,
-                    ),
-                  ),
-                );
-              },
+                  if (!peerSnapshot.hasData) {
+                    return ListTile(
+                      title: Text('User not found.'),
+                    );
+                  }
+
+                  var peerUserDetails = peerSnapshot.data!.data() as Map<String, dynamic>;
+                  String peerName = peerUserDetails['First Name'] ?? 'Unknown';
+                  String peerImageUrl = peerUserDetails['profileImageUrl'] ?? 'https://via.placeholder.com/150';
+
+                  // Fetch last message and format timestamp asynchronously
+                  return FutureBuilder<QuerySnapshot>(
+                    future: FirebaseFirestore.instance
+                      .collection('chats/${chats[index].id}/messages')
+                      .orderBy('timestamp', descending: true)
+                      .limit(1)
+                      .get(),
+                    builder: (context, AsyncSnapshot<QuerySnapshot> messageSnapshot) {
+                      if (messageSnapshot.connectionState == ConnectionState.waiting) {
+                        return ListTile(
+                          title: Text('Loading...'),
+                        );
+                      }
+
+                      if (!messageSnapshot.hasData || messageSnapshot.data!.docs.isEmpty) {
+                        return ListTile(
+                          title: Text(peerName),
+                          subtitle: Text('No messages'),
+                          leading: CircleAvatar(
+                            backgroundImage: NetworkImage(peerImageUrl),
+                          ),
+                        );
+                      }
+
+                      var lastMessageData = messageSnapshot.data!.docs.first.data() as Map<String, dynamic>;
+                      String lastMessage = lastMessageData['text'] ?? 'No messages';
+                      // Format the timestamp into a readable format
+                      // Use the intl package or another method to format the timestamp as needed
+                      String lastMessageTime = '...';
+
+                      return ListTile(
+                        leading: CircleAvatar(
+                          backgroundImage: NetworkImage(peerImageUrl),
+                        ),
+                        title: Text(peerName),
+                        subtitle: Text(lastMessage),
+                        trailing: Text(lastMessageTime),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ChatScreen(
+                                peerName: peerName,
+                                peerImageUrl: peerImageUrl,
+                                peerId: peerId,
+                              ),
+                            ),
+                          );
+                        },
+                      );
+                    },
+                  );
+                },
             );
           },
         );
