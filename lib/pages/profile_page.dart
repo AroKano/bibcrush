@@ -1,4 +1,5 @@
 import 'package:bibcrush/pages/start_page.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -7,6 +8,8 @@ import 'package:bibcrush/theme/theme_provider.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import '../components/custom_nav_bar.dart';
 import 'comment_page.dart';
+import 'dart:io';
+import 'package:image_picker/image_picker.dart';
 
 class ProfilePage extends StatefulWidget {
   ProfilePage({Key? key}) : super(key: key);
@@ -23,6 +26,7 @@ class _ProfilePageState extends State<ProfilePage> {
   int _selectedIndex = 0;
   bool _lightDarkModeEnabled = true;
   bool _notificationsEnabled = true;
+  File? _selectedImage;
 
   final _currentPasswordController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -219,11 +223,31 @@ class _ProfilePageState extends State<ProfilePage> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          const SizedBox(height: 50),
-          const Icon(
-            Icons.person,
-            size: 72,
-          ),
+          const SizedBox(height: 20),
+          _selectedImage != null
+              ? CircleAvatar(
+                  radius: 36,
+                  backgroundImage: FileImage(_selectedImage!),
+                )
+              : CircleAvatar(
+                  radius: 36,
+                  backgroundColor: Color(0xFFFF7A00),
+                  child: IconButton(
+                    icon: Icon(Icons.camera_alt),
+                    onPressed: () async {
+                      final image = await ImagePicker()
+                          .pickImage(source: ImageSource.gallery);
+                      if (image != null) {
+                        setState(() {
+                          _selectedImage = File(image.path);
+                        });
+                        await _uploadImageToFirebaseStorage();
+                      }
+                    },
+                  ),
+                ),
+          const SizedBox(height: 20),
+
           RichText(
             text: TextSpan(
               text: _first_name,
@@ -274,7 +298,7 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
             ),
           ),
-          SizedBox(height: 10),
+          SizedBox(height: 20),
           Container(
             decoration: BoxDecoration(
               border: Border(
@@ -303,9 +327,9 @@ class _ProfilePageState extends State<ProfilePage> {
               child: Column(
                 children: [
                   TabBar(
-                    labelColor: Colors.orange,
+                    labelColor: Color(0xFFFF7A00),
                     unselectedLabelColor: Colors.grey,
-                    indicatorColor: Colors.orange,
+                    indicatorColor: Color(0xFFFF7A00),
                     tabs: [
                       Tab(text: "My Posts"),
                       Tab(text: "My Info"),
@@ -394,13 +418,14 @@ class _ProfilePageState extends State<ProfilePage> {
           padding: const EdgeInsets.all(8.0),
           child: Card(
             elevation: 3,
+            color: Theme.of(context).colorScheme.primary,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 ListTile(
                   leading: CircleAvatar(
                     radius: 25,
-                    backgroundColor: Colors.blue,
+                    backgroundColor: Color(0xFFFF7A00),
                     child: Icon(Icons.person, color: Colors.white),
                   ),
                   title: Row(
@@ -574,6 +599,17 @@ class _ProfilePageState extends State<ProfilePage> {
 
         var posts = snapshot.data!.docs;
 
+        if (posts.isEmpty) {
+          // If no posts exist, display a centered message
+          return Center(
+            child: Text(
+              'No posts yet.',
+              style: TextStyle(fontSize: 15.0),
+            ),
+          );
+        }
+
+        // If posts exist, display them in a ListView
         return ListView.builder(
           itemCount: posts.length,
           itemBuilder: (context, index) {
@@ -1195,6 +1231,18 @@ Your app data will also be deleted and you won't be able to retrieve it.''',
     } catch (e) {
       print("Error updating user information in Firestore: $e");
       // Handle the error accordingly
+    }
+  }
+
+  Future<void> _uploadImageToFirebaseStorage() async {
+    try {
+      final Reference storageReference = FirebaseStorage.instance
+          .ref()
+          .child('profile_images/${DateTime.now().millisecondsSinceEpoch}');
+      await storageReference.putFile(_selectedImage!);
+      // You can save the download URL or any other information to Firebase Firestore or Realtime Database if needed.
+    } catch (e) {
+      print('Error uploading image to Firebase Storage: $e');
     }
   }
 }
