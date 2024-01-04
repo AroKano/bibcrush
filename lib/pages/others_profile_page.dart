@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:timeago/timeago.dart' as timeago;
-
+import 'package:bibcrush/pages/chat_page.dart';
 import 'comment_page.dart';
 
 final currentUser = FirebaseAuth.instance.currentUser!;
@@ -329,6 +329,29 @@ class _OthersProfilePageState extends State<OthersProfilePage> {
                         _isCrushed ? "Uncrush" : "Crush",
                         style: TextStyle(
                           color: Colors.white,
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 10),
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ChatScreen(
+                              peerName: _name,
+                              peerImageUrl: 'https://via.placeholder.com/150',
+                              peerId: widget.documentId,
+                            ),
+                          ),
+                        );
+                      },
+                      child: Text("Send Message"),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.blue,
+                        minimumSize: Size(120, 40),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
                         ),
                       ),
                     ),

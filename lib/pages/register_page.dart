@@ -212,6 +212,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
       "Follower": 0, // Default value for Follower
       "Following": 0, // Default value for Following
       "Crushes": 0, // Default value for Crushes
+      "Crushed": 0,
+      "Likes": [],
     });
   }
 

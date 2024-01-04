@@ -89,7 +89,6 @@ class _CreatePostPageState extends State<CreatePostPage> {
         'imageUrl': imageUrl,
         'timestamp': FieldValue.serverTimestamp(),
         'likes': 0,
-        'bookmarks': 0,
       };
 
       await FirebaseFirestore.instance.collection('posts').add(postData);

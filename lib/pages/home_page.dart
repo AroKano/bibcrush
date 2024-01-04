@@ -4,7 +4,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:timeago/timeago.dart' as timeago;
-
 import 'comment_page.dart';
 
 class HomePage extends StatefulWidget {
@@ -16,8 +15,6 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
-  bool isLiked = false;
-  bool isBookmarked = false;
 
   final user = FirebaseAuth.instance.currentUser!;
 
@@ -65,6 +62,30 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  Future<void> _deletePost(String postId) async {
+    try {
+      // Delete comments related to the post
+      await FirebaseFirestore.instance
+          .collection('posts')
+          .doc(postId)
+          .collection('comments')
+          .get()
+          .then((commentSnapshot) async {
+        for (var commentDoc in commentSnapshot.docs) {
+          await commentDoc.reference.delete();
+        }
+      });
+
+      // Delete the post itself
+      await FirebaseFirestore.instance.collection('posts').doc(postId).delete();
+
+      print('Post deleted successfully');
+    } catch (e) {
+      print('Error deleting post: $e');
+      // Handle the error as needed, such as showing a message to the user
+    }
+  }
+
   Widget _buildPostWidget(DocumentSnapshot postDoc) {
     return FutureBuilder<DocumentSnapshot>(
       future: FirebaseFirestore.instance.collection('users').doc(postDoc['users']['UID']).get(),
@@ -79,12 +100,14 @@ class _HomePageState extends State<HomePage> {
         }
 
         var post = postDoc.data() as Map<String, dynamic>;
-        var userData = userSnapshot.data?.data() as Map<String, dynamic> ?? {};
+        var userData = userSnapshot.data?.data() as Map<String, dynamic>? ?? {};
 
         if (userData == null) {
           print('Error: userData is null');
           return Container();  // or any other suitable widget
         }
+
+        bool isCurrentUserOwner = post['users']['UID'] == FirebaseAuth.instance.currentUser?.uid;
 
         print("User Document: ${userSnapshot.data}");
 
@@ -113,12 +136,35 @@ class _HomePageState extends State<HomePage> {
                       ),
                       PopupMenuButton<String>(
                         itemBuilder: (BuildContext context) {
-                          return {'Report', 'Unfollow'}.map((String choice) {
-                            return PopupMenuItem<String>(
-                              value: choice,
-                              child: Text(choice),
+                          List<PopupMenuEntry<String>> menuItems = [];
+
+                          if (isCurrentUserOwner) {
+                            // Add "Delete" option only if the current user is not the owner of the post
+                            menuItems.add(
+                              PopupMenuItem<String>(
+                                value: 'Delete',
+                                child: Text('Delete'),
+                              ),
                             );
-                          }).toList();
+                          } else if (!isCurrentUserOwner) {
+                            // Add "Report" option only if the current user is not the owner
+                            menuItems.add(
+                              PopupMenuItem<String>(
+                                value: 'Report',
+                                child: Text('Report'),
+                              ),
+                            );
+                          }
+
+                          return menuItems;
+                        },
+                        onSelected: (String value) async {
+                          if (value == 'Delete') {
+                            // Handle the delete action here
+                            await _deletePost(postDoc.id);
+                          } else if (value == 'Report') {
+                            // Handle the report action here
+                          }
                         },
                       ),
                     ],
@@ -171,27 +217,6 @@ class _HomePageState extends State<HomePage> {
                         setState(() {
                           post['likes'] = newLikes;
                         });
-                      },
-                    ),
-                    IconButton(
-                      icon: Icon(
-                        post['bookmarks'] != null && post['bookmarks']! > 0 ? Icons.bookmark : Icons.bookmark_border,
-                        color: post['bookmarks'] != null && post['bookmarks']! > 0 ? Colors.red : null,
-                      ),
-                      onPressed: () async {
-                        int newBookmarks = post['bookmarks'] != null && post['bookmarks']! > 0
-                            ? post['bookmarks']! - 1
-                            : post['bookmarks']! + 1;
-                        await FirebaseFirestore.instance.collection('posts').doc(postDoc.id).update({'bookmarks': newBookmarks});
-                        setState(() {
-                          post['bookmarks'] = newBookmarks;
-                        });
-                      },
-                    ),
-                    IconButton(
-                      icon: Icon(Icons.share),
-                      onPressed: () {
-                        print('Share');
                       },
                     ),
                   ],
