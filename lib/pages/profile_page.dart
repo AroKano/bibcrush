@@ -801,7 +801,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 _buildSubheading('Hilal Cubukcu:', 'Task 1'),
                 _buildSubheading('Arkan Kadir:', 'Task 2'),
                 _buildSubheading('Melisa Rosic Emira:', 'Task 3'),
-                _buildSubheading('Yudum Yilmaz:', 'Task 4'),
+                _buildSubheading('Yudum Yilmaz:', 'Frontend/UI'),
 
                 SizedBox(height: 16),
                 Center(
@@ -817,8 +817,6 @@ class _ProfilePageState extends State<ProfilePage> {
                 SizedBox(height: 8),
                 _buildPackageDescription('cupertino_icons',
                     'Bietet den Cupertino-Icon-Satz für iOS-artige Symbole in Flutter-Apps.'),
-                _buildPackageDescription('google_nav_bar',
-                    'Eine anpassbare Navigationsleiste am unteren Bildschirmrand im Google Material Design-Stil.'),
                 _buildPackageDescription('firebase_core',
                     'Das Kernpaket für Firebase, erforderlich für die Initialisierung und Konfiguration von Firebase-Diensten in einer Flutter-App.'),
                 _buildPackageDescription('firebase_auth',
