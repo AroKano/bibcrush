@@ -190,6 +190,13 @@ class _ProfilePageState extends State<ProfilePage> {
                   child: Column(
                     children: [
                       ListTile(
+                        leading: Icon(Icons.info_outline_rounded),
+                        title: Text("Info"),
+                        onTap: () {
+                          _showInfoDialog();
+                        },
+                      ),
+                      ListTile(
                         leading: Icon(Icons.delete_rounded),
                         title: Text("Delete account"),
                         onTap: () {
@@ -356,7 +363,10 @@ class _ProfilePageState extends State<ProfilePage> {
 
   Widget _buildMyPostWidget(DocumentSnapshot postDoc) {
     return FutureBuilder<DocumentSnapshot>(
-      future: FirebaseFirestore.instance.collection('users').doc(postDoc['users']['UID']).get(),
+      future: FirebaseFirestore.instance
+          .collection('users')
+          .doc(postDoc['users']['UID'])
+          .get(),
       builder: (context, userSnapshot) {
         if (userSnapshot.connectionState == ConnectionState.waiting) {
           return CircularProgressIndicator();
@@ -372,10 +382,11 @@ class _ProfilePageState extends State<ProfilePage> {
 
         if (userData == null) {
           print('Error: userData is null');
-          return Container();  // or any other suitable widget
+          return Container(); // or any other suitable widget
         }
 
-        bool isCurrentUserOwner = post['users']['UID'] == FirebaseAuth.instance.currentUser?.uid;
+        bool isCurrentUserOwner =
+            post['users']['UID'] == FirebaseAuth.instance.currentUser?.uid;
 
         print("User Document: ${userSnapshot.data}");
 
@@ -397,7 +408,8 @@ class _ProfilePageState extends State<ProfilePage> {
                     children: [
                       Row(
                         children: [
-                          Text(userData?['First Name'] ?? 'Unknown', style: TextStyle(fontWeight: FontWeight.bold)),
+                          Text(userData?['First Name'] ?? 'Unknown',
+                              style: TextStyle(fontWeight: FontWeight.bold)),
                           SizedBox(width: 4),
                           Text('@${userData?['Username'] ?? 'Unknown'}'),
                         ],
@@ -445,11 +457,11 @@ class _ProfilePageState extends State<ProfilePage> {
                   padding: const EdgeInsets.all(8.0),
                   child: post['imageUrl'] != null
                       ? Image.network(
-                    post['imageUrl'],
-                    width: 400,
-                    height: 550,
-                    fit: BoxFit.cover,
-                  )
+                          post['imageUrl'],
+                          width: 400,
+                          height: 550,
+                          fit: BoxFit.cover,
+                        )
                       : Container(),
                 ),
                 Padding(
@@ -468,19 +480,30 @@ class _ProfilePageState extends State<ProfilePage> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => CommentPage(postId: postDoc.id),
+                            builder: (context) =>
+                                CommentPage(postId: postDoc.id),
                           ),
                         );
                       },
                     ),
                     IconButton(
                       icon: Icon(
-                        post['likes'] != null && post['likes']! > 0 ? Icons.favorite : Icons.favorite_border,
-                        color: post['likes'] != null && post['likes']! > 0 ? Colors.red : null,
+                        post['likes'] != null && post['likes']! > 0
+                            ? Icons.favorite
+                            : Icons.favorite_border,
+                        color: post['likes'] != null && post['likes']! > 0
+                            ? Colors.red
+                            : null,
                       ),
                       onPressed: () async {
-                        int newLikes = post['likes'] != null && post['likes']! > 0 ? post['likes']! - 1 : post['likes']! + 1;
-                        await FirebaseFirestore.instance.collection('posts').doc(postDoc.id).update({'likes': newLikes});
+                        int newLikes =
+                            post['likes'] != null && post['likes']! > 0
+                                ? post['likes']! - 1
+                                : post['likes']! + 1;
+                        await FirebaseFirestore.instance
+                            .collection('posts')
+                            .doc(postDoc.id)
+                            .update({'likes': newLikes});
                         setState(() {
                           post['likes'] = newLikes;
                         });
@@ -585,7 +608,8 @@ class _ProfilePageState extends State<ProfilePage> {
     }
   }
 
-  void _showEditInfoDialog(BuildContext context, String title, String initialValue) {
+  void _showEditInfoDialog(
+      BuildContext context, String title, String initialValue) {
     String newValue = initialValue;
 
     showDialog(
@@ -627,7 +651,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         _courseOfStudy = newValue;
                         break;
                       case "Semester":
-                      // Check if newValue is a valid integer string before parsing
+                        // Check if newValue is a valid integer string before parsing
                         if (int.tryParse(newValue) != null) {
                           _semester = int.parse(newValue);
                         } else {
@@ -636,7 +660,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         }
                         break;
                       case "Faculty":
-                      // Check if newValue is a valid integer string before parsing
+                        // Check if newValue is a valid integer string before parsing
                         if (int.tryParse(newValue) != null) {
                           _faculty = int.parse(newValue);
                         } else {
@@ -644,7 +668,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           // Handle the error accordingly
                         }
                         break;
-                    // Add more cases for other info sections if needed
+                      // Add more cases for other info sections if needed
                     }
                   });
 
@@ -742,6 +766,126 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
+  void _showInfoDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Center(
+              child: Text(
+            'Info',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+            ),
+          )),
+          content: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Credits Section
+                Center(
+                  child: Text(
+                    'Credits',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                SizedBox(height: 8),
+                _buildSubheading('Hilal Cubukcu:', 'Task 1'),
+                _buildSubheading('Arkan Kadir:', 'Task 2'),
+                _buildSubheading('Melisa Rosic Emira:', 'Task 3'),
+                _buildSubheading('Yudum Yilmaz:', 'Task 4'),
+
+                // Packages Section
+                SizedBox(height: 16),
+                Center(
+                  child: Text(
+                    'Packages',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                SizedBox(height: 8),
+                _buildPackageDescription('cupertino_icons',
+                    'Bietet den Cupertino-Icon-Satz für iOS-artige Symbole in Flutter-Apps.'),
+                _buildPackageDescription('google_nav_bar',
+                    'Eine anpassbare Navigationsleiste am unteren Bildschirmrand im Google Material Design-Stil.'),
+                _buildPackageDescription('firebase_core',
+                    'Das Kernpaket für Firebase, erforderlich für die Initialisierung und Konfiguration von Firebase-Diensten in einer Flutter-App.'),
+                _buildPackageDescription('firebase_auth',
+                    'Flutter-Plugin für die Firebase-Authentifizierung, mit der Benutzer sich mit verschiedenen Authentifizierungsanbietern anmelden können.'),
+                _buildPackageDescription('cloud_firestore',
+                    'Flutter-Plugin für Cloud Firestore, eine NoSQL-Datenbank, die Daten in Echtzeit zwischen Geräten synchronisiert.'),
+                _buildPackageDescription('flutter_native_splash',
+                    'Ermöglicht eine einfache Möglichkeit, einen nativen Splash-Screen zu einer Flutter-App hinzuzufügen.'),
+                _buildPackageDescription('image_picker',
+                    'Ermöglicht Benutzern das Auswählen von Bildern aus der Galerie ihres Geräts oder das Aufnehmen von Fotos mit der Kamera.'),
+                _buildPackageDescription('provider',
+                    'Eine Bibliothek für das Zustandsmanagement, die es einfach macht, Daten zwischen Widgets in Ihrer Flutter-App zu teilen.'),
+                _buildPackageDescription('google_fonts',
+                    'Bietet die Möglichkeit, Google Fonts in Flutter-Apps zu verwenden.'),
+                _buildPackageDescription('firebase_storage',
+                    'Flutter-Plugin für Firebase Cloud Storage, mit dem man Dateien in der Cloud speichern und abrufen kann.'),
+                _buildPackageDescription('timeago',
+                    'Eine Bibliothek zum Formatieren von Zeitstempeln in ein "vor kurzem" Format, um relative Zeit in der App anzuzeigen.'),
+
+                // Widgets Section
+                SizedBox(height: 16),
+                Center(
+                  child: Text(
+                    'Widgets',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                SizedBox(height: 8),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildSubheading(String name, String task) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          name,
+          style:
+              TextStyle(fontWeight: FontWeight.bold, color: Color(0xFFFF7A00)),
+        ),
+        Text(task),
+        SizedBox(height: 8),
+      ],
+    );
+  }
+
+  Widget _buildPackageDescription(String packageName, String description) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          packageName,
+          style:
+              TextStyle(fontWeight: FontWeight.bold, color: Color(0xFFFF7A00)),
+        ),
+        Text(description),
+        SizedBox(height: 8),
+      ],
+    );
+  }
+
   void _showDeleteAccountDialog() {
     showDialog(
       context: context,
@@ -834,7 +978,7 @@ Your app data will also be deleted and you won't be able to retrieve it.''',
                     decoration: InputDecoration(
                       labelText: 'Confirm Password',
                       errorText:
-                      _passwordsMatch ? null : 'Passwords do not match',
+                          _passwordsMatch ? null : 'Passwords do not match',
                       errorStyle: TextStyle(color: Colors.red),
                       focusedBorder: UnderlineInputBorder(
                         borderSide: BorderSide(color: Color(0xFFFF7A00)),
@@ -904,10 +1048,11 @@ Your app data will also be deleted and you won't be able to retrieve it.''',
     );
   }
 
-  Future<String?> _changePassword(String oldPassword, String newPassword) async {
+  Future<String?> _changePassword(
+      String oldPassword, String newPassword) async {
     User user = FirebaseAuth.instance.currentUser!;
     AuthCredential credential =
-    EmailAuthProvider.credential(email: user.email!, password: oldPassword);
+        EmailAuthProvider.credential(email: user.email!, password: oldPassword);
 
     Map<String, String?> codeResponses = {
       // Re-auth responses
@@ -933,14 +1078,15 @@ Your app data will also be deleted and you won't be able to retrieve it.''',
     }
   }
 
-  Future<void> _signOut() async {await FirebaseAuth.instance.signOut();
-  Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => StartPage(
-          showRegisterPage: () {},
-        ),
-      ));
+  Future<void> _signOut() async {
+    await FirebaseAuth.instance.signOut();
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => StartPage(
+            showRegisterPage: () {},
+          ),
+        ));
   }
 
   Future<void> _deleteAccount() async {
@@ -986,10 +1132,10 @@ Your app data will also be deleted and you won't be able to retrieve it.''',
 
       // Fetch the current user document
       DocumentSnapshot<Map<String, dynamic>> userDocument =
-      await FirebaseFirestore.instance
-          .collection("users")
-          .doc(userId)
-          .get();
+          await FirebaseFirestore.instance
+              .collection("users")
+              .doc(userId)
+              .get();
 
       // Get the current data from the document
       Map<String, dynamic> currentData = userDocument.data() ?? {};
@@ -1000,7 +1146,7 @@ Your app data will also be deleted and you won't be able to retrieve it.''',
           currentData["Course of Study"] = newValue;
           break;
         case "Semester":
-        // Check if newValue is a valid integer string before parsing
+          // Check if newValue is a valid integer string before parsing
           if (int.tryParse(newValue) != null) {
             currentData["Semester"] = int.parse(newValue);
           } else {
@@ -1009,7 +1155,7 @@ Your app data will also be deleted and you won't be able to retrieve it.''',
           }
           break;
         case "Faculty":
-        // Check if newValue is a valid integer string before parsing
+          // Check if newValue is a valid integer string before parsing
           if (int.tryParse(newValue) != null) {
             currentData["Faculty"] = int.parse(newValue);
           } else {
@@ -1017,7 +1163,7 @@ Your app data will also be deleted and you won't be able to retrieve it.''',
             // Handle the error accordingly
           }
           break;
-      // Add more cases for other info sections if needed
+        // Add more cases for other info sections if needed
       }
 
       // Update the entire user information in Firestore
@@ -1033,7 +1179,8 @@ Your app data will also be deleted and you won't be able to retrieve it.''',
     }
   }
 
-  Future<void> _updateEditProfileInFirestore(String newFirstName, String newCaption) async {
+  Future<void> _updateEditProfileInFirestore(
+      String newFirstName, String newCaption) async {
     try {
       // Get the current user's document ID
       String userId = FirebaseAuth.instance.currentUser?.uid ?? "";
