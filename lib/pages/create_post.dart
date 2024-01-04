@@ -20,6 +20,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'home_page.dart';
 
+void main() {
+  runApp(CreatePost());
+}
+
 
 class CreatePost extends StatelessWidget {
   @override
