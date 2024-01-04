@@ -1,3 +1,9 @@
+/*
+Datum: 04.01.2024
+Autor: Yudum (UI)
+Was: Gradient für SplashScreen
+*/
+
 import 'package:flutter/material.dart';
 
 class OpeningPageBuilder {

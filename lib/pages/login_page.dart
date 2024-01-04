@@ -1,3 +1,9 @@
+/*
+Datum: 04.01.2024
+Autoren: Yudum(UI)
+Was: Login page mit E-Mail- und Passworteingabe und Bestätigung
+*/
+
 import 'package:bibcrush/components/my_button.dart';
 import 'package:bibcrush/components/my_textfield.dart';
 import 'package:bibcrush/pages/start_page.dart';

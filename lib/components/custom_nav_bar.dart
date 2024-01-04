@@ -1,3 +1,10 @@
+/*
+Datum: 04.02.2024
+Autoren: Yudum (UI)
+Was: Navigation Bar in der unteren Leiste, um auf folgende Seiten zu kommen: feed, search, create Post, inbox, profile
+*/
+
+
 import 'package:bibcrush/pages/notification_inbox_page.dart';
 import 'package:bibcrush/pages/create_post.dart';
 import 'package:bibcrush/pages/home_page.dart';

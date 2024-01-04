@@ -1,3 +1,9 @@
+/*
+ Datum: 04.01.2024
+ Autoren: Yudum(UI)
+ Was: Search page, um nach Usern zu suchen, alle User werden angezeigt
+ */
+
 import 'package:bibcrush/pages/others_profile_page.dart';
 import 'package:bibcrush/read%20data/get_user_and_first_name.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';

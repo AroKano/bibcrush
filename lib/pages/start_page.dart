@@ -1,3 +1,9 @@
+/*
+Datum: 04.01.2024
+Autoren: Yudum(UI)
+Was: Seite, die nach dem SplashScreen angezeigt wird, Option, sich einzuloggen bzw. zu registrieren
+*/
+
 import 'package:bibcrush/components/my_button.dart';
 import 'package:flutter/material.dart';
 import 'register_page.dart';

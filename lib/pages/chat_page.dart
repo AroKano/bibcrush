@@ -34,17 +34,21 @@ class _ChatScreenState extends State<ChatScreen> {
 
   String get chatId {
     final currentUser = FirebaseAuth.instance.currentUser!;
-    return getChatId(currentUser.uid, widget.peerId);
+    return getChatId(currentUser.uid,
+        widget.peerId); // Assuming widget.peerId contains the peer's user ID
   }
 
   void _handleSubmitted(String text) {
     if (text.trim().isNotEmpty) {
       _textController.clear();
       setState(() {
-        _isComposingMessage = false;
+        _isComposingMessage =
+        false; // Reset the flag when the message is submitted
       });
 
-      FirebaseFirestore.instance.collection('chats').doc(chatId)
+      // Add the message to Firestore in the chat's 'messages' subcollection
+      FirebaseFirestore.instance.collection('chats').doc(
+          chatId) // You need to define chatId
           .collection('messages').add({
         'senderId': FirebaseAuth.instance.currentUser!.uid,
         'text': text,
@@ -107,8 +111,12 @@ class _ChatScreenState extends State<ChatScreen> {
                 } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
                   return Center(child: Text('No messages yet.'));
                 } else {
+                  // Debug print the number of messages
+                  print('Number of messages: ${snapshot.data!.docs.length}');
                   messages = snapshot.data!.docs.map((doc) {
                     var data = doc.data() as Map<String, dynamic>;
+                    // Debug print message content
+                    print('Message text: ${data['text']}');
                     return Message(
                       text: data['text'],
                       sender: data['senderId'] == FirebaseAuth.instance.currentUser!.uid,
@@ -116,7 +124,7 @@ class _ChatScreenState extends State<ChatScreen> {
                     );
                   }).toList();
                   return ListView.builder(
-                    reverse: true,
+                    reverse: true, // Start the list from the bottom
                     itemCount: messages.length,
                     itemBuilder: (context, index) {
                       final message = messages[index];

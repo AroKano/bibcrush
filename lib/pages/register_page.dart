@@ -1,3 +1,9 @@
+/* 
+Datum: 04.01.2024
+Autoren: Yudum (UI)
+Was: Registration page mit Vorname, Benutzername, Fakultät, Studiengang, Semester, Studi-Mail, Passwort und Passwort bestätigen
+*/
+
 import 'package:bibcrush/components/my_button.dart';
 import 'package:bibcrush/components/my_textfield.dart';
 import 'package:bibcrush/pages/home_page.dart';
