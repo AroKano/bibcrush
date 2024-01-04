@@ -174,7 +174,15 @@ class _HomePageState extends State<HomePage> {
                             // Handle the delete action here
                             await _deletePost(postDoc.id);
                           } else if (value == 'Report') {
-                            // Handle the report action here
+                            await showDialog(
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(
+                                  content: Text(
+                                      "Thank you for sending the report and for helping to create a safe environment for all users."),
+                                );
+                              },
+                            );
                           }
                         },
                       ),
