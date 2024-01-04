@@ -1,7 +1,11 @@
-/*
-Datum: 04.01.2024
-Autoren: Yudum(UI)
-Was: Seite, die nach dem SplashScreen angezeigt wird, Option, sich einzuloggen bzw. zu registrieren
+/* 
+FileName: start_page.dart
+Authors: Yudum Yilmaz (UI),
+Last Modified on: 04.01.2024
+Description: This Dart file defines the StartPage class, representing the 
+initial screen of a Flutter app. It displays the app's logo, provides a 
+"Sign in" button to navigate to the login page, and offers an option to register
+by tapping on "Sign up here!" which leads to the registration page.
 */
 
 import 'package:bibcrush/components/my_button.dart';

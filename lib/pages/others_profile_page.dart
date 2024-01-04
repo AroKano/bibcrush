@@ -1,3 +1,14 @@
+/* 
+FileName: others_profile_page.dart
+Authors: Hilal Cubukcu (UI and linked user info to Firebase)
+Last Modified on: 04.01.2024
+Description: This Dart file defines the `OthersProfilePage` class, presenting a 
+user's profile with details such as name, username, caption, studying details, 
+and posts. It also provides options to follow/unfollow and crush/uncrush the user,
+as well as send messages. The user's posts and additional information are 
+displayed in separate tabs.
+*/
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -57,34 +68,52 @@ class _OthersProfilePageState extends State<OthersProfilePage> {
   Future<void> followUser(String otherUserID) async {
     final currentUserID = FirebaseAuth.instance.currentUser?.uid;
 
-    await FirebaseFirestore.instance.collection('users').doc(currentUserID).update({
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(currentUserID)
+        .update({
       'Following': FieldValue.arrayUnion([otherUserID]),
     });
 
-    await FirebaseFirestore.instance.collection('users').doc(otherUserID).update({
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(otherUserID)
+        .update({
       'Follower': FieldValue.arrayUnion([currentUserID]),
     });
   }
+
   Future<void> unfollowUser(String otherUserID) async {
     final currentUserID = FirebaseAuth.instance.currentUser?.uid;
 
-    await FirebaseFirestore.instance.collection('users').doc(currentUserID).update({
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(currentUserID)
+        .update({
       'Following': FieldValue.arrayRemove([otherUserID]),
     });
 
-    await FirebaseFirestore.instance.collection('users').doc(otherUserID).update({
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(otherUserID)
+        .update({
       'Follower': FieldValue.arrayRemove([currentUserID]),
     });
   }
+
   Future<bool> _checkIfFollowing() async {
     try {
       var currentUserId = FirebaseAuth.instance.currentUser?.uid;
-      var currentUserDoc = await FirebaseFirestore.instance.collection('users').doc(currentUserId).get();
+      var currentUserDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(currentUserId)
+          .get();
 
       print("User Document: $currentUserDoc");
 
       setState(() {
-        _isFollowing = currentUserDoc['Following']?.contains(widget.documentId) ?? false;
+        _isFollowing =
+            currentUserDoc['Following']?.contains(widget.documentId) ?? false;
       });
 
       return _isFollowing;
@@ -92,32 +121,45 @@ class _OthersProfilePageState extends State<OthersProfilePage> {
       print("Error checking if following: $e");
       return false;
     }
-
   }
+
   Future<void> _followUser() async {
     try {
       var currentUserId = FirebaseAuth.instance.currentUser?.uid;
 
-      await FirebaseFirestore.instance.collection('users').doc(currentUserId).update({
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(currentUserId)
+          .update({
         'Following': FieldValue.arrayUnion([widget.documentId]),
       });
 
-      await FirebaseFirestore.instance.collection('users').doc(widget.documentId).update({
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(widget.documentId)
+          .update({
         'Follower': FieldValue.arrayUnion([currentUserId]),
       });
     } catch (e) {
       print("Error following user: $e");
     }
   }
+
   Future<void> _unfollowUser() async {
     try {
       var currentUserId = FirebaseAuth.instance.currentUser?.uid;
 
-      await FirebaseFirestore.instance.collection('users').doc(currentUserId).update({
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(currentUserId)
+          .update({
         'Following': FieldValue.arrayRemove([widget.documentId]),
       });
 
-      await FirebaseFirestore.instance.collection('users').doc(widget.documentId).update({
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(widget.documentId)
+          .update({
         'Follower': FieldValue.arrayRemove([currentUserId]),
       });
     } catch (e) {
@@ -128,33 +170,51 @@ class _OthersProfilePageState extends State<OthersProfilePage> {
   Future<void> crushUser(String otherUserID) async {
     final currentUserID = FirebaseAuth.instance.currentUser?.uid;
 
-    await FirebaseFirestore.instance.collection('users').doc(currentUserID).update({
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(currentUserID)
+        .update({
       'Crushes': FieldValue.arrayUnion([otherUserID]),
     });
 
-    await FirebaseFirestore.instance.collection('users').doc(otherUserID).update({
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(otherUserID)
+        .update({
       'Crushed': FieldValue.arrayUnion([currentUserID]),
     });
   }
+
   Future<void> uncrushUser(String otherUserID) async {
     final currentUserID = FirebaseAuth.instance.currentUser?.uid;
 
-    await FirebaseFirestore.instance.collection('users').doc(currentUserID).update({
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(currentUserID)
+        .update({
       'Crushes': FieldValue.arrayRemove([otherUserID]),
     });
 
-    await FirebaseFirestore.instance.collection('users').doc(otherUserID).update({
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(otherUserID)
+        .update({
       'Crushed': FieldValue.arrayRemove([currentUserID]),
     });
   }
+
   Future<bool> _checkIfCrushed() async {
     try {
       var currentUserId = FirebaseAuth.instance.currentUser?.uid;
 
-      var currentUserDoc = await FirebaseFirestore.instance.collection('users').doc(currentUserId).get();
+      var currentUserDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(currentUserId)
+          .get();
 
       setState(() {
-        _isCrushed = currentUserDoc['Crushes']?.contains(widget.documentId) ?? false;
+        _isCrushed =
+            currentUserDoc['Crushes']?.contains(widget.documentId) ?? false;
       });
 
       return _isCrushed;
@@ -163,37 +223,50 @@ class _OthersProfilePageState extends State<OthersProfilePage> {
       return false;
     }
   }
+
   Future<void> _crushUser() async {
     try {
       var currentUserId = FirebaseAuth.instance.currentUser?.uid;
 
-      await FirebaseFirestore.instance.collection('users').doc(currentUserId).update({
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(currentUserId)
+          .update({
         'Crushes': FieldValue.arrayUnion([widget.documentId]),
       });
 
-      await FirebaseFirestore.instance.collection('users').doc(widget.documentId).update({
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(widget.documentId)
+          .update({
         'Crushed': FieldValue.arrayUnion([currentUserId]),
       });
     } catch (e) {
       print("Error crushing user: $e");
     }
   }
+
   Future<void> _uncrushUser() async {
     try {
       var currentUserId = FirebaseAuth.instance.currentUser?.uid;
 
-      await FirebaseFirestore.instance.collection('users').doc(currentUserId).update({
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(currentUserId)
+          .update({
         'Crushes': FieldValue.arrayRemove([widget.documentId]),
       });
 
-      await FirebaseFirestore.instance.collection('users').doc(widget.documentId).update({
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(widget.documentId)
+          .update({
         'Crushed': FieldValue.arrayRemove([currentUserId]),
       });
     } catch (e) {
       print("Error uncrushing user: $e");
     }
   }
-
 
   String _formatTimestamp(Timestamp timestamp) {
     var postTime = timestamp.toDate();
@@ -304,7 +377,7 @@ class _OthersProfilePageState extends State<OthersProfilePage> {
                       },
                       style: ButtonStyle(
                         backgroundColor:
-                        MaterialStateProperty.all(Color(0xFFFF7A00)),
+                            MaterialStateProperty.all(Color(0xFFFF7A00)),
                         shape: MaterialStateProperty.all(
                           RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8),
@@ -360,7 +433,6 @@ class _OthersProfilePageState extends State<OthersProfilePage> {
                   color: Colors.grey,
                   thickness: 0.5,
                 ),
-
                 Expanded(
                   child: DefaultTabController(
                     length: 2,
@@ -380,7 +452,6 @@ class _OthersProfilePageState extends State<OthersProfilePage> {
                           child: TabBarView(
                             children: [
                               _buildMyPostsTab(),
-
                               _buildMyInfosTab(),
                             ],
                           ),
@@ -432,7 +503,10 @@ class _OthersProfilePageState extends State<OthersProfilePage> {
 
   Widget _buildMyPostWidget(DocumentSnapshot postDoc) {
     return FutureBuilder<DocumentSnapshot>(
-      future: FirebaseFirestore.instance.collection('users').doc(postDoc['users']['UID']).get(),
+      future: FirebaseFirestore.instance
+          .collection('users')
+          .doc(postDoc['users']['UID'])
+          .get(),
       builder: (context, userSnapshot) {
         if (userSnapshot.connectionState == ConnectionState.waiting) {
           return CircularProgressIndicator();
@@ -448,7 +522,7 @@ class _OthersProfilePageState extends State<OthersProfilePage> {
 
         if (userData == null) {
           print('Error: userData is null');
-          return Container(); 
+          return Container();
         }
 
         print("User Document: ${userSnapshot.data}");
@@ -471,7 +545,8 @@ class _OthersProfilePageState extends State<OthersProfilePage> {
                     children: [
                       Row(
                         children: [
-                          Text(userData?['First Name'] ?? 'Unknown', style: TextStyle(fontWeight: FontWeight.bold)),
+                          Text(userData?['First Name'] ?? 'Unknown',
+                              style: TextStyle(fontWeight: FontWeight.bold)),
                           SizedBox(width: 4),
                           Text('@${userData?['Username'] ?? 'Unknown'}'),
                         ],
@@ -497,11 +572,11 @@ class _OthersProfilePageState extends State<OthersProfilePage> {
                   padding: const EdgeInsets.all(8.0),
                   child: post['imageUrl'] != null
                       ? Image.network(
-                    post['imageUrl'],
-                    width: 400,
-                    height: 550,
-                    fit: BoxFit.cover,
-                  )
+                          post['imageUrl'],
+                          width: 400,
+                          height: 550,
+                          fit: BoxFit.cover,
+                        )
                       : Container(),
                 ),
                 Padding(
@@ -520,19 +595,30 @@ class _OthersProfilePageState extends State<OthersProfilePage> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => CommentPage(postId: postDoc.id),
+                            builder: (context) =>
+                                CommentPage(postId: postDoc.id),
                           ),
                         );
                       },
                     ),
                     IconButton(
                       icon: Icon(
-                        post['likes'] != null && post['likes']! > 0 ? Icons.favorite : Icons.favorite_border,
-                        color: post['likes'] != null && post['likes']! > 0 ? Colors.red : null,
+                        post['likes'] != null && post['likes']! > 0
+                            ? Icons.favorite
+                            : Icons.favorite_border,
+                        color: post['likes'] != null && post['likes']! > 0
+                            ? Colors.red
+                            : null,
                       ),
                       onPressed: () async {
-                        int newLikes = post['likes'] != null && post['likes']! > 0 ? post['likes']! - 1 : post['likes']! + 1;
-                        await FirebaseFirestore.instance.collection('posts').doc(postDoc.id).update({'likes': newLikes});
+                        int newLikes =
+                            post['likes'] != null && post['likes']! > 0
+                                ? post['likes']! - 1
+                                : post['likes']! + 1;
+                        await FirebaseFirestore.instance
+                            .collection('posts')
+                            .doc(postDoc.id)
+                            .update({'likes': newLikes});
                         setState(() {
                           post['likes'] = newLikes;
                         });

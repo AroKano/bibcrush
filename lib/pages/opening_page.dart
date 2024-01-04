@@ -1,13 +1,14 @@
-/*
-Datum: 04.01.2024
-Autor: Yudum (UI)
-Was: Gradient für SplashScreen
+/* 
+FileName: opening_page.dart
+Authors: Yudum Yilmaz(UI),
+Last Modified on: 04.01.2024
+Description: SplashScreen with gradient.
 */
 
 import 'package:flutter/material.dart';
 
 class OpeningPageBuilder {
-  static Widget build() { 
+  static Widget build() {
     return OpeningPage();
   }
 }
@@ -15,9 +16,9 @@ class OpeningPageBuilder {
 class OpeningPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp( 
-      home: Scaffold( 
-        body: Container( 
+    return MaterialApp(
+      home: Scaffold(
+        body: Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.topCenter,

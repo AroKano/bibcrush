@@ -1,7 +1,12 @@
-/*
-Datum: 04.01.2024
-Autoren: Yudum(UI)
-Was: Login page mit E-Mail- und Passworteingabe und Bestätigung
+/* 
+FileName: login_page.dart
+Authors: Yudum Yilmaz(UI), Hilal Cubukcu (email verification)
+Last Modified on: 04.01.2024
+Description: This Dart file defines the `LoginPage` class, which presents a user
+interface for logging in, including input fields for email and password, 
+a "Forgot password?" link, and a "Sign In" button. Upon successful login, 
+it navigates to the `HomePage`, and if the email is not verified, 
+it prompts the user to verify their email.
 */
 
 import 'package:bibcrush/components/my_button.dart';
@@ -31,7 +36,6 @@ class _LoginPageState extends State<LoginPage> {
         password: _passwordController.text.trim(),
       );
       if (FirebaseAuth.instance.currentUser!.emailVerified) {
-        
         Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(builder: (_) => HomePage()),

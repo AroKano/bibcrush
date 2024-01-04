@@ -1,7 +1,13 @@
 /* 
-Datum: 04.01.2024
-Autoren: Yudum (UI)
-Was: Registration page mit Vorname, Benutzername, Fakultät, Studiengang, Semester, Studi-Mail, Passwort und Passwort bestätigen
+FileName: register_page.dart
+Authors: Yudum Yilmaz (UI), Hilal Cubukcu (Hsh-student register restriction)
+Last Modified on: 04.01.2024
+Description: This Dart file defines the RegistrationPage class, which 
+represents a user registration page. It includes form fields for the user to 
+input details like first name, username, faculty, course of study, semester, 
+email, and password. The user details are then stored in Firebase Firestore 
+upon successful registration. Additionally, error messages are displayed for 
+incomplete or mismatched inputs.
 */
 
 import 'package:bibcrush/components/my_button.dart';
@@ -256,14 +262,11 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   ),
                 ),
               ),
-
               Text(
                 firstNameError,
                 style: TextStyle(color: Colors.red),
               ),
-
               const SizedBox(height: 20),
-
               Container(
                 decoration: BoxDecoration(
                   border: Border.all(color: Colors.grey),
@@ -285,14 +288,11 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   ),
                 ),
               ),
-
               Text(
                 usernameError,
                 style: TextStyle(color: Colors.red),
               ),
-
               const SizedBox(height: 20),
-
               Container(
                 decoration: BoxDecoration(
                   border: Border.all(color: Colors.grey),
@@ -315,14 +315,11 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   ),
                 ),
               ),
-
               Text(
                 facultyError,
                 style: TextStyle(color: Colors.red),
               ),
-
               const SizedBox(height: 20),
-
               Container(
                 decoration: BoxDecoration(
                   border: Border.all(color: Colors.grey),
@@ -345,14 +342,11 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   ),
                 ),
               ),
-
               Text(
                 courseOfStudyError,
                 style: TextStyle(color: Colors.red),
               ),
-
               const SizedBox(height: 20),
-
               Container(
                 decoration: BoxDecoration(
                   border: Border.all(color: Colors.grey),
@@ -375,14 +369,11 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   ),
                 ),
               ),
-
               Text(
                 semesterError,
                 style: TextStyle(color: Colors.red),
               ),
-
               const SizedBox(height: 20),
-
               Container(
                 decoration: BoxDecoration(
                   border: Border.all(color: Colors.grey),
@@ -404,14 +395,11 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   ),
                 ),
               ),
-
               Text(
                 emailError,
                 style: TextStyle(color: Colors.red),
               ),
-
               const SizedBox(height: 20),
-
               Container(
                 decoration: BoxDecoration(
                   border: Border.all(color: Colors.grey),
@@ -433,14 +421,11 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   ),
                 ),
               ),
-
               Text(
                 passwordError,
                 style: TextStyle(color: Colors.red),
               ),
-
               const SizedBox(height: 20),
-
               Container(
                 decoration: BoxDecoration(
                   border: Border.all(color: Colors.grey),
@@ -462,14 +447,11 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   ),
                 ),
               ),
-
               Text(
                 confirmPasswordError,
                 style: TextStyle(color: Colors.red),
               ),
-
               const SizedBox(height: 20),
-
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -497,9 +479,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   ),
                 ],
               ),
-
               const SizedBox(height: 20),
-
               MyButton(text: "Register", onTap: signUp),
             ],
           ),

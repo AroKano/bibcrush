@@ -1,9 +1,8 @@
 /* 
 FileName: profile_page.dart
-Author: Hilal Cubukcu (all)
-Last Modified on: 01.01.2024
-Description: This Dart file defines a ThemeProvider class that manages 
-the theme data for a Flutter app, allowing the toggling between light and dark modes.
+Authors: Hilal Cubukcu (UI, widgets, delete-, changepassword- and dialog functions)
+Last Modified on: 04.01.2024
+Description: 
 */
 
 import 'package:bibcrush/pages/start_page.dart';

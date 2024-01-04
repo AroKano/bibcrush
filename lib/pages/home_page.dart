@@ -1,3 +1,12 @@
+/* 
+FileName: home_page.dart
+Authors: Hilal Cubukcu (UI fixes)
+Last Modified on: 04.01.2024
+Description: This Dart file implements the `HomePage` with a dynamic list of 
+posts fetched from Firebase Firestore, displaying user details, post content, 
+and providing options like commenting, liking, and post management for the current user.
+*/
+
 import 'package:bibcrush/components/custom_nav_bar.dart';
 import 'package:bibcrush/pages/start_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';

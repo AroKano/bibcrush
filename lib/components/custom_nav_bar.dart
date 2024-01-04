@@ -1,9 +1,11 @@
-/*
-Datum: 04.02.2024
-Autoren: Yudum (UI)
-Was: Navigation Bar in der unteren Leiste, um auf folgende Seiten zu kommen: feed, search, create Post, inbox, profile
+/* 
+FileName: custom_nav_bar.dart
+Authors: Yudum Yilmaz (UI), Hilal Cubukcu (navigate function)
+Last Modified on: 04.01.2024
+Description: This Dart file defines a CustomNavBar widget for a Flutter app, 
+representing a custom navigation bar with icons for home, search, create post, 
+notifications, and profile. 
 */
-
 
 import 'package:bibcrush/pages/notification_inbox_page.dart';
 import 'package:bibcrush/pages/create_post.dart';

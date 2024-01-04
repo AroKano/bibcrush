@@ -1,8 +1,13 @@
-/*
- Datum: 04.01.2024
- Autoren: Yudum(UI)
- Was: Search page, um nach Usern zu suchen, alle User werden angezeigt
- */
+/* 
+FileName: search_page.dart
+Authors: Yudum Yilmaz (UI), Hilal Cubukcu (UI, Firebase connection)
+Last Modified on: 04.01.2024
+Description: This Dart file defines the SearchPage class, representing a search 
+page in a Flutter app. It includes a search bar to look for users based on their 
+usernames or document IDs stored in Firebase Firestore. The search results are 
+displayed in a list, and users can navigate to individual profiles by tapping on
+the search results.
+*/
 
 import 'package:bibcrush/pages/others_profile_page.dart';
 import 'package:bibcrush/read%20data/get_user_and_first_name.dart';
