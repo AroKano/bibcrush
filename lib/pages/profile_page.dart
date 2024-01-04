@@ -548,7 +548,7 @@ class _ProfilePageState extends State<ProfilePage> {
     return ListView(
       padding: EdgeInsets.all(16.0),
       children: [
-        _buildInfoSection("Studying", _courseOfStudy),
+        _buildInfoSection("Course of Study", _courseOfStudy),
         _buildInfoSection("Semester", _semester?.toString() ?? ""),
         _buildInfoSection("Faculty", _faculty?.toString() ?? ""),
       ],
