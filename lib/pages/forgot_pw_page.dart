@@ -1,6 +1,6 @@
 /* 
 FileName: forgot_password_page.dart
-Authors: Hilal Cubukcu (UI fixes)
+Authors: Hilal Cubukcu (UI fixes), Arkan Kadir (Firebase)
 Last Modified on: 01.01.2024
 Description: This Dart file defines a ForgotPasswordPage with a form for users 
 to enter their email address and receive a password reset link via Firebase Authentication.

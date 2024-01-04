@@ -1,3 +1,16 @@
+/*
+FileName: create_post.dart
+Authors: Arkan Kadir (Firebase),
+Last Modified on: 01.01.2024
+Description: Description: Flutter code defining the Create Post screen of the app.
+Allows users to compose and publish new posts with text and optional images.
+The screen includes functionality for capturing images from the camera or
+uploading images from the gallery. It utilizes Firebase services for image
+storage and Firestore for managing user posts. Also, it provides a cancel button
+to return to the home page without creating a post. The UI is designed with an app bar,
+image preview, text input, and bottom navigation for actions like capturing, uploading, and posting.
+*/
+
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';

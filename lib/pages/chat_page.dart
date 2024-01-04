@@ -1,3 +1,16 @@
+/*
+FileName: chat_page.dart
+Authors:
+Last Modified on: 01.01.2024
+Description: Flutter code defining the Chat Screen for real-time messaging between users.
+Users can send and receive messages in a chat with a specific peer.
+The UI displays the peer's information, including their name and profile image.
+Messages are retrieved from Firestore and displayed in a chat-like format.
+Users can input messages with a text input field and send them.
+The app supports real-time updates for new messages. The screen also includes a
+back button, options button, and a dynamic typing indicator.
+*/
+
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';

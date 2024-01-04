@@ -1,3 +1,15 @@
+/*
+FileName: notification_inbox_page.dart
+Authors:
+Last Modified on: 04.01.2024
+Description: A Flutter page named 'NotificationPage' that provides an inbox for messages
+and notifications. It includes a custom bottom navigation bar, tabs for 'Messages' and
+'Notifications', and lists to display messages and notifications.
+The page also integrates a user profile button, search button, and a notification count indicator.
+The page structure involves two classes: 'NotificationPage' and '_InboxNotificationsPageState'.
+
+*/
+
 import 'package:flutter/material.dart';
 import 'chat_page.dart';
 import '../components/custom_nav_bar.dart';

@@ -1,6 +1,6 @@
 /* 
 FileName: register_page.dart
-Authors: Yudum Yilmaz (UI), Hilal Cubukcu (Hsh-student register restriction)
+Authors: Yudum Yilmaz (UI), Hilal Cubukcu (Hsh-student register restriction), Arkan Kadir (Firebase, error handling)
 Last Modified on: 04.01.2024
 Description: This Dart file defines the RegistrationPage class, which 
 represents a user registration page. It includes form fields for the user to 

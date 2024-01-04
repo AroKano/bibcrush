@@ -1,6 +1,6 @@
 /* 
 FileName: others_profile_page.dart
-Authors: Hilal Cubukcu (UI and linked user info to Firebase)
+Authors: Hilal Cubukcu (UI and linked user info to Firebase), Arkan Kadir (Firebase initialisation)
 Last Modified on: 04.01.2024
 Description: This Dart file defines the `OthersProfilePage` class, presenting a 
 user's profile with details such as name, username, caption, studying details, 

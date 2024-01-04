@@ -1,3 +1,14 @@
+/*
+FileName: comment_page.dart
+Authors: Arkan Kadir (Firebase, UI)
+Last Modified on: 01.01.2024
+Description: Flutter code defining the Comment Page for a specific post in the app.
+Allows users to view and add comments on a post. The screen fetches and displays post details,
+such as user information, post text, and image. It also shows existing comments and provides a
+text input field for users to add new comments. The UI includes features like a back button,
+post details, comment list, and an input field with a send button.
+*/
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';

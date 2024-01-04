@@ -1,6 +1,6 @@
 /* 
 FileName: login_page.dart
-Authors: Yudum Yilmaz(UI), Hilal Cubukcu (email verification)
+Authors: Yudum Yilmaz(UI), Hilal Cubukcu (email verification), Arkan Kadir (Firebaase)
 Last Modified on: 04.01.2024
 Description: This Dart file defines the `LoginPage` class, which presents a user
 interface for logging in, including input fields for email and password, 

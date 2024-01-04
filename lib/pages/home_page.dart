@@ -1,6 +1,6 @@
 /* 
 FileName: home_page.dart
-Authors: Hilal Cubukcu (UI fixes)
+Authors: Hilal Cubukcu (UI fixes), Arkan Kadir (Fetching data from Database, Firebase)
 Last Modified on: 04.01.2024
 Description: This Dart file implements the `HomePage` with a dynamic list of 
 posts fetched from Firebase Firestore, displaying user details, post content, 

@@ -1,8 +1,10 @@
 /* 
 FileName: opening_page.dart
-Authors: Yudum Yilmaz(UI),
+Authors: Yudum Yilmaz(UI), Arkan Kadir (initialisation of Splashscreen)
 Last Modified on: 04.01.2024
-Description: SplashScreen with gradient.
+Description: A Flutter widget named 'OpeningPageBuilder' that provides a static method
+'build' to create an instance of 'OpeningPage'. The 'OpeningPage' widget serves
+as the initial splash screen with a gradient background transitioning from orange to yellow.
 */
 
 import 'package:flutter/material.dart';

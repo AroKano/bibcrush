@@ -1,9 +1,26 @@
 /* 
 FileName: profile_page.dart
-Authors: Hilal Cubukcu (UI, widgets, delete-, changepassword- and dialog functions)
+Authors: Hilal Cubukcu (UI, widgets, delete-, changepassword- and dialog functions),
+Arkan Kadir (Firebase, Loading Posts, edit InfoTabs)
 Last Modified on: 04.01.2024
-Description: 
+Description:
+
+Flutter code for a social media app's ProfilePage, managing user profile, posts,
+and interactions. Features include async post retrieval, deletion, info dialogs,
+account actions, and Firebase integration for storage.
+
+Key Features:
+- Async post retrieval with FutureBuilder.
+- Post deletion with comments removal.
+- Dialogs for user info and profile edits.
+- Info dialog for credits, packages, widgets.
+- Account deletion and password change.
+- Helper methods for text fields, errors, user updates.
+- Firebase Storage for profile image upload.
+
+Comprehensive Flutter-Firebase implementation for profile management in a social app.
 */
+
 
 import 'package:bibcrush/pages/start_page.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -802,7 +819,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
                 SizedBox(height: 8),
                 _buildSubheading('Hilal Cubukcu:', 'Task 1'),
-                _buildSubheading('Arkan Kadir:', 'Task 2'),
+                _buildSubheading('Arkan Kadir:', 'Backend'),
                 _buildSubheading('Melisa Rosic Emira:', 'Task 3'),
                 _buildSubheading('Yudum Yilmaz:', 'Frontend/UI'),
                 SizedBox(height: 16),
@@ -849,6 +866,43 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                 ),
                 SizedBox(height: 8),
+                _buildWidgetDescription("Scaffold()",
+                    "Das Haupt-Widget für die App-Oberfläche. Enthält die AppBar, das EndDrawer, den Body und die BottomNavigationBar."),
+                _buildWidgetDescription("AppBar()",
+                    "Die obere Leiste der App, die häufig für die Anzeige des App-Titels und anderer wichtiger Informationen verwendet wird."),
+                _buildWidgetDescription("EndDrawer()",
+                    "Ein seitliches Menü, das durch Wischen vom rechten Bildschirmrand oder durch Tippen auf das Menüsymbol in der AppBar geöffnet wird. Enthält Optionen für Themenänderung, Benachrichtigungen, Passwortänderung und Kontoaktionen."),
+                _buildWidgetDescription("Column()",
+                    "Ein Widget, das seine Kinder in einer vertikalen Abfolge anordnet. Hier wird es verwendet, um mehrere Widgets vertikal in der Spalte anzuzeigen."),
+                _buildWidgetDescription("CircleAvatar()",
+                    "Zeigt das Profilbild des Benutzers an. Wird auch für das Hinzufügen von Profilbildern und die Auswahl von Bildern aus der Galerie verwendet."),
+                _buildWidgetDescription("RichText()",
+                    "Erlaubt die Anzeige von Text mit verschiedenen Stilen. Hier verwendet, um den Benutzernamen und den Vornamen des Benutzers mit unterschiedlichen Stilen anzuzeigen."),
+                _buildWidgetDescription("TextButton()",
+                    "Ein flacher Button mit Text, der für die Schaltfläche ""Edit Profile"" und andere Schaltflächen im Dialog verwendet wird."),
+                _buildWidgetDescription("Container()",
+                    "Ein unsichtbares Widget, das zum Zentrieren und Stylen von Texten im Profilbereich verwendet wird."),
+                _buildWidgetDescription("DefaultTabController()",
+                    "Ein Controller für ein TabBar und TabBarView, der hier für die Registerkarten ""My Posts"" und ""My Info"" verwendet wird."),
+                _buildWidgetDescription("TabBar und TabBarView()",
+                    "Ein TabBar zeigt Registerkarten an, während TabBarView den Inhalt der ausgewählten Registerkarte anzeigt."),
+                _buildWidgetDescription("ListView und ListView.builder()",
+                    "Widgets, die eine scrollbare Liste von Widgets bereitstellen. Wird verwendet, um Benutzerposts und Benutzerinformationen in Registerkarten anzuzeigen."),
+                _buildWidgetDescription("Card()",
+                    "Ein Material Design-Karten-Widget für die Anzeige von Benutzerposts mit Kommentaren, Likes und Bildern."),
+                _buildWidgetDescription("FutureBuilder()",
+                    "Ein Widget, das asynchrone Daten in Echtzeit aktualisiert. Hier verwendet, um Benutzerposts asynchron abzurufen und anzuzeigen."),
+                _buildWidgetDescription("AlertDialog()",
+                    "Ein Popup-Dialog, der für verschiedene Benutzerinteraktionen wie Profilbearbeitung, Passwortänderung und Kontoaktionen verwendet wird."),
+                _buildWidgetDescription("TextFormField()",
+                    "Ein Texteingabefeld für Benutzerinteraktionen wie die Eingabe neuer Informationen für das Benutzerprofil oder das Ändern von Passwörtern."),
+                _buildWidgetDescription("Switch()",
+                    "Ein Schiebeschalter zum Ein- und Ausschalten von Einstellungen wie Licht-/Dunkelmodus und Benachrichtigungen."),
+                _buildWidgetDescription("IconButton()",
+                    "Ein Button mit nur einem Icon, der hier für Aktionen wie Kommentieren, Liken und Profilbild ändern verwendet wird."),
+                _buildWidgetDescription("ImagePicker()",
+                    "Ein Flutter-Plugin, das Benutzern das Auswählen von Bildern aus der Galerie oder das Aufnehmen von Fotos mit der Kamera ermöglicht."),
+
               ],
             ),
           ),
@@ -880,6 +934,21 @@ class _ProfilePageState extends State<ProfilePage> {
           packageName,
           style:
               TextStyle(fontWeight: FontWeight.bold, color: Color(0xFFFF7A00)),
+        ),
+        Text(description),
+        SizedBox(height: 8),
+      ],
+    );
+  }
+
+  Widget _buildWidgetDescription(String packageName, String description) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          packageName,
+          style:
+          TextStyle(fontWeight: FontWeight.bold, color: Color(0xFFFF7A00)),
         ),
         Text(description),
         SizedBox(height: 8),
