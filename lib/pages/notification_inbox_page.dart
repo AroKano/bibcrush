@@ -172,101 +172,62 @@ class _InboxNotificationsPageState extends State<InboxNotificationsPage> {
 
   Widget _buildMessagesList() {
     var currentUser = FirebaseAuth.instance.currentUser;
-
     if (currentUser == null) {
       return Center(child: Text('You need to be logged in to see messages.'));
     }
 
     return StreamBuilder<QuerySnapshot>(
-      stream: FirebaseFirestore.instance.collection('chats')
-        .where('participants', arrayContains: currentUser.uid)
-        .snapshots(),
+      stream: FirebaseFirestore.instance
+          .collection('chats')
+          .where('participants', arrayContains: currentUser.uid)
+          .snapshots(),
       builder: (context, chatSnapshot) {
         if (chatSnapshot.connectionState == ConnectionState.waiting) {
           return Center(child: CircularProgressIndicator());
         }
-
         if (!chatSnapshot.hasData || chatSnapshot.data!.docs.isEmpty) {
           return Center(child: Text('No messages yet.'));
         }
 
         var chats = chatSnapshot.data!.docs;
-
         return ListView.builder(
           itemCount: chats.length,
           itemBuilder: (context, index) {
             var chatData = chats[index].data() as Map<String, dynamic>;
-            var peerId = chatData['participants'].firstWhere((id) => id != currentUser.uid);
+            var peerId = chatData['participants']
+                .firstWhere((id) => id != currentUser.uid);
+
 
             return FutureBuilder<DocumentSnapshot>(
-                future: FirebaseFirestore.instance.collection('users').doc(peerId).get(),
-                builder: (context, AsyncSnapshot<DocumentSnapshot> peerSnapshot) {
-                  if (peerSnapshot.connectionState == ConnectionState.waiting) {
-                    return ListTile(
-                        title: Text('Loading...'),
-                    );
-                  }
+              future: FirebaseFirestore.instance.collection('users').doc(peerId).get(),
+              builder: (context, AsyncSnapshot<DocumentSnapshot> peerSnapshot) {
+                if (peerSnapshot.connectionState == ConnectionState.waiting) {
+                  return ListTile(title: Text('Loading...'));
+                }
+                if (!peerSnapshot.hasData) {
+                  return ListTile(title: Text('User not found.'));
+                }
+                var peerUserDetails = peerSnapshot.data!.data() as Map<String, dynamic>;
+                String peerName = peerUserDetails['First Name'] ?? 'Unknown';
+                String peerImageUrl = peerUserDetails['profileImageUrl'] ?? 'https://via.placeholder.com/150';
 
-                  if (!peerSnapshot.hasData) {
-                    return ListTile(
-                      title: Text('User not found.'),
-                    );
-                  }
-
-                  var peerUserDetails = peerSnapshot.data!.data() as Map<String, dynamic>;
-                  String peerName = peerUserDetails['First Name'] ?? 'Unknown';
-                  String peerImageUrl = peerUserDetails['profileImageUrl'] ?? 'https://via.placeholder.com/150';
-
-                  return FutureBuilder<QuerySnapshot>(
-                    future: FirebaseFirestore.instance
-                      .collection('chats/${chats[index].id}/messages')
-                      .orderBy('timestamp', descending: true)
-                      .limit(1)
-                      .get(),
-                    builder: (context, AsyncSnapshot<QuerySnapshot> messageSnapshot) {
-                      if (messageSnapshot.connectionState == ConnectionState.waiting) {
-                        return ListTile(
-                          title: Text('Loading...'),
-                        );
-                      }
-
-                      if (!messageSnapshot.hasData || messageSnapshot.data!.docs.isEmpty) {
-                        return ListTile(
-                          title: Text(peerName),
-                          subtitle: Text('No messages'),
-                          leading: CircleAvatar(
-                            backgroundImage: NetworkImage(peerImageUrl),
-                          ),
-                        );
-                      }
-
-                      var lastMessageData = messageSnapshot.data!.docs.first.data() as Map<String, dynamic>;
-                      String lastMessage = lastMessageData['text'] ?? 'No messages';
-                      String lastMessageTime = '...';
-
-                      return ListTile(
-                        leading: CircleAvatar(
-                          backgroundImage: NetworkImage(peerImageUrl),
+                return ListTile(
+                  leading: CircleAvatar(backgroundImage: NetworkImage(peerImageUrl)),
+                  title: Text(peerName),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ChatScreen(
+                          peerName: peerName,
+                          peerImageUrl: peerImageUrl,
+                          peerId: peerId,
                         ),
-                        title: Text(peerName),
-                        subtitle: Text(lastMessage),
-                        trailing: Text(lastMessageTime),
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => ChatScreen(
-                                peerName: peerName,
-                                peerImageUrl: peerImageUrl,
-                                peerId: peerId,
-                              ),
-                            ),
-                          );
-                        },
-                      );
-                    },
-                  );
-                },
+                      ),
+                    );
+                  },
+                );
+              },
             );
           },
         );
@@ -274,18 +235,20 @@ class _InboxNotificationsPageState extends State<InboxNotificationsPage> {
     );
   }
 
+
   Widget _buildNotificationsList() {
     return ListView.builder(
-      itemCount: 5,
+      itemCount: 1,
       itemBuilder: (context, index) {
         return ListTile(
           leading: CircleAvatar(),
           title: Text('New Follower'),
-          subtitle: Text('Anna99 started following you.'),
+          subtitle: Text('Hilal started following you.'),
           trailing: Text('1 hr ago'),
         );
       },
     );
   }
 }
+
 
