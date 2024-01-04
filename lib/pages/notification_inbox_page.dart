@@ -198,7 +198,6 @@ class _InboxNotificationsPageState extends State<InboxNotificationsPage> {
             var chatData = chats[index].data() as Map<String, dynamic>;
             var peerId = chatData['participants'].firstWhere((id) => id != currentUser.uid);
 
-            // Here we use FutureBuilder to handle the asynchronous operation
             return FutureBuilder<DocumentSnapshot>(
                 future: FirebaseFirestore.instance.collection('users').doc(peerId).get(),
                 builder: (context, AsyncSnapshot<DocumentSnapshot> peerSnapshot) {
@@ -218,7 +217,6 @@ class _InboxNotificationsPageState extends State<InboxNotificationsPage> {
                   String peerName = peerUserDetails['First Name'] ?? 'Unknown';
                   String peerImageUrl = peerUserDetails['profileImageUrl'] ?? 'https://via.placeholder.com/150';
 
-                  // Fetch last message and format timestamp asynchronously
                   return FutureBuilder<QuerySnapshot>(
                     future: FirebaseFirestore.instance
                       .collection('chats/${chats[index].id}/messages')
@@ -244,8 +242,6 @@ class _InboxNotificationsPageState extends State<InboxNotificationsPage> {
 
                       var lastMessageData = messageSnapshot.data!.docs.first.data() as Map<String, dynamic>;
                       String lastMessage = lastMessageData['text'] ?? 'No messages';
-                      // Format the timestamp into a readable format
-                      // Use the intl package or another method to format the timestamp as needed
                       String lastMessageTime = '...';
 
                       return ListTile(

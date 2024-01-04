@@ -37,7 +37,7 @@ class _ChatScreenState extends State<ChatScreen> {
   String get chatId {
     final currentUser = FirebaseAuth.instance.currentUser!;
     return getChatId(currentUser.uid,
-        widget.peerId); // Assuming widget.peerId contains the peer's user ID
+        widget.peerId);
   }
 
   void _handleSubmitted(String text) {
@@ -47,12 +47,11 @@ class _ChatScreenState extends State<ChatScreen> {
       _textController.clear();
       setState(() {
         _isComposingMessage =
-        false; // Reset the flag when the message is submitted
+        false;
       });
 
-      // Add the message to Firestore in the chat's 'messages' subcollection
       FirebaseFirestore.instance.collection('chats').doc(
-          chatId) // You need to define chatId
+          chatId)
           .collection('messages').add({
         'senderId': FirebaseAuth.instance.currentUser!.uid,
         'text': text,
@@ -118,11 +117,9 @@ class _ChatScreenState extends State<ChatScreen> {
                   print('No messages found.');
                   return Center(child: Text('No messages yet.'));
                 } else {
-                  // Debug print the number of messages
                   print('Number of messages: ${snapshot.data!.docs.length}');
                   messages = snapshot.data!.docs.map((doc) {
                     var data = doc.data() as Map<String, dynamic>;
-                    // Debug print message content
                     print('Message text: ${data['text']}');
                     return Message(
                       text: data['text'],
@@ -132,7 +129,7 @@ class _ChatScreenState extends State<ChatScreen> {
                     );
                   }).toList();
                   return ListView.builder(
-                    reverse: true, // Start the list from the bottom
+                    reverse: true,
                     itemCount: messages.length,
                     itemBuilder: (context, index) {
                       final message = messages[index];

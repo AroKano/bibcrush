@@ -69,7 +69,6 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> _deletePost(String postId) async {
     try {
-      // Delete comments related to the post
       await FirebaseFirestore.instance
           .collection('posts')
           .doc(postId)
@@ -81,13 +80,11 @@ class _HomePageState extends State<HomePage> {
         }
       });
 
-      // Delete the post itself
       await FirebaseFirestore.instance.collection('posts').doc(postId).delete();
 
       print('Post deleted successfully');
     } catch (e) {
       print('Error deleting post: $e');
-      // Handle the error as needed, such as showing a message to the user
     }
   }
 
@@ -112,7 +109,7 @@ class _HomePageState extends State<HomePage> {
 
         if (userData == null) {
           print('Error: userData is null');
-          return Container(); // or any other suitable widget
+          return Container();
         }
 
         bool isCurrentUserOwner =
@@ -150,7 +147,6 @@ class _HomePageState extends State<HomePage> {
                           List<PopupMenuEntry<String>> menuItems = [];
 
                           if (isCurrentUserOwner) {
-                            // Add "Delete" option only if the current user is not the owner of the post
                             menuItems.add(
                               PopupMenuItem<String>(
                                 value: 'Delete',
@@ -158,7 +154,6 @@ class _HomePageState extends State<HomePage> {
                               ),
                             );
                           } else if (!isCurrentUserOwner) {
-                            // Add "Report" option only if the current user is not the owner
                             menuItems.add(
                               PopupMenuItem<String>(
                                 value: 'Report',
@@ -171,7 +166,6 @@ class _HomePageState extends State<HomePage> {
                         },
                         onSelected: (String value) async {
                           if (value == 'Delete') {
-                            // Handle the delete action here
                             await _deletePost(postDoc.id);
                           } else if (value == 'Report') {
                             await showDialog(

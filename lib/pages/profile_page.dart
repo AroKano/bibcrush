@@ -21,7 +21,7 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   final currentUser = FirebaseAuth.instance.currentUser!;
   final String? uid = FirebaseAuth.instance.currentUser?.uid;
-  int _postLikes = 0; // Add this line
+  int _postLikes = 0;
 
   int _selectedIndex = 0;
   bool _lightDarkModeEnabled = true;
@@ -32,7 +32,7 @@ class _ProfilePageState extends State<ProfilePage> {
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
 
-  //damit Passwort Übereinstimmung kontrolliert wird ohne auf hot Reload zu drücken
+
   final _formKey = GlobalKey<FormState>();
   bool _passwordsMatch = true;
 
@@ -72,18 +72,15 @@ class _ProfilePageState extends State<ProfilePage> {
             print(document.reference);
             docIDs.add(document.reference.id);
 
-            // Update local state with user details
             setState(() {
               _first_name = document['First Name'] ?? '';
               _username = document['Username'] ?? '';
               _caption = document['Caption'] ?? '';
               _courseOfStudy = document['Course of Study'] ?? '';
 
-              // Treat faculty and semester as int
               _semester = document['Semester'] as int?;
               _faculty = document['Faculty'] as int?;
 
-              // Fetch and update additional user statistics
               _fetchUserStatistics();
             });
           } else {
@@ -94,12 +91,10 @@ class _ProfilePageState extends State<ProfilePage> {
       });
     } catch (e) {
       print("Error fetching user details: $e");
-      // Handle the error accordingly
     }
   }
 
   Future<void> _fetchUserStatistics() async {
-    // Fetch user statistics (Posts, Follower, Following, Crushes)
     final userStatsDoc = await FirebaseFirestore.instance
         .collection("users")
         .doc(user?.uid)
@@ -107,19 +102,15 @@ class _ProfilePageState extends State<ProfilePage> {
 
     if (userStatsDoc.exists) {
       setState(() {
-        // Assuming 'Posts' is a list, handle it accordingly
         var posts = userStatsDoc['Posts'];
         _posts = posts is List ? posts.length : 0;
 
-        // Assuming 'Follower' is a list, handle it accordingly
         var followers = userStatsDoc['Follower'];
         _follower = followers is List ? followers.length : 0;
 
-        // Assuming 'Following' is a list, handle it accordingly
         var following = userStatsDoc['Following'];
         _following = following is List ? following.length : 0;
 
-        // Assuming 'Crushes' is a list, handle it accordingly
         var crushes = userStatsDoc['Crushes'];
         _crushes = crushes is List ? crushes.length : 0;
       });
@@ -279,7 +270,6 @@ class _ProfilePageState extends State<ProfilePage> {
           ),
           TextButton(
             onPressed: () {
-              // Navigate to the edit profile screen or show a dialog
               _showEditProfileDialog(context);
             },
             style: ButtonStyle(
@@ -319,7 +309,6 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
             ),
           ),
-          // TabBar and TabBarView
           Expanded(
             child: DefaultTabController(
               length: 2,
@@ -338,10 +327,8 @@ class _ProfilePageState extends State<ProfilePage> {
                   Expanded(
                     child: TabBarView(
                       children: [
-                        // Tab 1: My Posts
                         _buildMyPostsTab(),
 
-                        // Tab 2: My Infos
                         _buildMyInfosTab(),
                       ],
                     ),
@@ -406,7 +393,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
         if (userData == null) {
           print('Error: userData is null');
-          return Container(); // or any other suitable widget
+          return Container();
         }
 
         bool isCurrentUserOwner =
@@ -444,7 +431,6 @@ class _ProfilePageState extends State<ProfilePage> {
                           List<PopupMenuEntry<String>> menuItems = [];
 
                           if (isCurrentUserOwner) {
-                            // Add "Delete" option only if the current user is not the owner of the post
                             menuItems.add(
                               PopupMenuItem<String>(
                                 value: 'Delete',
@@ -452,7 +438,6 @@ class _ProfilePageState extends State<ProfilePage> {
                               ),
                             );
                           } else if (!isCurrentUserOwner) {
-                            // Add "Report" option only if the current user is not the owner
                             menuItems.add(
                               PopupMenuItem<String>(
                                 value: 'Report',
@@ -464,10 +449,8 @@ class _ProfilePageState extends State<ProfilePage> {
                         },
                         onSelected: (String value) async {
                           if (value == 'Delete') {
-                            // Handle the delete action here
                             await _deletePost(postDoc.id);
                           } else if (value == 'Report') {
-                            // Handle the report action here
                           }
                         },
                       ),
@@ -600,7 +583,6 @@ class _ProfilePageState extends State<ProfilePage> {
         var posts = snapshot.data!.docs;
 
         if (posts.isEmpty) {
-          // If no posts exist, display a centered message
           return Center(
             child: Text(
               'No posts yet.',
@@ -609,7 +591,6 @@ class _ProfilePageState extends State<ProfilePage> {
           );
         }
 
-        // If posts exist, display them in a ListView
         return ListView.builder(
           itemCount: posts.length,
           itemBuilder: (context, index) {
@@ -622,7 +603,6 @@ class _ProfilePageState extends State<ProfilePage> {
 
   Future<void> _deletePost(String postId) async {
     try {
-      // Delete comments related to the post
       await FirebaseFirestore.instance
           .collection('posts')
           .doc(postId)
@@ -634,13 +614,11 @@ class _ProfilePageState extends State<ProfilePage> {
         }
       });
 
-      // Delete the post itself
       await FirebaseFirestore.instance.collection('posts').doc(postId).delete();
 
       print('Post deleted successfully');
     } catch (e) {
       print('Error deleting post: $e');
-      // Handle the error as needed, such as showing a message to the user
     }
   }
 
@@ -677,7 +655,6 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
             TextButton(
               onPressed: () async {
-                // Save the edited information
                 try {
                   await _updateEditInfoInFirestore(title, newValue);
 
@@ -687,31 +664,25 @@ class _ProfilePageState extends State<ProfilePage> {
                         _courseOfStudy = newValue;
                         break;
                       case "Semester":
-                        // Check if newValue is a valid integer string before parsing
                         if (int.tryParse(newValue) != null) {
                           _semester = int.parse(newValue);
                         } else {
                           print("Invalid integer for Semester: $newValue");
-                          // Handle the error accordingly
                         }
                         break;
                       case "Faculty":
-                        // Check if newValue is a valid integer string before parsing
                         if (int.tryParse(newValue) != null) {
                           _faculty = int.parse(newValue);
                         } else {
                           print("Invalid integer for Faculty: $newValue");
-                          // Handle the error accordingly
                         }
                         break;
-                      // Add more cases for other info sections if needed
                     }
                   });
 
                   Navigator.of(context).pop();
                 } catch (e) {
                   print("Error saving edited information: $e");
-                  // Handle the error accordingly
                 }
               },
               child: Text(
@@ -780,10 +751,8 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
             TextButton(
               onPressed: () async {
-                // Update the caption in Firestore
                 await _updateEditProfileInFirestore(newFirstName, newCaption);
 
-                // Update the local state
                 setState(() {
                   _first_name = newFirstName;
                   _caption = newCaption;
@@ -818,7 +787,6 @@ class _ProfilePageState extends State<ProfilePage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Credits Section
                 Center(
                   child: Text(
                     'Credits',
@@ -835,7 +803,6 @@ class _ProfilePageState extends State<ProfilePage> {
                 _buildSubheading('Melisa Rosic Emira:', 'Task 3'),
                 _buildSubheading('Yudum Yilmaz:', 'Task 4'),
 
-                // Packages Section
                 SizedBox(height: 16),
                 Center(
                   child: Text(
@@ -871,7 +838,6 @@ class _ProfilePageState extends State<ProfilePage> {
                 _buildPackageDescription('timeago',
                     'Eine Bibliothek zum Formatieren von Zeitstempeln in ein "vor kurzem" Format, um relative Zeit in der App anzuzeigen.'),
 
-                // Widgets Section
                 SizedBox(height: 16),
                 Center(
                   child: Text(
@@ -1091,7 +1057,6 @@ Your app data will also be deleted and you won't be able to retrieve it.''',
         EmailAuthProvider.credential(email: user.email!, password: oldPassword);
 
     Map<String, String?> codeResponses = {
-      // Re-auth responses
       "user-mismatch": null,
       "user-not-found": null,
       "invalid-credential": null,
@@ -1127,14 +1092,12 @@ Your app data will also be deleted and you won't be able to retrieve it.''',
 
   Future<void> _deleteAccount() async {
     try {
-      // Delete user posts
       final postQuerySnapshot = await FirebaseFirestore.instance
           .collection('posts')
           .where('users.UID', isEqualTo: uid)
           .get();
 
       for (var postDoc in postQuerySnapshot.docs) {
-        // Delete comments related to the post
         final commentQuerySnapshot = await FirebaseFirestore.instance
             .collection('posts')
             .doc(postDoc.id)
@@ -1145,64 +1108,50 @@ Your app data will also be deleted and you won't be able to retrieve it.''',
           await commentDoc.reference.delete();
         }
 
-        // Delete the post itself
         await postDoc.reference.delete();
       }
 
-      // Delete the user document in Firestore
       await FirebaseFirestore.instance.collection('users').doc(uid).delete();
 
-      // Delete the user account in Firebase Authentication
       await currentUser.delete();
     } catch (e) {
       print('Error deleting account: $e');
-      // Handle the error as needed, such as showing a message to the user
     }
   }
 
   Future<void> _updateEditInfoInFirestore(String title, String newValue) async {
     try {
-      // Get the current user's document ID
       String userId = FirebaseAuth.instance.currentUser?.uid ?? "";
       print("Current User UID: $userId");
 
-      // Fetch the current user document
       DocumentSnapshot<Map<String, dynamic>> userDocument =
           await FirebaseFirestore.instance
               .collection("users")
               .doc(userId)
               .get();
 
-      // Get the current data from the document
       Map<String, dynamic> currentData = userDocument.data() ?? {};
 
-      // Update the specific field based on the title
       switch (title) {
         case "Course of Study":
           currentData["Course of Study"] = newValue;
           break;
         case "Semester":
-          // Check if newValue is a valid integer string before parsing
           if (int.tryParse(newValue) != null) {
             currentData["Semester"] = int.parse(newValue);
           } else {
             print("Invalid integer for Semester: $newValue");
-            // Handle the error accordingly
           }
           break;
         case "Faculty":
-          // Check if newValue is a valid integer string before parsing
           if (int.tryParse(newValue) != null) {
             currentData["Faculty"] = int.parse(newValue);
           } else {
             print("Invalid integer for Faculty: $newValue");
-            // Handle the error accordingly
           }
           break;
-        // Add more cases for other info sections if needed
       }
 
-      // Update the entire user information in Firestore
       await FirebaseFirestore.instance
           .collection("users")
           .doc(userId)
@@ -1211,17 +1160,14 @@ Your app data will also be deleted and you won't be able to retrieve it.''',
       print("$title updated in Firestore");
     } catch (e) {
       print("Error updating $title in Firestore: $e");
-      // Handle the error accordingly
     }
   }
 
   Future<void> _updateEditProfileInFirestore(
       String newFirstName, String newCaption) async {
     try {
-      // Get the current user's document ID
       String userId = FirebaseAuth.instance.currentUser?.uid ?? "";
 
-      // Update the user information in Firestore
       await FirebaseFirestore.instance.collection("users").doc(userId).update({
         "First Name": newFirstName,
         "Caption": newCaption,
@@ -1230,7 +1176,6 @@ Your app data will also be deleted and you won't be able to retrieve it.''',
       print("User information updated in Firestore");
     } catch (e) {
       print("Error updating user information in Firestore: $e");
-      // Handle the error accordingly
     }
   }
 
@@ -1240,7 +1185,6 @@ Your app data will also be deleted and you won't be able to retrieve it.''',
           .ref()
           .child('profile_images/${DateTime.now().millisecondsSinceEpoch}');
       await storageReference.putFile(_selectedImage!);
-      // You can save the download URL or any other information to Firebase Firestore or Realtime Database if needed.
     } catch (e) {
       print('Error uploading image to Firebase Storage: $e');
     }
