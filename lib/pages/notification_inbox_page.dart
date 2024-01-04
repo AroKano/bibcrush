@@ -53,7 +53,6 @@ class _InboxNotificationsPageState extends State<InboxNotificationsPage> {
             backgroundColor: Colors.transparent,
             leading: InkWell(
               onTap: () {
-                // Navigate to the Profile Page
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => ProfilePage()),
@@ -79,7 +78,6 @@ class _InboxNotificationsPageState extends State<InboxNotificationsPage> {
                 child: IconButton(
                   icon: Icon(Icons.search, color: Theme.of(context).iconTheme.color),
                   onPressed: () {
-                    // Navigate to the Search Page
                     Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => SearchPage()),
@@ -175,7 +173,6 @@ class _InboxNotificationsPageState extends State<InboxNotificationsPage> {
   Widget _buildMessagesList() {
     return StreamBuilder<QuerySnapshot>(
       stream: FirebaseFirestore.instance.collection('your_chat_collection')
-        // Query to get the current user's conversations
         .where('participants', arrayContains: FirebaseAuth.instance.currentUser!.uid)
         .snapshots(),
       builder: (context, snapshot) {
@@ -197,16 +194,14 @@ class _InboxNotificationsPageState extends State<InboxNotificationsPage> {
             String peerName = chatData['peerName'];
             String peerImageUrl = chatData['peerImageUrl'];
 
-            // Logic to extract peerId, peerName, and peerImageUrl from chatData
-            // ...
 
             return ListTile(
               leading: CircleAvatar(
                 backgroundImage: NetworkImage(peerImageUrl),
               ),
               title: Text(peerName),
-              subtitle: Text('Last message...'), // Replace with actual last message preview
-              trailing: Text('Time'), // Replace with actual time of last message
+              subtitle: Text('Last message...'),
+              trailing: Text('Time'),
               onTap: () {
                 Navigator.push(
                   context,
@@ -227,7 +222,6 @@ class _InboxNotificationsPageState extends State<InboxNotificationsPage> {
   }
 
   Widget _buildNotificationsList() {
-    // Placeholder for notifications list
     return ListView.builder(
       itemCount: 5,
       itemBuilder: (context, index) {

@@ -13,7 +13,7 @@ class MyButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onTap ?? () {}, // Provide a default empty function if onTap is null
+      onTap: onTap ?? () {},
       child: Container(
         decoration: BoxDecoration(
           color: Color(0xFFFF7A00),

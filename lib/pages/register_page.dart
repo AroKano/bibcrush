@@ -68,7 +68,6 @@ class _RegistrationPageState extends State<RegistrationPage> {
   }
 
   Future signUp() async {
-    // Clear previous error messages
     setState(() {
       firstNameError = "";
       usernameError = "";
@@ -127,7 +126,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
       showSnackBar("E-Mail adress is necessary");
       return;
     }
-    // Check if the email address has the correct domain
+
     if (!_emailController.text.trim().endsWith("@stud.hs-hannover.de")) {
       setState(() {
         emailError = "Invalid email domain. Please use @stud.hs-hannover.de";
@@ -145,22 +144,18 @@ class _RegistrationPageState extends State<RegistrationPage> {
     }
 
     if (!passwordConfirmed()) {
-      // Handle password not confirmed error
       showSnackBar("Passwords don't match!");
       return;
     }
 
-    // create user
     try {
       await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: _emailController.text.trim(),
         password: _passwordController.text.trim(),
       );
 
-      // Send email verification
       await FirebaseAuth.instance.currentUser!.sendEmailVerification();
 
-      // Add user details
       addUserDetails(
         _firstNameController.text.trim(),
         _usernameController.text.trim(),
@@ -172,7 +167,6 @@ class _RegistrationPageState extends State<RegistrationPage> {
         "Hey, edit your caption!",
       );
 
-      // Registration successful, show a message and navigate to the login page
       showSnackBar(
           "Registration successful. Please check your email for verification.");
       Navigator.push(
@@ -184,7 +178,6 @@ class _RegistrationPageState extends State<RegistrationPage> {
         ),
       );
     } catch (e) {
-      // Handle registration error
       showSnackBar("Registration failed: $e");
     }
   }
@@ -207,11 +200,11 @@ class _RegistrationPageState extends State<RegistrationPage> {
       "Semester": semester,
       "E-Mail": email,
       "UID": uid,
-      "Caption": "Hey, edit your caption!", // Placeholder for captions
-      "Posts": 0, // Default value for Posts
-      "Follower": 0, // Default value for Follower
-      "Following": 0, // Default value for Following
-      "Crushes": 0, // Default value for Crushes
+      "Caption": "Hey, edit your caption!",
+      "Posts": 0,
+      "Follower": 0,
+      "Following": 0,
+      "Crushes": 0,
       "Crushed": 0,
       "Likes": [],
     });
@@ -258,10 +251,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
                 ),
               ),
 
-              // Add this Text widget below the TextField
               Text(
                 firstNameError,
-                style: TextStyle(color: Colors.red), // Customize the text color
+                style: TextStyle(color: Colors.red),
               ),
 
               const SizedBox(height: 20),
@@ -288,10 +280,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
                 ),
               ),
 
-              // Add this Text widget below the TextField
               Text(
                 usernameError,
-                style: TextStyle(color: Colors.red), // Customize the text color
+                style: TextStyle(color: Colors.red),
               ),
 
               const SizedBox(height: 20),
@@ -321,7 +312,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
 
               Text(
                 facultyError,
-                style: TextStyle(color: Colors.red), // Customize the text color
+                style: TextStyle(color: Colors.red),
               ),
 
               const SizedBox(height: 20),
@@ -349,10 +340,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
                 ),
               ),
 
-              // Add this Text widget below the TextField
               Text(
                 courseOfStudyError,
-                style: TextStyle(color: Colors.red), // Customize the text color
+                style: TextStyle(color: Colors.red),
               ),
 
               const SizedBox(height: 20),
@@ -380,10 +370,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
                 ),
               ),
 
-              // Add this Text widget below the TextField
               Text(
                 semesterError,
-                style: TextStyle(color: Colors.red), // Customize the text color
+                style: TextStyle(color: Colors.red),
               ),
 
               const SizedBox(height: 20),
@@ -410,10 +399,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
                 ),
               ),
 
-              // Add this Text widget below the TextField
               Text(
                 emailError,
-                style: TextStyle(color: Colors.red), // Customize the text color
+                style: TextStyle(color: Colors.red),
               ),
 
               const SizedBox(height: 20),
@@ -440,10 +428,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
                 ),
               ),
 
-              // Add this Text widget below the TextField
               Text(
                 passwordError,
-                style: TextStyle(color: Colors.red), // Customize the text color
+                style: TextStyle(color: Colors.red),
               ),
 
               const SizedBox(height: 20),
@@ -470,10 +457,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
                 ),
               ),
 
-              // Add this Text widget below the TextField
               Text(
                 confirmPasswordError,
-                style: TextStyle(color: Colors.red), // Customize the text color
+                style: TextStyle(color: Colors.red),
               ),
 
               const SizedBox(height: 20),

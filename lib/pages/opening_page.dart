@@ -1,20 +1,18 @@
 import 'package:flutter/material.dart';
 
-//klasse für aufbau der startseite
 class OpeningPageBuilder {
-  static Widget build() { //statische methode zum erstellen der seite
+  static Widget build() { 
     return OpeningPage();
   }
 }
 
-//hauptklasse für startseite
 class OpeningPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp( //WIDGET: grundlegende app-einstellungen + designregeln
-      home: Scaffold( //WIDGET: grundlegendes layout (z.b. app bar, navigation)
-        body: Container( //WIDGET: "rahmen" um andere widgets anzuordnen (hier gradient)
-          decoration: BoxDecoration( //hintergrund mit gradient
+    return MaterialApp( 
+      home: Scaffold( 
+        body: Container( 
+          decoration: BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,

@@ -25,8 +25,7 @@ class _LoginPageState extends State<LoginPage> {
         password: _passwordController.text.trim(),
       );
       if (FirebaseAuth.instance.currentUser!.emailVerified) {
-        // Navigate to the home page or any other authenticated page
-        // Anmeldung erfolgreich, navigiere zur Home-Seite und ersetze die aktuelle Seite
+        
         Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(builder: (_) => HomePage()),
@@ -44,7 +43,6 @@ class _LoginPageState extends State<LoginPage> {
         );
       }
     } catch (e) {
-      // Fehler bei der Anmeldung
       print("Login error: $e");
       showDialog(
         context: context,
@@ -75,7 +73,6 @@ class _LoginPageState extends State<LoginPage> {
           child: IconButton(
             icon: const Icon(Icons.arrow_back, color: Colors.black),
             onPressed: () {
-              // Navigate to LoginPage
               Navigator.push(
                 context,
                 MaterialPageRoute(

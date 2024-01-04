@@ -24,7 +24,6 @@ class _CommentPageState extends State<CommentPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Display Original Post
             StreamBuilder<DocumentSnapshot>(
               stream: FirebaseFirestore.instance.collection('posts').doc(widget.postId).snapshots(),
               builder: (context, snapshot) {
@@ -105,7 +104,6 @@ class _CommentPageState extends State<CommentPage> {
               },
             ),
 
-            // Display Comments
             StreamBuilder<QuerySnapshot>(
               stream: FirebaseFirestore.instance.collection('comments').doc(widget.postId).collection('post_comments').snapshots(),
               builder: (context, snapshot) {
@@ -120,16 +118,16 @@ class _CommentPageState extends State<CommentPage> {
                 var comments = snapshot.data!.docs;
 
                 return ListView.builder(
-                  shrinkWrap: true, // Important to prevent vertical scrolling conflict
-                  physics: NeverScrollableScrollPhysics(), // Prevent vertical scrolling
+                  shrinkWrap: true, 
+                  physics: NeverScrollableScrollPhysics(), 
                   itemCount: comments.length,
                   itemBuilder: (context, index) => _buildCommentWidget(comments[index].data() as Map<String, dynamic>),
                 );
               },
             ),
-            // Comment Text Field
+
             Padding(
-              padding: const EdgeInsets.fromLTRB(20.0, 30.0, 20.0, 20.0), // Increased top padding
+              padding: const EdgeInsets.fromLTRB(20.0, 30.0, 20.0, 20.0), 
               child: Container(
                 decoration: BoxDecoration(
                   border: Border.all(color: Colors.grey),
@@ -173,7 +171,7 @@ class _CommentPageState extends State<CommentPage> {
         fit: BoxFit.cover,
       );
     } else {
-      return SizedBox.shrink(); // Empty placeholder if imageUrl is null or empty
+      return SizedBox.shrink(); 
     }
   }
 
@@ -214,13 +212,12 @@ class _CommentPageState extends State<CommentPage> {
                   ),
                 ],
               ),
-              SizedBox(height: 4), // Adjust the height as needed
+              SizedBox(height: 4), 
               Text(comment['text'] ?? 'No text available'),
             ],
           );
         },
       ),
-      // Add more comment details as needed
     );
   }
 
@@ -229,19 +226,15 @@ class _CommentPageState extends State<CommentPage> {
 
     if (commentText.isNotEmpty) {
       try {
-        // Get the current user ID
         String currentUserId = FirebaseAuth.instance.currentUser!.uid;
 
-        // Save the comment to the database
         var newComment = {
           'text': commentText,
           'UID': currentUserId,
-          // Add more comment details as needed
         };
 
         await FirebaseFirestore.instance.collection('comments').doc(widget.postId).collection('post_comments').add(newComment);
 
-        // Clear the comment text field
         commentController.clear();
       } catch (e) {
         print('Error posting comment: $e');

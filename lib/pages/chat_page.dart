@@ -5,7 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 class Message {
   String text;
-  bool sender; // true for sender, false for receiver
+  bool sender; 
   DateTime dateTime;
 
   Message({required this.text, required this.sender, DateTime? dateTime})
@@ -36,18 +36,17 @@ class _ChatScreenState extends State<ChatScreen> {
 
   String get chatId {
     final currentUser = FirebaseAuth.instance.currentUser!;
-    return getChatId(currentUser.uid, widget.peerId);  // Assuming widget.peerId contains the peer's user ID
+    return getChatId(currentUser.uid, widget.peerId); 
   }
 
   void _handleSubmitted(String text) {
     if (text.trim().isNotEmpty) {
       _textController.clear();
       setState(() {
-        _isComposingMessage = false; // Reset the flag when the message is submitted
+        _isComposingMessage = false; 
       });
 
-      // Add the message to Firestore in the chat's 'messages' subcollection
-      FirebaseFirestore.instance.collection('chats').doc(chatId) // You need to define chatId
+      FirebaseFirestore.instance.collection('chats').doc(chatId)
         .collection('messages').add({
           'senderId': FirebaseAuth.instance.currentUser!.uid,
           'text': text,
@@ -61,7 +60,6 @@ class _ChatScreenState extends State<ChatScreen> {
     super.initState();
     _textController.addListener(_handleTextChange);
 
-    // Firestore listener setup
     FirebaseFirestore.instance.collection('chats').doc(chatId)
       .collection('messages').orderBy('timestamp', descending: true)
         .snapshots().listen((snapshot) {
@@ -127,7 +125,6 @@ class _ChatScreenState extends State<ChatScreen> {
             child: IconButton(
               icon: Icon(Icons.more_vert),
               onPressed: () {
-                // Action for pressing the more_vert (three dots) icon
               },
             ),
           ),
@@ -141,7 +138,7 @@ class _ChatScreenState extends State<ChatScreen> {
           ),
           Expanded(
             child: ListView.builder(
-              reverse: true, // Makes sure that the list starts from the bottom
+              reverse: true, 
               itemCount: messages.length,
               itemBuilder: (context, index) {
                 final message = messages[index];
