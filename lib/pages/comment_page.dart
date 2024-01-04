@@ -25,7 +25,10 @@ class _CommentPageState extends State<CommentPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             StreamBuilder<DocumentSnapshot>(
-              stream: FirebaseFirestore.instance.collection('posts').doc(widget.postId).snapshots(),
+              stream: FirebaseFirestore.instance
+                  .collection('posts')
+                  .doc(widget.postId)
+                  .snapshots(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return Center(child: CircularProgressIndicator());
@@ -41,42 +44,54 @@ class _CommentPageState extends State<CommentPage> {
                   padding: const EdgeInsets.all(8.0),
                   child: Card(
                     elevation: 3,
+                    color: Theme.of(context).colorScheme.primary,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         ListTile(
                           title: FutureBuilder<DocumentSnapshot>(
-                            future: FirebaseFirestore.instance.collection('users').doc(post['users']['UID']).get(),
+                            future: FirebaseFirestore.instance
+                                .collection('users')
+                                .doc(post['users']['UID'])
+                                .get(),
                             builder: (context, userSnapshot) {
-                              if (userSnapshot.connectionState == ConnectionState.waiting) {
+                              if (userSnapshot.connectionState ==
+                                  ConnectionState.waiting) {
                                 return Text('Loading...');
                               }
 
-                              if (userSnapshot.hasError || !userSnapshot.hasData || userSnapshot.data!.data() == null) {
+                              if (userSnapshot.hasError ||
+                                  !userSnapshot.hasData ||
+                                  userSnapshot.data!.data() == null) {
                                 return Text('No username');
                               }
 
-                              var userData = userSnapshot.data!.data() as Map<String, dynamic>;
+                              var userData = userSnapshot.data!.data()
+                                  as Map<String, dynamic>;
 
                               return Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
                                       Row(
                                         children: [
                                           Text(
                                             '${userData['First Name'] ?? 'No First Name'}',
-                                            style: TextStyle(fontWeight: FontWeight.bold),
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold),
                                           ),
                                           SizedBox(width: 4),
-                                          Text('@${userData['Username'] ?? 'No username'}'),
+                                          Text(
+                                              '@${userData['Username'] ?? 'No username'}'),
                                         ],
                                       ),
                                       PopupMenuButton<String>(
                                         itemBuilder: (BuildContext context) {
-                                          return {'Report', 'Unfollow'}.map((String choice) {
+                                          return {'Report', 'Unfollow'}
+                                              .map((String choice) {
                                             return PopupMenuItem<String>(
                                               value: choice,
                                               child: Text(choice),
@@ -103,9 +118,12 @@ class _CommentPageState extends State<CommentPage> {
                 );
               },
             ),
-
             StreamBuilder<QuerySnapshot>(
-              stream: FirebaseFirestore.instance.collection('comments').doc(widget.postId).collection('post_comments').snapshots(),
+              stream: FirebaseFirestore.instance
+                  .collection('comments')
+                  .doc(widget.postId)
+                  .collection('post_comments')
+                  .snapshots(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return CircularProgressIndicator();
@@ -118,16 +136,16 @@ class _CommentPageState extends State<CommentPage> {
                 var comments = snapshot.data!.docs;
 
                 return ListView.builder(
-                  shrinkWrap: true, 
-                  physics: NeverScrollableScrollPhysics(), 
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
                   itemCount: comments.length,
-                  itemBuilder: (context, index) => _buildCommentWidget(comments[index].data() as Map<String, dynamic>),
+                  itemBuilder: (context, index) => _buildCommentWidget(
+                      comments[index].data() as Map<String, dynamic>),
                 );
               },
             ),
-
             Padding(
-              padding: const EdgeInsets.fromLTRB(20.0, 30.0, 20.0, 20.0), 
+              padding: const EdgeInsets.fromLTRB(20.0, 30.0, 20.0, 20.0),
               child: Container(
                 decoration: BoxDecoration(
                   border: Border.all(color: Colors.grey),
@@ -171,20 +189,25 @@ class _CommentPageState extends State<CommentPage> {
         fit: BoxFit.cover,
       );
     } else {
-      return SizedBox.shrink(); 
+      return SizedBox.shrink();
     }
   }
 
   Widget _buildCommentWidget(Map<String, dynamic> comment) {
     return ListTile(
       title: FutureBuilder<DocumentSnapshot>(
-        future: FirebaseFirestore.instance.collection('users').doc(comment['UID']).get(),
+        future: FirebaseFirestore.instance
+            .collection('users')
+            .doc(comment['UID'])
+            .get(),
         builder: (context, userSnapshot) {
           if (userSnapshot.connectionState == ConnectionState.waiting) {
             return Text('Loading...');
           }
 
-          if (userSnapshot.hasError || !userSnapshot.hasData || userSnapshot.data!.data() == null) {
+          if (userSnapshot.hasError ||
+              !userSnapshot.hasData ||
+              userSnapshot.data!.data() == null) {
             return Text('No username');
           }
 
@@ -212,7 +235,7 @@ class _CommentPageState extends State<CommentPage> {
                   ),
                 ],
               ),
-              SizedBox(height: 4), 
+              SizedBox(height: 4),
               Text(comment['text'] ?? 'No text available'),
             ],
           );
@@ -233,7 +256,11 @@ class _CommentPageState extends State<CommentPage> {
           'UID': currentUserId,
         };
 
-        await FirebaseFirestore.instance.collection('comments').doc(widget.postId).collection('post_comments').add(newComment);
+        await FirebaseFirestore.instance
+            .collection('comments')
+            .doc(widget.postId)
+            .collection('post_comments')
+            .add(newComment);
 
         commentController.clear();
       } catch (e) {
