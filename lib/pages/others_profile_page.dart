@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:timeago/timeago.dart' as timeago;
+import 'package:bibcrush/pages/chat_page.dart';
 
 import 'comment_page.dart';
 
@@ -144,45 +145,62 @@ class _OthersProfilePageState extends State<OthersProfilePage> {
                       ),
                     ),
                     SizedBox(width: 10),
-                    Row(
-                      children: [
-                        TextButton(
-                          onPressed: () {},
-                          style: ButtonStyle(
-                            backgroundColor:
-                                MaterialStateProperty.all(Color(0xFFFF7A00)),
-                            shape: MaterialStateProperty.all(
-                              RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                            ),
-                            side: MaterialStateProperty.all(
-                              BorderSide(
-                                color: Color(0xFFFF7A00),
-                                width: 0.7,
-                              ),
-                            ),
-                          ),
-                          child: Row(
-                            children: [
-                              Icon(
-                                Icons.favorite,
-                                color: Colors.white,
-                              ),
-                              Text(
-                                "Crush",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ],
+                    TextButton(
+                      onPressed: () {},
+                      style: ButtonStyle(
+                        backgroundColor:
+                          MaterialStateProperty.all(Color(0xFFFF7A00)),
+                        shape: MaterialStateProperty.all(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
                           ),
                         ),
-                      ],
+                        side: MaterialStateProperty.all(
+                          BorderSide(
+                            color: Color(0xFFFF7A00),
+                            width: 0.7,
+                          ),
+                        ),
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.favorite,
+                            color: Colors.white,
+                          ),
+                          Text(
+                            "Crush",
+                            style: TextStyle(
+                              color: Colors.white,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),
-                SizedBox(height: 10),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ChatScreen(
+                          peerName: _name,
+                          peerImageUrl: 'https://via.placeholder.com/150',
+                          peerId: widget.documentId,
+                        ),
+                      ),
+                    );
+                  },
+                  child: Text("Send Message"),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blue,
+                    minimumSize: Size(182, 40),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                ),
                 Divider(
                   color: Colors.grey,
                   thickness: 0.5,

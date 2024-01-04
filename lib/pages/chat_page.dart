@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'home_page.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class Message {
   String text;
@@ -13,28 +15,44 @@ class Message {
 class ChatScreen extends StatefulWidget {
   final String peerName;
   final String peerImageUrl;
+  final String peerId;
 
-  ChatScreen({required this.peerName, required this.peerImageUrl});
+  ChatScreen({required this.peerName, required this.peerImageUrl, required this.peerId,});
 
   @override
   _ChatScreenState createState() => _ChatScreenState();
 }
 
 class _ChatScreenState extends State<ChatScreen> {
-  final List<Message> messages = [];
+  List<Message> messages = [];
   final TextEditingController _textController = TextEditingController();
   bool _isComposingMessage = false;
+
+  String getChatId(String userId1, String userId2) {
+    return userId1.hashCode <= userId2.hashCode
+        ? '$userId1\_$userId2'
+        : '$userId2\_$userId1';
+  }
+
+  String get chatId {
+    final currentUser = FirebaseAuth.instance.currentUser!;
+    return getChatId(currentUser.uid, widget.peerId);  // Assuming widget.peerId contains the peer's user ID
+  }
 
   void _handleSubmitted(String text) {
     if (text.trim().isNotEmpty) {
       _textController.clear();
       setState(() {
-        _isComposingMessage =
-            false; // Reset the flag when the message is submitted
-        // Add the message to the message list
-        messages.insert(0, Message(text: text, sender: true));
+        _isComposingMessage = false; // Reset the flag when the message is submitted
       });
-      // Send the message to a server or database action
+
+      // Add the message to Firestore in the chat's 'messages' subcollection
+      FirebaseFirestore.instance.collection('chats').doc(chatId) // You need to define chatId
+        .collection('messages').add({
+          'senderId': FirebaseAuth.instance.currentUser!.uid,
+          'text': text,
+          'timestamp': FieldValue.serverTimestamp(),
+        });
     }
   }
 
@@ -42,6 +60,24 @@ class _ChatScreenState extends State<ChatScreen> {
   void initState() {
     super.initState();
     _textController.addListener(_handleTextChange);
+
+    // Firestore listener setup
+    FirebaseFirestore.instance.collection('chats').doc(chatId)
+      .collection('messages').orderBy('timestamp', descending: true)
+        .snapshots().listen((snapshot) {
+          List<Message> newMessages = [];
+          for (var doc in snapshot.docs) {
+            var data = doc.data();
+            newMessages.add(Message(
+              text: data['text'],
+              sender: data['senderId'] == FirebaseAuth.instance.currentUser!.uid,
+              dateTime: (data['dateTime'] as Timestamp).toDate(),
+            ));
+          }
+          setState(() {
+            messages = newMessages;
+          });
+      });
   }
 
   void _handleTextChange() {

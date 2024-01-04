@@ -171,27 +171,54 @@ class _InboxNotificationsPageState extends State<InboxNotificationsPage> {
   }
 
   Widget _buildMessagesList() {
-    // Placeholder for messages list
-    return ListView.builder(
-      itemCount: 5,
-      itemBuilder: (context, index) {
-        return ListTile(
-            leading: CircleAvatar(),
-            title: Text('Mike Smith'),
-            subtitle: Text('Hi, I saw you study Mediendesign...'),
-            trailing: Text('12 mins ago'),
-            onTap: () {
-              // When a message is tapped, navigate to the ChatScreen
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => ChatScreen(
-                    peerName: 'Mike Smith', // Replace with actual data
-                    peerImageUrl: 'https://via.placeholder.com/150', // Replace with actual data
+    return StreamBuilder<QuerySnapshot>(
+      stream: FirebaseFirestore.instance.collection('your_chat_collection')
+        // Query to get the current user's conversations
+        .where('participants', arrayContains: FirebaseAuth.instance.currentUser!.uid)
+        .snapshots(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(child: CircularProgressIndicator());
+        }
+
+        if (!snapshot.hasData) {
+          return Center(child: Text('No messages yet.'));
+        }
+
+        var chats = snapshot.data!.docs;
+
+        return ListView.builder(
+          itemCount: chats.length,
+          itemBuilder: (context, index) {
+            var chatData = chats[index].data() as Map<String, dynamic>;
+            String peerId; // Initialize with actual peer ID
+            String peerName; // Initialize with actual peer name
+            String peerImageUrl; // Initialize with actual peer image URL
+
+            // Logic to extract peerId, peerName, and peerImageUrl from chatData
+            // ...
+
+            return ListTile(
+              leading: CircleAvatar(
+                backgroundImage: NetworkImage(peerImageUrl),
+              ),
+              title: Text(peerName),
+              subtitle: Text('Last message...'), // Replace with actual last message preview
+              trailing: Text('Time'), // Replace with actual time of last message
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ChatScreen(
+                      peerName: peerName,
+                      peerImageUrl: peerImageUrl,
+                      peerId: peerId,
+                    ),
                   ),
-                ),
-              );
-            }
+                );
+              },
+            );
+          },
         );
       },
     );
