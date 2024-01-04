@@ -2,11 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:timeago/timeago.dart' as timeago;
-import 'package:bibcrush/pages/chat_page.dart';
 
 import 'comment_page.dart';
 
-//user
 final currentUser = FirebaseAuth.instance.currentUser!;
 
 class OthersProfilePage extends StatefulWidget {
@@ -27,12 +25,15 @@ class _OthersProfilePageState extends State<OthersProfilePage> {
   late String _studying;
   late int _semester;
   late int _faculty;
+  bool _isFollowing = false;
+  bool _isCrushed = false;
 
   @override
   void initState() {
     super.initState();
-    // Fetch user data when the page is created
-    // No need to call _fetchUserData manually
+    _fetchUserData();
+    _checkIfFollowing();
+    _checkIfCrushed();
   }
 
   Future<Map<String, dynamic>?> _fetchUserData() async {
@@ -43,15 +44,167 @@ class _OthersProfilePageState extends State<OthersProfilePage> {
           .get();
 
       if (document.exists) {
-        return document.data() as Map<String, dynamic>?;
+        return document.data() as Map<String, dynamic>? ?? {};
       } else {
-        return null; // or handle the case where the document doesn't exist
+        return null;
       }
     } catch (e) {
       print("Error fetching user data: $e");
-      return null; // or handle the error
+      return null;
     }
   }
+
+  Future<void> followUser(String otherUserID) async {
+    final currentUserID = FirebaseAuth.instance.currentUser?.uid;
+
+    await FirebaseFirestore.instance.collection('users').doc(currentUserID).update({
+      'Following': FieldValue.arrayUnion([otherUserID]),
+    });
+
+    await FirebaseFirestore.instance.collection('users').doc(otherUserID).update({
+      'Follower': FieldValue.arrayUnion([currentUserID]),
+    });
+  }
+  Future<void> unfollowUser(String otherUserID) async {
+    final currentUserID = FirebaseAuth.instance.currentUser?.uid;
+
+    await FirebaseFirestore.instance.collection('users').doc(currentUserID).update({
+      'Following': FieldValue.arrayRemove([otherUserID]),
+    });
+
+    await FirebaseFirestore.instance.collection('users').doc(otherUserID).update({
+      'Follower': FieldValue.arrayRemove([currentUserID]),
+    });
+  }
+  Future<bool> _checkIfFollowing() async {
+    try {
+      var currentUserId = FirebaseAuth.instance.currentUser?.uid;
+      var currentUserDoc = await FirebaseFirestore.instance.collection('users').doc(currentUserId).get();
+
+      print("User Document: $currentUserDoc");
+
+      // Check if the 'Following' array contains the other user's ID
+      setState(() {
+        _isFollowing = currentUserDoc['Following']?.contains(widget.documentId) ?? false;
+      });
+
+      return _isFollowing;
+    } catch (e) {
+      print("Error checking if following: $e");
+      return false;
+    }
+
+  }
+  Future<void> _followUser() async {
+    try {
+      var currentUserId = FirebaseAuth.instance.currentUser?.uid;
+
+      // Update current user's following list
+      await FirebaseFirestore.instance.collection('users').doc(currentUserId).update({
+        'Following': FieldValue.arrayUnion([widget.documentId]),
+      });
+
+      // Update other user's followers list
+      await FirebaseFirestore.instance.collection('users').doc(widget.documentId).update({
+        'Follower': FieldValue.arrayUnion([currentUserId]),
+      });
+    } catch (e) {
+      print("Error following user: $e");
+    }
+  }
+  Future<void> _unfollowUser() async {
+    try {
+      var currentUserId = FirebaseAuth.instance.currentUser?.uid;
+
+      // Update current user's following list
+      await FirebaseFirestore.instance.collection('users').doc(currentUserId).update({
+        'Following': FieldValue.arrayRemove([widget.documentId]),
+      });
+
+      // Update other user's followers list
+      await FirebaseFirestore.instance.collection('users').doc(widget.documentId).update({
+        'Follower': FieldValue.arrayRemove([currentUserId]),
+      });
+    } catch (e) {
+      print("Error unfollowing user: $e");
+    }
+  }
+
+  Future<void> crushUser(String otherUserID) async {
+    final currentUserID = FirebaseAuth.instance.currentUser?.uid;
+
+    await FirebaseFirestore.instance.collection('users').doc(currentUserID).update({
+      'Crushes': FieldValue.arrayUnion([otherUserID]),
+    });
+
+    await FirebaseFirestore.instance.collection('users').doc(otherUserID).update({
+      'Crushed': FieldValue.arrayUnion([currentUserID]),
+    });
+  }
+  Future<void> uncrushUser(String otherUserID) async {
+    final currentUserID = FirebaseAuth.instance.currentUser?.uid;
+
+    await FirebaseFirestore.instance.collection('users').doc(currentUserID).update({
+      'Crushes': FieldValue.arrayRemove([otherUserID]),
+    });
+
+    await FirebaseFirestore.instance.collection('users').doc(otherUserID).update({
+      'Crushed': FieldValue.arrayRemove([currentUserID]),
+    });
+  }
+  Future<bool> _checkIfCrushed() async {
+    try {
+      var currentUserId = FirebaseAuth.instance.currentUser?.uid;
+
+      // Fetch the user document of the current user
+      var currentUserDoc = await FirebaseFirestore.instance.collection('users').doc(currentUserId).get();
+
+      // Check if the 'Crushes' array contains the other user's ID
+      setState(() {
+        _isCrushed = currentUserDoc['Crushes']?.contains(widget.documentId) ?? false;
+      });
+
+      return _isCrushed;
+    } catch (e) {
+      print("Error checking if crushed: $e");
+      return false;
+    }
+  }
+  Future<void> _crushUser() async {
+    try {
+      var currentUserId = FirebaseAuth.instance.currentUser?.uid;
+
+      // Update current user's crushes list
+      await FirebaseFirestore.instance.collection('users').doc(currentUserId).update({
+        'Crushes': FieldValue.arrayUnion([widget.documentId]),
+      });
+
+      // Update other user's crushed list
+      await FirebaseFirestore.instance.collection('users').doc(widget.documentId).update({
+        'Crushed': FieldValue.arrayUnion([currentUserId]),
+      });
+    } catch (e) {
+      print("Error crushing user: $e");
+    }
+  }
+  Future<void> _uncrushUser() async {
+    try {
+      var currentUserId = FirebaseAuth.instance.currentUser?.uid;
+
+      // Update current user's crushes list
+      await FirebaseFirestore.instance.collection('users').doc(currentUserId).update({
+        'Crushes': FieldValue.arrayRemove([widget.documentId]),
+      });
+
+      // Update other user's crushed list
+      await FirebaseFirestore.instance.collection('users').doc(widget.documentId).update({
+        'Crushed': FieldValue.arrayRemove([currentUserId]),
+      });
+    } catch (e) {
+      print("Error uncrushing user: $e");
+    }
+  }
+
 
   String _formatTimestamp(Timestamp timestamp) {
     var postTime = timestamp.toDate();
@@ -129,78 +282,59 @@ class _OthersProfilePageState extends State<OthersProfilePage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () async {
+                        bool isFollowing = await _checkIfFollowing();
+                        if (isFollowing) {
+                          // If already following, unfollow
+                          await _unfollowUser();
+                        } else {
+                          // If not following, follow
+                          await _followUser();
+                        }
+                      },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.blue,
-                        fixedSize: Size(90, 40),
+                        fixedSize: Size(120, 40),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),
                         ),
                       ),
                       child: Text(
-                        "Follow",
+                        _isFollowing ? "Unfollow" : "Follow",
                         style: TextStyle(
                           color: Colors.white,
                         ),
                       ),
                     ),
                     SizedBox(width: 10),
-                    TextButton(
-                      onPressed: () {},
-                      style: ButtonStyle(
-                        backgroundColor:
-                          MaterialStateProperty.all(Color(0xFFFF7A00)),
-                        shape: MaterialStateProperty.all(
-                          RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                        ),
-                        side: MaterialStateProperty.all(
-                          BorderSide(
-                            color: Color(0xFFFF7A00),
-                            width: 0.7,
-                          ),
+                    ElevatedButton(
+                      onPressed: () async {
+                        bool isCrushed = await _checkIfCrushed();
+                        if (isCrushed) {
+                          // If already crushed, uncrush
+                          await _uncrushUser();
+                        } else {
+                          // If not crushed, crush
+                          await _crushUser();
+                        }
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.red,
+                        fixedSize: Size(120, 40),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
                         ),
                       ),
-                      child: Row(
-                        children: [
-                          Icon(
-                            Icons.favorite,
-                            color: Colors.white,
-                          ),
-                          Text(
-                            "Crush",
-                            style: TextStyle(
-                              color: Colors.white,
-                            ),
-                          ),
-                        ],
+                      child: Text(
+                        _isCrushed ? "Uncrush" : "Crush",
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
                       ),
                     ),
                   ],
                 ),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => ChatScreen(
-                          peerName: _name,
-                          peerImageUrl: 'https://via.placeholder.com/150',
-                          peerId: widget.documentId,
-                        ),
-                      ),
-                    );
-                  },
-                  child: Text("Send Message"),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue,
-                    minimumSize: Size(182, 40),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                ),
+                SizedBox(height: 10),
                 Divider(
                   color: Colors.grey,
                   thickness: 0.5,
