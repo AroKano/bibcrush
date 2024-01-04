@@ -11,7 +11,6 @@ class AuthPage extends StatefulWidget {
 }
 
 class _AuthPageState extends State<AuthPage> {
-  // initially, show the login page
   bool showLoginPage = true;
   bool showStartPage = true;
 
@@ -36,7 +35,6 @@ class _AuthPageState extends State<AuthPage> {
     if (showLoginPage) {
       return StartPage(showRegisterPage: toggleScreens);
     } else {
-      // Handle other cases here
       return LoginPage(showStartPage: showStarterPage);
     }
   }
