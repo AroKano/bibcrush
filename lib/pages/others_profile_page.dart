@@ -83,6 +83,7 @@ class _OthersProfilePageState extends State<OthersProfilePage> {
 
       print("User Document: $currentUserDoc");
 
+      // Check if the 'Following' array contains the other user's ID
       setState(() {
         _isFollowing = currentUserDoc['Following']?.contains(widget.documentId) ?? false;
       });
@@ -98,10 +99,12 @@ class _OthersProfilePageState extends State<OthersProfilePage> {
     try {
       var currentUserId = FirebaseAuth.instance.currentUser?.uid;
 
+      // Update current user's following list
       await FirebaseFirestore.instance.collection('users').doc(currentUserId).update({
         'Following': FieldValue.arrayUnion([widget.documentId]),
       });
 
+      // Update other user's followers list
       await FirebaseFirestore.instance.collection('users').doc(widget.documentId).update({
         'Follower': FieldValue.arrayUnion([currentUserId]),
       });
@@ -113,10 +116,12 @@ class _OthersProfilePageState extends State<OthersProfilePage> {
     try {
       var currentUserId = FirebaseAuth.instance.currentUser?.uid;
 
+      // Update current user's following list
       await FirebaseFirestore.instance.collection('users').doc(currentUserId).update({
         'Following': FieldValue.arrayRemove([widget.documentId]),
       });
 
+      // Update other user's followers list
       await FirebaseFirestore.instance.collection('users').doc(widget.documentId).update({
         'Follower': FieldValue.arrayRemove([currentUserId]),
       });
@@ -151,8 +156,10 @@ class _OthersProfilePageState extends State<OthersProfilePage> {
     try {
       var currentUserId = FirebaseAuth.instance.currentUser?.uid;
 
+      // Fetch the user document of the current user
       var currentUserDoc = await FirebaseFirestore.instance.collection('users').doc(currentUserId).get();
 
+      // Check if the 'Crushes' array contains the other user's ID
       setState(() {
         _isCrushed = currentUserDoc['Crushes']?.contains(widget.documentId) ?? false;
       });
@@ -167,10 +174,12 @@ class _OthersProfilePageState extends State<OthersProfilePage> {
     try {
       var currentUserId = FirebaseAuth.instance.currentUser?.uid;
 
+      // Update current user's crushes list
       await FirebaseFirestore.instance.collection('users').doc(currentUserId).update({
         'Crushes': FieldValue.arrayUnion([widget.documentId]),
       });
 
+      // Update other user's crushed list
       await FirebaseFirestore.instance.collection('users').doc(widget.documentId).update({
         'Crushed': FieldValue.arrayUnion([currentUserId]),
       });
@@ -182,10 +191,12 @@ class _OthersProfilePageState extends State<OthersProfilePage> {
     try {
       var currentUserId = FirebaseAuth.instance.currentUser?.uid;
 
+      // Update current user's crushes list
       await FirebaseFirestore.instance.collection('users').doc(currentUserId).update({
         'Crushes': FieldValue.arrayRemove([widget.documentId]),
       });
 
+      // Update other user's crushed list
       await FirebaseFirestore.instance.collection('users').doc(widget.documentId).update({
         'Crushed': FieldValue.arrayRemove([currentUserId]),
       });
@@ -226,6 +237,7 @@ class _OthersProfilePageState extends State<OthersProfilePage> {
             _semester = data?['Semester'] ?? 0;
             _faculty = data?['Faculty'] ?? 0;
 
+            // Continue building your UI here using the fetched data
             return Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
@@ -273,8 +285,10 @@ class _OthersProfilePageState extends State<OthersProfilePage> {
                       onPressed: () async {
                         bool isFollowing = await _checkIfFollowing();
                         if (isFollowing) {
+                          // If already following, unfollow
                           await _unfollowUser();
                         } else {
+                          // If not following, follow
                           await _followUser();
                         }
                       },
@@ -297,8 +311,10 @@ class _OthersProfilePageState extends State<OthersProfilePage> {
                       onPressed: () async {
                         bool isCrushed = await _checkIfCrushed();
                         if (isCrushed) {
+                          // If already crushed, uncrush
                           await _uncrushUser();
                         } else {
+                          // If not crushed, crush
                           await _crushUser();
                         }
                       },
@@ -347,6 +363,7 @@ class _OthersProfilePageState extends State<OthersProfilePage> {
                   thickness: 0.5,
                 ),
 
+                // TabBar and TabBarView
                 Expanded(
                   child: DefaultTabController(
                     length: 2,
@@ -365,8 +382,10 @@ class _OthersProfilePageState extends State<OthersProfilePage> {
                         Expanded(
                           child: TabBarView(
                             children: [
+                              // Tab 1: My Posts
                               _buildMyPostsTab(),
 
+                              // Tab 2: My Infos
                               _buildMyInfosTab(),
                             ],
                           ),
@@ -434,7 +453,7 @@ class _OthersProfilePageState extends State<OthersProfilePage> {
 
         if (userData == null) {
           print('Error: userData is null');
-          return Container();
+          return Container();  // or any other suitable widget
         }
 
         print("User Document: ${userSnapshot.data}");
