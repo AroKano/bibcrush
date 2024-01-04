@@ -30,7 +30,6 @@ class _StartPageState extends State<StartPage> {
             MyButton(
               text: 'Sign in',
               onTap: () {
-                // Navigate to LoginPage
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -50,7 +49,6 @@ class _StartPageState extends State<StartPage> {
                 ),
                 GestureDetector(
                   onTap: () {
-                    // Navigate to LoginPage
                     Navigator.push(
                       context,
                       MaterialPageRoute(

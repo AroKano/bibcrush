@@ -285,16 +285,14 @@ class _OthersProfilePageState extends State<OthersProfilePage> {
                       onPressed: () async {
                         bool isFollowing = await _checkIfFollowing();
                         if (isFollowing) {
-                          // If already following, unfollow
                           await _unfollowUser();
                         } else {
-                          // If not following, follow
                           await _followUser();
                         }
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.blue,
-                        fixedSize: Size(120, 40),
+                        fixedSize: Size(130, 40),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),
                         ),
@@ -307,7 +305,7 @@ class _OthersProfilePageState extends State<OthersProfilePage> {
                       ),
                     ),
                     SizedBox(width: 10),
-                    ElevatedButton(
+                    TextButton(
                       onPressed: () async {
                         bool isCrushed = await _checkIfCrushed();
                         if (isCrushed) {
@@ -318,46 +316,60 @@ class _OthersProfilePageState extends State<OthersProfilePage> {
                           await _crushUser();
                         }
                       },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.red,
-                        fixedSize: Size(120, 40),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
+                      style: ButtonStyle(
+                        backgroundColor:
+                        MaterialStateProperty.all(Color(0xFFFF7A00)),
+                        shape: MaterialStateProperty.all(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                        side: MaterialStateProperty.all(
+                          BorderSide(
+                            color: Color(0xFFFF7A00),
+                            width: 0.7,
+                          ),
                         ),
                       ),
-                      child: Text(
-                        _isCrushed ? "Uncrush" : "Crush",
-                        style: TextStyle(
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                    SizedBox(width: 10),
-                    ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => ChatScreen(
-                              peerName: _name,
-                              peerImageUrl: 'https://via.placeholder.com/150',
-                              peerId: widget.documentId,
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.favorite,
+                            color: Colors.white,
+                          ),
+                          Text(
+                            _isCrushed ? " Uncrush" : " Crush",
+                            style: TextStyle(
+                              color: Colors.white,
                             ),
                           ),
-                        );
-                      },
-                      child: Text("Send Message"),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.blue,
-                        minimumSize: Size(120, 40),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
+                        ],
                       ),
                     ),
                   ],
                 ),
-                SizedBox(height: 10),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ChatScreen(
+                          peerName: _name,
+                          peerImageUrl: 'https://via.placeholder.com/150',
+                          peerId: widget.documentId,
+                        ),
+                      ),
+                    );
+                  },
+                  child: Text("Send Message"),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blue,
+                    minimumSize: Size(182, 40),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                ),
                 Divider(
                   color: Colors.grey,
                   thickness: 0.5,
@@ -541,27 +553,6 @@ class _OthersProfilePageState extends State<OthersProfilePage> {
                         setState(() {
                           post['likes'] = newLikes;
                         });
-                      },
-                    ),
-                    IconButton(
-                      icon: Icon(
-                        post['bookmarks'] != null && post['bookmarks']! > 0 ? Icons.bookmark : Icons.bookmark_border,
-                        color: post['bookmarks'] != null && post['bookmarks']! > 0 ? Colors.red : null,
-                      ),
-                      onPressed: () async {
-                        int newBookmarks = post['bookmarks'] != null && post['bookmarks']! > 0
-                            ? post['bookmarks']! - 1
-                            : post['bookmarks']! + 1;
-                        await FirebaseFirestore.instance.collection('posts').doc(postDoc.id).update({'bookmarks': newBookmarks});
-                        setState(() {
-                          post['bookmarks'] = newBookmarks;
-                        });
-                      },
-                    ),
-                    IconButton(
-                      icon: Icon(Icons.share),
-                      onPressed: () {
-                        print('Share');
                       },
                     ),
                   ],

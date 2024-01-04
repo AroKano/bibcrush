@@ -53,7 +53,6 @@ class _InboxNotificationsPageState extends State<InboxNotificationsPage> {
             backgroundColor: Colors.transparent,
             leading: InkWell(
               onTap: () {
-                // Navigate to the Profile Page
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => ProfilePage()),
@@ -79,7 +78,6 @@ class _InboxNotificationsPageState extends State<InboxNotificationsPage> {
                 child: IconButton(
                   icon: Icon(Icons.search, color: Theme.of(context).iconTheme.color),
                   onPressed: () {
-                    // Navigate to the Search Page
                     Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => SearchPage()),
@@ -281,7 +279,6 @@ class _InboxNotificationsPageState extends State<InboxNotificationsPage> {
   }
 
   Widget _buildNotificationsList() {
-    // Placeholder for notifications list
     return ListView.builder(
       itemCount: 5,
       itemBuilder: (context, index) {

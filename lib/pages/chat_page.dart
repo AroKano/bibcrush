@@ -5,7 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 class Message {
   String text;
-  bool sender; // true for sender, false for receiver
+  bool sender; 
   DateTime dateTime;
 
   Message({required this.text, required this.sender, DateTime? dateTime})
@@ -91,7 +91,6 @@ class _ChatScreenState extends State<ChatScreen> {
             child: IconButton(
               icon: Icon(Icons.more_vert),
               onPressed: () {
-                // Action for pressing the more_vert (three dots) icon
               },
             ),
           ),

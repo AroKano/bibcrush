@@ -8,13 +8,13 @@ import 'package:flutter/material.dart';
 class CustomNavBar extends StatelessWidget {
   final Function(int) onTabChange;
   final int? selectedIndex;
-  final BuildContext context; // Add context as a property
+  final BuildContext context;
 
   const CustomNavBar({
     Key? key,
     required this.onTabChange,
     this.selectedIndex,
-    required this.context, // Pass context in the constructor
+    required this.context,
   }) : super(key: key);
 
   @override
