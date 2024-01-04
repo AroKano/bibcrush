@@ -1,3 +1,11 @@
+/* 
+FileName: profile_page.dart
+Author: Hilal Cubukcu (all)
+Last Modified on: 01.01.2024
+Description: This Dart file defines a ThemeProvider class that manages 
+the theme data for a Flutter app, allowing the toggling between light and dark modes.
+*/
+
 import 'package:bibcrush/pages/start_page.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -31,7 +39,6 @@ class _ProfilePageState extends State<ProfilePage> {
   final _currentPasswordController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
-
 
   final _formKey = GlobalKey<FormState>();
   bool _passwordsMatch = true;
@@ -150,7 +157,7 @@ class _ProfilePageState extends State<ProfilePage> {
                               .toggleTheme();
                         },
                         value: _lightDarkModeEnabled,
-                        activeTrackColor: Colors.orange,
+                        activeTrackColor: Color(0xFFFF7A00),
                         activeColor: Colors.white,
                       ),
                     ),
@@ -166,7 +173,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           });
                         },
                         value: _notificationsEnabled,
-                        activeTrackColor: Colors.orange,
+                        activeTrackColor: Color(0xFFFF7A00),
                         activeColor: Colors.white,
                       ),
                     ),
@@ -238,7 +245,6 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                 ),
           const SizedBox(height: 20),
-
           RichText(
             text: TextSpan(
               text: _first_name,
@@ -328,7 +334,6 @@ class _ProfilePageState extends State<ProfilePage> {
                     child: TabBarView(
                       children: [
                         _buildMyPostsTab(),
-
                         _buildMyInfosTab(),
                       ],
                     ),
@@ -450,8 +455,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         onSelected: (String value) async {
                           if (value == 'Delete') {
                             await _deletePost(postDoc.id);
-                          } else if (value == 'Report') {
-                          }
+                          } else if (value == 'Report') {}
                         },
                       ),
                     ],
@@ -802,7 +806,6 @@ class _ProfilePageState extends State<ProfilePage> {
                 _buildSubheading('Arkan Kadir:', 'Task 2'),
                 _buildSubheading('Melisa Rosic Emira:', 'Task 3'),
                 _buildSubheading('Yudum Yilmaz:', 'Frontend/UI'),
-
                 SizedBox(height: 16),
                 Center(
                   child: Text(
@@ -835,7 +838,6 @@ class _ProfilePageState extends State<ProfilePage> {
                     'Flutter-Plugin für Firebase Cloud Storage, mit dem man Dateien in der Cloud speichern und abrufen kann.'),
                 _buildPackageDescription('timeago',
                     'Eine Bibliothek zum Formatieren von Zeitstempeln in ein "vor kurzem" Format, um relative Zeit in der App anzuzeigen.'),
-
                 SizedBox(height: 16),
                 Center(
                   child: Text(

@@ -1,3 +1,12 @@
+/* 
+FileName: theme.dart
+Authors: Hilal Cubukcu (all)
+Last Modified on: 02.01.2024
+Description: This Dart file defines light and dark mode theme data configurations 
+using the `ThemeData` class from Flutter, including color schemes, text themes from 
+the Google Fonts package, and input decoration themes for both modes.
+*/
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 

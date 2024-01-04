@@ -1,3 +1,11 @@
+/* 
+FileName: theme_provider.dart
+Author: Hilal Cubukcu (all)
+Last Modified on: 01.01.2024
+Description: This Dart file defines a ThemeProvider class that manages 
+the theme data for a Flutter app, allowing the toggling between light and dark modes.
+*/
+
 import 'package:bibcrush/theme/theme.dart';
 import 'package:flutter/material.dart';
 
