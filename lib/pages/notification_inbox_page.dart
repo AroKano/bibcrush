@@ -3,6 +3,8 @@ import 'chat_page.dart';
 import '../components/custom_nav_bar.dart';
 import 'package:bibcrush/pages/profile_page.dart';
 import 'package:bibcrush/pages/search_page.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 
 class NotificationPage extends StatelessWidget {
@@ -191,9 +193,9 @@ class _InboxNotificationsPageState extends State<InboxNotificationsPage> {
           itemCount: chats.length,
           itemBuilder: (context, index) {
             var chatData = chats[index].data() as Map<String, dynamic>;
-            String peerId; // Initialize with actual peer ID
-            String peerName; // Initialize with actual peer name
-            String peerImageUrl; // Initialize with actual peer image URL
+            String peerId = chatData['peerId'];
+            String peerName = chatData['peerName'];
+            String peerImageUrl = chatData['peerImageUrl'];
 
             // Logic to extract peerId, peerName, and peerImageUrl from chatData
             // ...
