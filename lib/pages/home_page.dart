@@ -27,7 +27,12 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Feed'),
+        title: Center(
+            child: Image.asset(
+          'assets/bibcrush_logo_top.png',
+          width: 60,
+          height: 60,
+        )),
       ),
       body: FutureBuilder<QuerySnapshot>(
         future: FirebaseFirestore.instance.collection('posts').get(),
@@ -88,7 +93,10 @@ class _HomePageState extends State<HomePage> {
 
   Widget _buildPostWidget(DocumentSnapshot postDoc) {
     return FutureBuilder<DocumentSnapshot>(
-      future: FirebaseFirestore.instance.collection('users').doc(postDoc['users']['UID']).get(),
+      future: FirebaseFirestore.instance
+          .collection('users')
+          .doc(postDoc['users']['UID'])
+          .get(),
       builder: (context, userSnapshot) {
         if (userSnapshot.connectionState == ConnectionState.waiting) {
           return CircularProgressIndicator();
@@ -104,10 +112,11 @@ class _HomePageState extends State<HomePage> {
 
         if (userData == null) {
           print('Error: userData is null');
-          return Container();  // or any other suitable widget
+          return Container(); // or any other suitable widget
         }
 
-        bool isCurrentUserOwner = post['users']['UID'] == FirebaseAuth.instance.currentUser?.uid;
+        bool isCurrentUserOwner =
+            post['users']['UID'] == FirebaseAuth.instance.currentUser?.uid;
 
         print("User Document: ${userSnapshot.data}");
 
@@ -115,13 +124,14 @@ class _HomePageState extends State<HomePage> {
           padding: const EdgeInsets.all(8.0),
           child: Card(
             elevation: 3,
+            color: Theme.of(context).colorScheme.primary,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 ListTile(
                   leading: CircleAvatar(
                     radius: 25,
-                    backgroundColor: Colors.blue,
+                    backgroundColor: Color(0xFFFF7A00),
                     child: Icon(Icons.person, color: Colors.white),
                   ),
                   title: Row(
@@ -129,7 +139,8 @@ class _HomePageState extends State<HomePage> {
                     children: [
                       Row(
                         children: [
-                          Text(userData?['First Name'] ?? 'Unknown', style: TextStyle(fontWeight: FontWeight.bold)),
+                          Text(userData?['First Name'] ?? 'Unknown',
+                              style: TextStyle(fontWeight: FontWeight.bold)),
                           SizedBox(width: 4),
                           Text('@${userData?['Username'] ?? 'Unknown'}'),
                         ],
@@ -178,11 +189,11 @@ class _HomePageState extends State<HomePage> {
                   padding: const EdgeInsets.all(8.0),
                   child: post['imageUrl'] != null
                       ? Image.network(
-                    post['imageUrl'],
-                    width: 400,
-                    height: 550,
-                    fit: BoxFit.cover,
-                  )
+                          post['imageUrl'],
+                          width: 400,
+                          height: 550,
+                          fit: BoxFit.cover,
+                        )
                       : Container(),
                 ),
                 Padding(
@@ -201,19 +212,30 @@ class _HomePageState extends State<HomePage> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => CommentPage(postId: postDoc.id),
+                            builder: (context) =>
+                                CommentPage(postId: postDoc.id),
                           ),
                         );
                       },
                     ),
                     IconButton(
                       icon: Icon(
-                        post['likes'] != null && post['likes']! > 0 ? Icons.favorite : Icons.favorite_border,
-                        color: post['likes'] != null && post['likes']! > 0 ? Colors.red : null,
+                        post['likes'] != null && post['likes']! > 0
+                            ? Icons.favorite
+                            : Icons.favorite_border,
+                        color: post['likes'] != null && post['likes']! > 0
+                            ? Colors.red
+                            : null,
                       ),
                       onPressed: () async {
-                        int newLikes = post['likes'] != null && post['likes']! > 0 ? post['likes']! - 1 : post['likes']! + 1;
-                        await FirebaseFirestore.instance.collection('posts').doc(postDoc.id).update({'likes': newLikes});
+                        int newLikes =
+                            post['likes'] != null && post['likes']! > 0
+                                ? post['likes']! - 1
+                                : post['likes']! + 1;
+                        await FirebaseFirestore.instance
+                            .collection('posts')
+                            .doc(postDoc.id)
+                            .update({'likes': newLikes});
                         setState(() {
                           post['likes'] = newLikes;
                         });
