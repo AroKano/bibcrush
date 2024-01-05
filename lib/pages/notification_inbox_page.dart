@@ -1,6 +1,6 @@
 /*
 FileName: notification_inbox_page.dart
-Authors:
+Authors:Melisa Rosic Emira (UI, Firebase, Fetching data from Database)
 Last Modified on: 04.01.2024
 Description: A Flutter page named 'NotificationPage' that provides an inbox for messages
 and notifications. It includes a custom bottom navigation bar, tabs for 'Messages' and

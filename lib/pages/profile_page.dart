@@ -820,7 +820,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 SizedBox(height: 8),
                 _buildSubheading('Hilal Cubukcu:', 'Task 1'),
                 _buildSubheading('Arkan Kadir:', 'Backend'),
-                _buildSubheading('Melisa Rosic Emira:', 'Task 3'),
+                _buildSubheading('Melisa Rosic Emira:', 'UI (Figma), Frontend, Backend'),
                 _buildSubheading('Yudum Yilmaz:', 'Frontend/UI'),
                 SizedBox(height: 16),
                 Center(
@@ -902,6 +902,14 @@ class _ProfilePageState extends State<ProfilePage> {
                     "Ein Button mit nur einem Icon, der hier für Aktionen wie Kommentieren, Liken und Profilbild ändern verwendet wird."),
                 _buildWidgetDescription("ImagePicker()",
                     "Ein Flutter-Plugin, das Benutzern das Auswählen von Bildern aus der Galerie oder das Aufnehmen von Fotos mit der Kamera ermöglicht."),
+                _buildWidgetDescription("_buildActionItem()",
+                    "Erstellt interaktive Bedienelemente wie Buttons oder Menüpunkte."),
+                _buildWidgetDescription("_buildTabButton()",
+                    "Generiert Tab-Schaltflächen für die Navigation innerhalb der App."),
+                _buildWidgetDescription("_buildMessagesList()",
+                    "Zeigt eine Liste von Nachrichten, sortiert nach neuesten Nachrichten."),
+                _buildWidgetDescription("_buildNotificationsList()",
+                    "Stellt eine Liste von Benachrichtigungen für den Benutzer dar."),
 
               ],
             ),

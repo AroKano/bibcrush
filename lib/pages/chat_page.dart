@@ -1,7 +1,7 @@
 /*
 FileName: chat_page.dart
-Authors:
-Last Modified on: 01.01.2024
+Authors:Melisa Rosic Emira (UI, Firebase, Fetching data from Database)
+Last Modified on: 04.01.2024
 Description: Flutter code defining the Chat Screen for real-time messaging between users.
 Users can send and receive messages in a chat with a specific peer.
 The UI displays the peer's information, including their name and profile image.
