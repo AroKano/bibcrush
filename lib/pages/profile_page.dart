@@ -21,7 +21,6 @@ Key Features:
 Comprehensive Flutter-Firebase implementation for profile management in a social app.
 */
 
-
 import 'package:bibcrush/pages/start_page.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -818,9 +817,10 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                 ),
                 SizedBox(height: 8),
-                _buildSubheading('Hilal Cubukcu:', 'Task 1'),
+                _buildSubheading('Hilal Cubukcu:', 'Frontend, Backend'),
                 _buildSubheading('Arkan Kadir:', 'Backend'),
-                _buildSubheading('Melisa Rosic Emira:', 'UI (Figma), Frontend, Backend'),
+                _buildSubheading(
+                    'Melisa Rosic Emira:', 'UI (Figma), Frontend, Backend'),
                 _buildSubheading('Yudum Yilmaz:', 'Frontend/UI'),
                 SizedBox(height: 16),
                 Center(
@@ -854,6 +854,8 @@ class _ProfilePageState extends State<ProfilePage> {
                     'Flutter-Plugin für Firebase Cloud Storage, mit dem man Dateien in der Cloud speichern und abrufen kann.'),
                 _buildPackageDescription('timeago',
                     'Eine Bibliothek zum Formatieren von Zeitstempeln in ein "vor kurzem" Format, um relative Zeit in der App anzuzeigen.'),
+                _buildPackageDescription('intl',
+                    'Das intl-Paket in der pubspec.yaml-Datei in Flutter ermöglicht die Internationalisierung und Lokalisierung, um Formatierung und Übersetzung von Nachrichten basierend auf verschiedenen Ländercodes zu unterstützen.'),
                 SizedBox(height: 16),
                 Center(
                   child: Text(
@@ -878,12 +880,20 @@ class _ProfilePageState extends State<ProfilePage> {
                     "Zeigt das Profilbild des Benutzers an. Wird auch für das Hinzufügen von Profilbildern und die Auswahl von Bildern aus der Galerie verwendet."),
                 _buildWidgetDescription("RichText()",
                     "Erlaubt die Anzeige von Text mit verschiedenen Stilen. Hier verwendet, um den Benutzernamen und den Vornamen des Benutzers mit unterschiedlichen Stilen anzuzeigen."),
-                _buildWidgetDescription("TextButton()",
-                    "Ein flacher Button mit Text, der für die Schaltfläche ""Edit Profile"" und andere Schaltflächen im Dialog verwendet wird."),
+                _buildWidgetDescription(
+                    "TextButton()",
+                    "Ein flacher Button mit Text, der für die Schaltfläche "
+                        "Edit Profile"
+                        " und andere Schaltflächen im Dialog verwendet wird."),
                 _buildWidgetDescription("Container()",
                     "Ein unsichtbares Widget, das zum Zentrieren und Stylen von Texten im Profilbereich verwendet wird."),
-                _buildWidgetDescription("DefaultTabController()",
-                    "Ein Controller für ein TabBar und TabBarView, der hier für die Registerkarten ""My Posts"" und ""My Info"" verwendet wird."),
+                _buildWidgetDescription(
+                    "DefaultTabController()",
+                    "Ein Controller für ein TabBar und TabBarView, der hier für die Registerkarten "
+                        "My Posts"
+                        " und "
+                        "My Info"
+                        " verwendet wird."),
                 _buildWidgetDescription("TabBar und TabBarView()",
                     "Ein TabBar zeigt Registerkarten an, während TabBarView den Inhalt der ausgewählten Registerkarte anzeigt."),
                 _buildWidgetDescription("ListView und ListView.builder()",
@@ -910,7 +920,18 @@ class _ProfilePageState extends State<ProfilePage> {
                     "Zeigt eine Liste von Nachrichten, sortiert nach neuesten Nachrichten."),
                 _buildWidgetDescription("_buildNotificationsList()",
                     "Stellt eine Liste von Benachrichtigungen für den Benutzer dar."),
-
+                _buildWidgetDescription("_buildSubheading()",
+                    "Das Widget erstellt eine Spalte mit einem fett gedruckten Namen in orangener Farbe, gefolgt von einem zugehörigen Aufgabenbereich und einem vertikalen Freiraum."),
+                _buildWidgetDescription("_buildPackageDescription()",
+                    "Das Widget erstellt eine Spalte mit dem Paketnamen in orangener Farbe und einer dazugehörigen Beschreibung mit vertikalem Freiraum."),
+                _buildWidgetDescription("_buildWidgetDescription()",
+                    "Das Widget erstellt eine Spalte mit dem Widgetnamen in orangener Farbe und einer dazugehörigen Beschreibung mit vertikalem Freiraum."),
+                _buildWidgetDescription("_buildMyInfosTab()",
+                    "Das Widget erstellt eine ListView mit verschiedenen Abschnitten zu den persönlichen Informationen des Benutzers, darunter Studiengang, Semester und Fakultät."),
+                _buildWidgetDescription("_buildInfoSection()",
+                    "Das Widget erstellt eine Spalte mit einem ListTile, das einen Abschnitt für eine bestimmte Information und den zugehörigen Text enthält, sowie eine Bearbeitungsoption."),
+                _buildWidgetDescription("_buildMyPostsTab()",
+                    "Das Widget erstellt eine FutureBuilder-Liste, die die vom Benutzer erstellten Posts aus der Firestore-Datenbank abruft und darstellt, oder eine Ladeanzeige bzw. Fehlermeldung, wenn erforderlich."),
               ],
             ),
           ),
@@ -956,7 +977,7 @@ class _ProfilePageState extends State<ProfilePage> {
         Text(
           packageName,
           style:
-          TextStyle(fontWeight: FontWeight.bold, color: Color(0xFFFF7A00)),
+              TextStyle(fontWeight: FontWeight.bold, color: Color(0xFFFF7A00)),
         ),
         Text(description),
         SizedBox(height: 8),
