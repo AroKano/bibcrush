@@ -1,6 +1,6 @@
 /*
 FileName: create_post.dart
-Authors: Arkan Kadir (Firebase),
+Authors: Arkan Kadir (Firebase), Melisa Rosic Emira (UI, Firebase)
 Last Modified on: 01.01.2024
 Description: Description: Flutter code defining the Create Post screen of the app.
 Allows users to compose and publish new posts with text and optional images.
@@ -19,10 +19,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'home_page.dart';
-
-void main() {
-  runApp(CreatePost());
-}
 
 
 class CreatePost extends StatelessWidget {
